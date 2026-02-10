@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Player</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .game-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading {
+            color: white;
+            text-align: center;
+            font-size: 1.5em;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .error {
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .error h2 {
+            color: #ff6b6b;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container" id="container">
+        <div class="loading">
+            <div>Loading game...</div>
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <script>
+        // Get game ID from URL
+        const params = new URLSearchParams(window.location.search);
+        const gameId = parseInt(params.get('gameId'));
+
+        if (!gameId) {
+            document.getElementById('container').innerHTML = `
+                <div class="error">
+                    <h2>Error</h2>
+                    <p>No game ID provided</p>
+                </div>
+            `;
+        }
+
+        // Load game from localStorage
+        const games = JSON.parse(localStorage.getItem('games')) || [];
+        const game = games.find(g => g.id === gameId);
+
+        if (!game) {
+            document.getElementById('container').innerHTML = `
+                <div class="error">
+                    <h2>Game Not Found</h2>
+                    <p>The game could not be loaded</p>
+                </div>
+            `;
+        } else {
+            // Extract and run the game
+            extractAndRunGame(game);
+        }
+
+        async function extractAndRunGame(game) {
+            try {
+                // Convert array buffer to JSZip
+                const zip = new JSZip();
+                const loaded = await zip.loadAsync(game.data);
+
+                // Find the main HTML file (index.html or first HTML file)
+                let mainHtmlFile = null;
+                let mainHtmlContent = null;
+
+                // First try to find index.html
+                if (loaded.file('index.html')) {
+                    mainHtmlFile = 'index.html';
+                    mainHtmlContent = await loaded.file('index.html').async('string');
+                } else {
+                    // Otherwise find the first HTML file
+                    for (const [filename, file] of Object.entries(loaded.files)) {
+                        if (filename.endsWith('.html') && !filename.includes('/')) {
+                            mainHtmlFile = filename;
+                            mainHtmlContent = await file.async('string');
+                            break;
+                        }
+                    }
+                }
+
+                if (!mainHtmlContent) {
+                    throw new Error('No HTML file found in the game ZIP');
+                }
+
+                // Create a blob URL for the game by building a data URL
+                // We'll create an HTML file that references all resources from the zip
+                const htmlWithResources = await buildGameHTML(zip, mainHtmlContent, mainHtmlFile);
+
+                // Create blob and object URL
+                const blob = new Blob([htmlWithResources], { type: 'text/html' });
+                const blobUrl = URL.createObjectURL(blob);
+
+                // Display game in iframe
+                document.getElementById('container').innerHTML = `<iframe src="${blobUrl}" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>`;
+
+            } catch (error) {
+                console.error('Error loading game:', error);
+                document.getElementById('container').innerHTML = `
+                    <div class="error">
+                        <h2>Error Loading Game</h2>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function buildGameHTML(zip, mainHtmlContent, baseFile) {
+            // Parse the HTML to find resource references
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(mainHtmlContent, 'text/html');
+
+            // Process stylesheets
+            const styles = doc.querySelectorAll('link[rel="stylesheet"]');
+            for (const link of styles) {
+                const href = link.getAttribute('href');
+                const relativePath = resolveFilePath(baseFile, href);
+                const file = zip.file(relativePath);
+                
+                if (file) {
+                    try {
+                        const content = await file.async('string');
+                        const style = doc.createElement('style');
+                        style.textContent = content;
+                        link.replaceWith(style);
+                    } catch (e) {
+                        console.warn('Could not load stylesheet:', href);
+                    }
+                }
+            }
+
+            // Process scripts
+            const scripts = doc.querySelectorAll('script[src]');
+            for (const script of scripts) {
+                const src = script.getAttribute('src');
+                const relativePath = resolveFilePath(baseFile, src);
+                const file = zip.file(relativePath);
+                
+                if (file) {
+                    try {
+                        const content = await file.async('string');
+                        const newScript = doc.createElement('script');
+                        newScript.textContent = content;
+                        script.replaceWith(newScript);
+                    } catch (e) {
+                        console.warn('Could not load script:', src);
+                    }
+                }
+            }
+
+            // Process images
+            const images = doc.querySelectorAll('img');
+            for (const img of images) {
+                const src = img.getAttribute('src');
+                if (!src.startsWith('data:') && !src.startsWith('http')) {
+                    const relativePath = resolveFilePath(baseFile, src);
+                    const file = zip.file(relativePath);
+                    
+                    if (file) {
+                        try {
+                            const content = await file.async('arraybuffer');
+                            const blob = new Blob([content]);
+                            const blobUrl = URL.createObjectURL(blob);
+                            img.setAttribute('src', blobUrl);
+                        } catch (e) {
+                            console.warn('Could not load image:', src);
+                        }
+                    }
+                }
+            }
+
+            // Add base tag to handle relative URLs
+            const base = doc.createElement('base');
+            base.href = window.location.href;
+            doc.head.appendChild(base);
+
+            return doc.documentElement.outerHTML;
+        }
+
+        function resolveFilePath(basePath, relativePath) {
+            if (relativePath.startsWith('/')) {
+                return relativePath.substring(1);
+            }
+
+            const baseDir = basePath.substring(0, basePath.lastIndexOf('/'));
+            let resolved = baseDir ? baseDir + '/' : '';
+
+            const parts = relativePath.split('/');
+            for (const part of parts) {
+                if (part === '.') {
+                    continue;
+                } else if (part === '..') {
+                    resolved = resolved.substring(0, resolved.lastIndexOf('/'));
+                    if (resolved) resolved += '/';
+                } else if (part) {
+                    resolved += part + '/';
+                }
+            }
+
+            return resolved.endsWith('/') ? resolved.substring(0, resolved.length - 1) : resolved;
+        }
+    </script>
+</body>
+</html>
