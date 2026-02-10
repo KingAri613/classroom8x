@@ -7,5 +7,41 @@
     "categories": ["action", "platformer"],
     "gameUrl": "escape road/escape road.html",
     "rating": 4.5
+  },
+  {
+    "id": "candy-crush",
+    "name": "Candy Crush",
+    "description": "Match candies and complete levels in this addictive puzzle game!",
+    "icon": "🍭",
+    "categories": ["puzzle"],
+    "gameUrl": "candy crush/index.html",
+    "rating": 4.7
+  },
+  {
+    "id": "chess",
+    "name": "Chess",
+    "description": "Classic chess game - test your strategy and tactical skills.",
+    "icon": "♟",
+    "categories": ["puzzle", "2player"],
+    "gameUrl": "chess/index.html",
+    "rating": 4.6
+  },
+  {
+    "id": "crossy-road",
+    "name": "Crossy Road",
+    "description": "Cross the street while avoiding traffic and obstacles!",
+    "icon": "🚦",
+    "categories": ["action", "platformer"],
+    "gameUrl": "crossy road/index.html",
+    "rating": 4.4
+  },
+  {
+    "id": "drive-mad",
+    "name": "Drive Mad",
+    "description": "Drive through crazy tracks and complete insane stunts!",
+    "icon": "🏎",
+    "categories": ["action", "racing"],
+    "gameUrl": "drive mad/index.html",
+    "rating": 4.8
   }
 ]
