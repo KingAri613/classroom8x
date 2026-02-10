@@ -1,0 +1,10 @@
+[
+  {
+    "id": 1,
+    "name": "Dust Racing 2D",
+    "description": "A fun retro-style 2D racing game with multiple tracks and challenges.",
+    "icon": "🏎️",
+    "type": "external",
+    "downloadUrl": "./Dust Racing/DustRacing2D-master.zip"
+  }
+]
