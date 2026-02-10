@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dust Racing 2D</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .game-wrapper {
+            background: #0a0a0a;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            padding: 20px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        #gameCanvas {
+            border: 3px solid #333;
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 100%);
+        }
+
+        .info {
+            color: #fff;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+            color: #fff;
+        }
+
+        .stat-box {
+            background: #222;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            border: 1px solid #444;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .controls {
+            color: #aaa;
+            margin-top: 15px;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-wrapper">
+        <canvas id="gameCanvas" width="600" height="400"></canvas>
+        
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-label">Speed</div>
+                <div class="stat-value" id="speed">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Position</div>
+                <div class="stat-value" id="position">1st</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Lap</div>
+                <div class="stat-value" id="lap">1/3</div>
+            </div>
+        </div>
+
+        <div class="info">
+            <strong>🏁 Dust Racing 2D 🏁</strong>
+        </div>
+
+        <div class="controls">
+            <strong>Controls:</strong><br>
+            ⬆️ Arrow Up / W - Accelerate<br>
+            ⬇️ Arrow Down / S - Brake<br>
+            ⬅️ Arrow Left / A - Turn Left<br>
+            ➡️ Arrow Right / D - Turn Right<br>
+            Space - Handbrake
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Game state
+        const game = {
+            camera: { x: 0, y: 0 },
+            lap: 1,
+            maxLaps: 3,
+            finished: false,
+            position: 1,
+            checkpoints: [
+                { x: 300, y: 200, passed: false },
+                { x: 500, y: 200, passed: false },
+                { x: 500, y: 50, passed: false },
+                { x: 300, y: 50, passed: false }
+            ]
+        };
+
+        // Player car
+        const player = {
+            x: 100,
+            y: 300,
+            width: 20,
+            height: 35,
+            angle: 0,
+            speed: 0,
+            maxSpeed: 8,
+            acceleration: 0.2,
+            friction: 0.95,
+            rotationSpeed: 0.1
+        };
+
+        // Keyboard input
+        const keys = {};
+        window.addEventListener('keydown', (e) => keys[e.key] = true);
+        window.addEventListener('keyup', (e) => keys[e.key] = false);
+
+        // Track definition
+        const track = {
+            width: 600,
+            height: 800,
+            trackWidth: 100
+        };
+
+        function drawTrack() {
+            // Grass
+            ctx.fillStyle = '#2d5016';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Track
+            ctx.fillStyle = '#333';
+            ctx.fillRect(150, 0, 300, 400);
+
+            // Road markings (center line)
+            ctx.strokeStyle = '#ffff00';
+            ctx.setLineDash([20, 10]);
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(300, 0);
+            ctx.lineTo(300, 400);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Start/Finish line
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.fillRect(150, 380, 300, 20);
+
+            // Checkpoints visual
+            ctx.strokeStyle = 'rgba(0, 255, 0, 0.2)';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([5, 5]);
+            for (let cp of game.checkpoints) {
+                ctx.strokeRect(cp.x - 40, cp.y - 2, 80, 4);
+            }
+            ctx.setLineDash([]);
+        }
+
+        function drawCar(car, x, y) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(car.angle);
+
+            // Car body
+            ctx.fillStyle = '#ff2233';
+            ctx.fillRect(-car.width / 2, -car.height / 2, car.width, car.height);
+
+            // Car window
+            ctx.fillStyle = '#44aaff';
+            ctx.fillRect(-car.width / 2 + 2, -car.height / 2 + 5, car.width - 4, 10);
+
+            // Headlights
+            ctx.fillStyle = '#ffff00';
+            ctx.fillRect(-6, -car.height / 2 - 2, 4, 3);
+            ctx.fillRect(2, -car.height / 2 - 2, 4, 3);
+
+            ctx.restore();
+        }
+
+        function updatePlayer() {
+            let inputX = 0;
+            let inputY = 0;
+
+            // Handle input
+            if (keys['ArrowUp'] || keys['w'] || keys['W']) inputY = -1;
+            if (keys['ArrowDown'] || keys['s'] || keys['S']) inputY = 1;
+            if (keys['ArrowLeft'] || keys['a'] || keys['A']) inputX = -1;
+            if (keys['ArrowRight'] || keys['d'] || keys['D']) inputX = 1;
+
+            // Acceleration/Braking
+            if (inputY === -1) {
+                player.speed = Math.min(player.speed + player.acceleration, player.maxSpeed);
+            } else if (inputY === 1) {
+                player.speed = Math.max(player.speed - player.acceleration * 2, -player.maxSpeed * 0.5);
+            }
+
+            // Rotation
+            if (inputX !== 0 && player.speed !== 0) {
+                player.angle += inputX * player.rotationSpeed * (player.speed / player.maxSpeed);
+            }
+
+            // Apply friction
+            player.speed *= player.friction;
+
+            // Update position
+            player.x += Math.cos(player.angle) * player.speed;
+            player.y += Math.sin(player.angle) * player.speed;
+
+            // Track collision (simple boundaries)
+            if (player.x < 160 || player.x > 440) {
+                player.speed *= -0.5;
+                player.x = Math.max(160, Math.min(440, player.x));
+            }
+            if (player.y < 10 || player.y > 390) {
+                player.speed *= -0.5;
+                player.y = Math.max(10, Math.min(390, player.y));
+            }
+
+            // Check checkpoints
+            for (let i = 0; i < game.checkpoints.length; i++) {
+                const cp = game.checkpoints[i];
+                const dist = Math.hypot(player.x - cp.x, player.y - cp.y);
+                if (dist < 50) {
+                    if (!cp.passed) {
+                        cp.passed = true;
+                    }
+                }
+            }
+
+            // Check if all checkpoints passed (lap complete)
+            if (game.checkpoints.every(cp => cp.passed) && 200 < player.y) {
+                if (game.lap < game.maxLaps) {
+                    game.lap++;
+                    game.checkpoints.forEach(cp => cp.passed = false);
+                } else {
+                    game.finished = true;
+                }
+            }
+        }
+
+        function draw() {
+            // Clear canvas
+            ctx.fillStyle = '#2d5016';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            drawTrack();
+            drawCar(player, player.x, player.y);
+
+            // Update stats display
+            document.getElementById('speed').textContent = Math.abs(Math.round(player.speed * 10));
+            document.getElementById('lap').textContent = game.lap + '/' + game.maxLaps;
+            document.getElementById('position').textContent = game.finished ? '🏁 Finished!' : '1st';
+        }
+
+        function update() {
+            updatePlayer();
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Start game
+        gameLoop();
+    </script>
+</body>
+</html>

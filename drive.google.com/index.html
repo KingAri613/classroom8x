@@ -353,11 +353,11 @@
                             <div class="game-title">${this.escapeHtml(game.name)}</div>
                             <p style="font-size: 0.85em; color: #666; margin-bottom: 10px;">${this.escapeHtml(game.description || '')}</p>
                             <div class="game-buttons">
-                                ${game.type === 'external' ? 
+                                ${game.type === 'playable' ? 
+                                    `<button class="btn-small btn-play" onclick="gameManager.playGame(${game.id})">Play</button>` :
                                     `<a href="${game.downloadUrl}" download style="text-decoration: none; flex: 1;">
                                         <button class="btn-small btn-play" style="width: 100%;">Download</button>
-                                    </a>` :
-                                    `<button class="btn-small btn-play" onclick="gameManager.playGame(${game.id})">Play</button>`
+                                    </a>`
                                 }
                             </div>
                         </div>
