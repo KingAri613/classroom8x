@@ -77,51 +77,68 @@
     </div>
 
     <script>
-        // Get game ID from URL
-        const params = new URLSearchParams(window.location.search);
-        const gameId = parseInt(params.get('gameId'));
+                // Determine game source from URL: either `gameId` (localStorage) or `gameUrl` (file in repo)
+                const params = new URLSearchParams(window.location.search);
+                const gameIdParam = params.get('gameId');
+                const gameUrlParam = params.get('gameUrl');
 
-        if (!gameId) {
-            document.getElementById('container').innerHTML = `
-                <div class="error">
-                    <h2>Error</h2>
-                    <p>No game ID provided</p>
-                </div>
-            `;
-        }
+                if (!gameIdParam && !gameUrlParam) {
+                    document.getElementById('container').innerHTML = `
+                        <div class="error">
+                            <h2>Error</h2>
+                            <p>No game specified</p>
+                        </div>
+                    `;
+                }
 
-        // Load game from localStorage
-        const games = JSON.parse(localStorage.getItem('games')) || [];
-        const game = games.find(g => g.id === gameId);
+                if (gameUrlParam) {
+                    loadGameFromUrl(decodeURIComponent(gameUrlParam));
+                } else if (gameIdParam) {
+                    const maybeId = isNaN(parseInt(gameIdParam)) ? gameIdParam : parseInt(gameIdParam);
+                    const games = JSON.parse(localStorage.getItem('games')) || [];
+                    const game = games.find(g => g.id === maybeId);
+                    if (!game) {
+                        document.getElementById('container').innerHTML = `
+                            <div class="error">
+                                <h2>Game Not Found</h2>
+                                <p>The game could not be loaded</p>
+                            </div>
+                        `;
+                    } else {
+                        extractAndRunGameFromBuffer(game.data);
+                    }
+                }
 
-        if (!game) {
-            document.getElementById('container').innerHTML = `
-                <div class="error">
-                    <h2>Game Not Found</h2>
-                    <p>The game could not be loaded</p>
-                </div>
-            `;
-        } else {
-            // Extract and run the game
-            extractAndRunGame(game);
-        }
-
-        async function extractAndRunGame(game) {
+        async function loadGameFromUrl(url) {
             try {
-                // Convert array buffer to JSZip
-                const zip = new JSZip();
-                const loaded = await zip.loadAsync(game.data);
+                const resp = await fetch(url);
+                if (!resp.ok) throw new Error('Failed to fetch game');
+                const buffer = await resp.arrayBuffer();
+                await extractAndRunGameFromBuffer(buffer);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('container').innerHTML = `
+                    <div class="error">
+                        <h2>Error Loading Game</h2>
+                        <p>${err.message}</p>
+                    </div>
+                `;
+            }
+        }
 
-                // Find the main HTML file (index.html or first HTML file)
+        async function extractAndRunGameFromBuffer(arrayBuffer) {
+            try {
+                const zip = new JSZip();
+                const loaded = await zip.loadAsync(arrayBuffer);
+
+                // Find the main HTML file (index.html or first top-level HTML file)
                 let mainHtmlFile = null;
                 let mainHtmlContent = null;
 
-                // First try to find index.html
                 if (loaded.file('index.html')) {
                     mainHtmlFile = 'index.html';
                     mainHtmlContent = await loaded.file('index.html').async('string');
                 } else {
-                    // Otherwise find the first HTML file
                     for (const [filename, file] of Object.entries(loaded.files)) {
                         if (filename.endsWith('.html') && !filename.includes('/')) {
                             mainHtmlFile = filename;
@@ -131,21 +148,12 @@
                     }
                 }
 
-                if (!mainHtmlContent) {
-                    throw new Error('No HTML file found in the game ZIP');
-                }
+                if (!mainHtmlContent) throw new Error('No HTML file found in the game ZIP');
 
-                // Create a blob URL for the game by building a data URL
-                // We'll create an HTML file that references all resources from the zip
                 const htmlWithResources = await buildGameHTML(zip, mainHtmlContent, mainHtmlFile);
-
-                // Create blob and object URL
                 const blob = new Blob([htmlWithResources], { type: 'text/html' });
                 const blobUrl = URL.createObjectURL(blob);
-
-                // Display game in iframe
                 document.getElementById('container').innerHTML = `<iframe src="${blobUrl}" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>`;
-
             } catch (error) {
                 console.error('Error loading game:', error);
                 document.getElementById('container').innerHTML = `

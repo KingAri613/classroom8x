@@ -116,6 +116,11 @@
             color: white;
         }
 
+        /* Improved card layout */
+        .game-card { display: flex; flex-direction: column; }
+        .game-info { display: flex; flex-direction: column; gap: 8px; }
+        .game-meta { font-size: 0.85em; color: #666; }
+
         .game-info {
             padding: 15px;
         }
@@ -334,6 +339,23 @@
             constructor() {
                 this.games = JSON.parse(localStorage.getItem('games')) || [];
                 this.render();
+
+                // If user hasn't uploaded any games yet, add the bundled game
+                if (this.games.length === 0) {
+                    this.addBundledGame();
+                }
+            }
+
+            addBundledGame() {
+                const bundled = {
+                    id: 'bundled-' + Date.now(),
+                    name: 'Escape Road (Bundled)',
+                    url: 'escape-road-game.zip',
+                    uploadDate: new Date().toLocaleString()
+                };
+                this.games.push(bundled);
+                this.save();
+                this.render();
             }
 
             addGame(name, zipData) {
@@ -382,9 +404,10 @@
                         <div class="game-thumbnail">🎮</div>
                         <div class="game-info">
                             <div class="game-title">${this.escapeHtml(game.name)}</div>
+                            <div class="game-meta">${game.uploadDate ? this.escapeHtml(game.uploadDate) : ''}${game.url ? ' • bundled' : ''}</div>
                             <div class="game-buttons">
-                                <button class="btn-small btn-play" onclick="gameManager.playGame(${game.id})">Play</button>
-                                <button class="btn-small btn-delete" onclick="gameManager.deleteGame(${game.id})">Delete</button>
+                                <button class="btn-small btn-play" onclick="gameManager.playGame(${JSON.stringify(game.id)})">Play</button>
+                                <button class="btn-small btn-delete" onclick="gameManager.deleteGame(${JSON.stringify(game.id)})">Delete</button>
                             </div>
                         </div>
                     </div>
@@ -398,12 +421,19 @@
                 // Display game in fullscreen iframe
                 const iframe = document.createElement('div');
                 iframe.className = 'iframe-container';
+                let src = '';
+                if (game.url) {
+                    src = `game-player.html?gameUrl=${encodeURIComponent(game.url)}`;
+                } else {
+                    // fallback to localStorage-based loading
+                    localStorage.setItem('currentGameId', id);
+                    src = `game-player.html?gameId=${id}`;
+                }
                 iframe.innerHTML = `
                     <button class="close-game-btn" onclick="this.parentElement.remove()">❌ Close Game</button>
-                    <iframe src="game-player.html?gameId=${id}" style="width: 100%; height: 100%; border: none;"></iframe>
+                    <iframe src="${src}" style="width: 100%; height: 100%; border: none;"></iframe>
                 `;
                 document.body.appendChild(iframe);
-                localStorage.setItem('currentGameId', id);
             }
 
             escapeHtml(text) {
