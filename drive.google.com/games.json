@@ -1,10 +1,11 @@
 [
   {
-    "id": 1,
-    "name": "Dust Racing 2D",
-    "description": "A fun retro-style 2D racing game. Accelerate, brake, and navigate through checkpoints to complete laps!",
-    "icon": "🏎️",
-    "type": "playable",
-    "gameUrl": "./games/dust-racing.html"
+    "id": "escape-road",
+    "name": "Escape Road",
+    "description": "A thrilling platformer game where you must navigate obstacles and escape to freedom!",
+    "icon": "🚗",
+    "categories": ["action", "platformer"],
+    "gameUrl": "escape road/escape road.html",
+    "rating": 4.5
   }
 ]

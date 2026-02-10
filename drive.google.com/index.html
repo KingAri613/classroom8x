@@ -12,517 +12,440 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #e94560;
+            --secondary: #0f3460;
+            --dark: #1a1a2e;
+            --light: #16213e;
+            --border: #0f3460;
+            --text: #eaeaea;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #1a1a2e;
+            color: #eaeaea;
             min-height: 100vh;
+        }
+
+        .header {
+            background: #16213e;
+            color: #eaeaea;
             padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        header {
             text-align: center;
-            color: white;
-            margin-bottom: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
-        h1 {
-            font-size: 3em;
+        .header h1 {
+            font-size: 2em;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        .subtitle {
-            font-size: 1.2em;
+        .header p {
             opacity: 0.9;
         }
 
-        .controls {
+        .container {
             display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            justify-content: center;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .btn {
-            padding: 12px 24px;
+        .sidebar {
+            width: 220px;
+            background: #16213e;
+            border-right: 1px solid #0f3460;
+            padding: 20px;
+            min-height: calc(100vh - 120px);
+            position: sticky;
+            top: 0;
+            max-height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar h3 {
+            font-size: 0.95em;
+            text-transform: uppercase;
+            color: #eaeaea;
+            margin: 15px 0 10px 0;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-list {
+            list-style: none;
+        }
+
+        .sidebar-list li {
+            margin: 8px 0;
+        }
+
+        .sidebar-list button {
+            width: 100%;
+            padding: 10px 12px;
             border: none;
-            border-radius: 8px;
-            font-size: 1em;
+            background: #0f3460;
+            color: #eaeaea;
+            text-align: left;
+            border-radius: 6px;
             cursor: pointer;
+            font-size: 0.95em;
             transition: all 0.3s ease;
-            font-weight: bold;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .sidebar-list button:hover {
+            background: #e94560;
             color: white;
-            border: 2px solid white;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-        }
-
-        .btn-secondary {
-            background: rgba(255,255,255,0.2);
+        .sidebar-list button.active {
+            background: #e94560;
             color: white;
-            border: 2px solid white;
+            font-weight: 600;
         }
 
-        .btn-secondary:hover {
-            background: rgba(255,255,255,0.3);
+        .search-box {
+            margin-bottom: 20px;
         }
 
-        #fileInput {
-            display: none;
+        .search-box input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #0f3460;
+            border-radius: 6px;
+            font-size: 0.95em;
+            transition: border-color 0.3s ease;
+            background: #0f3460;
+            color: #eaeaea;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #e94560;
+            box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.2);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #eaeaea;
         }
 
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 20px;
             margin-bottom: 40px;
         }
 
         .game-card {
-            background: white;
+            background: #16213e;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #0f3460;
         }
 
         .game-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.3);
+            border-color: #e94560;
         }
 
         .game-thumbnail {
             width: 100%;
-            height: 140px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 120px;
+            background: linear-gradient(135deg, #e94560 0%, #0f3460 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3em;
-            color: white;
+            font-size: 2.5em;
+            position: relative;
         }
 
-        /* Improved card layout */
-        .game-card { display: flex; flex-direction: column; }
-        .game-info { display: flex; flex-direction: column; gap: 8px; }
-        .game-meta { font-size: 0.85em; color: #666; }
+        .game-rating {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 193, 7, 0.95);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
 
         .game-info {
-            padding: 15px;
+            padding: 12px;
         }
 
         .game-title {
-            font-size: 1.1em;
-            font-weight: bold;
-            color: #333;
+            font-size: 1em;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #eaeaea;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .game-description {
+            font-size: 0.8em;
+            color: #aaa;
             margin-bottom: 10px;
-            word-break: break-word;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        .game-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-small {
-            flex: 1;
-            padding: 8px 12px;
+        .game-button {
+            width: 100%;
+            padding: 8px;
+            background: #e94560;
+            color: white;
             border: none;
             border-radius: 6px;
-            font-size: 0.9em;
             cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
             transition: all 0.3s ease;
-            font-weight: bold;
         }
 
-        .btn-play {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-play:hover {
-            transform: scale(1.05);
-        }
-
-        .btn-delete {
-            background: #ff6b6b;
-            color: white;
-        }
-
-        .btn-delete:hover {
-            background: #ee5a52;
+        .game-button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.5);
         }
 
         .empty-state {
             text-align: center;
-            color: white;
             padding: 60px 20px;
+            color: #aaa;
         }
 
         .empty-state h2 {
-            font-size: 2em;
-            margin-bottom: 15px;
+            font-size: 1.5em;
+            margin-bottom: 10px;
         }
 
-        .modal {
+        .modal-overlay {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
             align-items: center;
             justify-content: center;
         }
 
-        .modal.active {
+        .modal-overlay.active {
             display: flex;
         }
 
-        .modal-content {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-        }
-
-        .modal h2 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .upload-area {
-            border: 3px dashed #667eea;
-            border-radius: 8px;
-            padding: 40px 20px;
-            text-align: center;
-            background: rgba(102, 126, 234, 0.1);
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .upload-area:hover {
-            background: rgba(102, 126, 234, 0.2);
-            border-color: #764ba2;
-        }
-
-        .upload-area.dragover {
-            background: rgba(102, 126, 234, 0.3);
-            border-color: #764ba2;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e0e0e0;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-
-        .iframe-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2000;
-            background: black;
-        }
-
-        .close-game-btn {
+        .close-button {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 2001;
-            padding: 10px 20px;
-            background: white;
-            color: black;
-            border: none;
+            padding: 12px 20px;
+            background: #16213e;
+            color: #eaeaea;
+            border: 1px solid #e94560;
             border-radius: 6px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 0.95em;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
-        .close-game-btn:hover {
-            background: #f0f0f0;
-        }
-
-        .stats {
+        .close-button:hover {
+            background: #e94560;
             color: white;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 1.1em;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #0f3460;
+                min-height: auto;
+                max-height: none;
+                position: static;
+                padding: 15px;
+            }
+
+            .games-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 15px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="header">
+        <h1>🎮 Game Hub</h1>
+        <p>Play amazing games instantly</p>
+    </div>
+
     <div class="container">
-        <header>
-            <h1>🎮 Games Hub</h1>
-            <p class="subtitle">Play your favorite games anytime, anywhere</p>
-        </header>
-
-        <div class="stats">
-            <p>Total Games: <strong id="gameCount">0</strong></p>
-        </div>
-
-        <div class="controls">
-            <button class="btn btn-primary" onclick="openUploadModal()">📤 Upload Game</button>
-            <button class="btn btn-primary" onclick="window.location.href='game-player.html'">▶️ Open Game Player</button>
-            <button class="btn btn-secondary" onclick="syncLocalStorage()">🔄 Refresh Games</button>
-        </div>
-
-        <div class="games-grid" id="gamesGrid">
-            <div class="empty-state">
-                <h2>No games yet!</h2>
-                <p>Click "Upload Game" to add your first game.</p>
+        <aside class="sidebar">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search games...">
             </div>
-        </div>
+
+            <h3>Categories</h3>
+            <ul class="sidebar-list">
+                <li><button class="category-btn active" data-category="all">All Games</button></li>
+                <li><button class="category-btn" data-category="action">Action</button></li>
+                <li><button class="category-btn" data-category="platformer">Platformer</button></li>
+                <li><button class="category-btn" data-category="racing">Racing</button></li>
+                <li><button class="category-btn" data-category="puzzle">Puzzle</button></li>
+                <li><button class="category-btn" data-category="2player">2 Player</button></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <h2 class="section-title" id="sectionTitle">All Games</h2>
+            <div class="games-grid" id="gamesGrid">
+                <div class="empty-state">
+                    <h2>Loading games...</h2>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <!-- Upload Modal -->
-    <div class="modal" id="uploadModal">
-        <div class="modal-content">
-            <h2>Upload Game (ZIP File)</h2>
-            <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
-                <p>📦 Click to select or drag & drop a ZIP file</p>
-                <p style="font-size: 0.9em; color: #666; margin-top: 10px;">Supported: .zip files</p>
-            </div>
-            <div class="progress-bar" id="progressBar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="closeUploadModal()">Cancel</button>
-            </div>
-        </div>
+    <div class="modal-overlay" id="gameModal">
+        <button class="close-button" onclick="closeGame()">✕ Close Game</button>
+        <iframe id="gameFrame"></iframe>
     </div>
-
-    <input type="file" id="fileInput" accept=".zip" onchange="handleFileSelect(event)">
 
     <script>
-        // Game management system
-        class GameManager {
-            constructor() {
-                this.games = JSON.parse(localStorage.getItem('games')) || [];
-                this.render();
+        let allGames = [];
+        let filteredGames = [];
+        let currentCategory = 'all';
+        let currentSearch = '';
 
-                // If user hasn't uploaded any games yet, add the bundled game
-                if (this.games.length === 0) {
-                    this.addBundledGame();
-                }
-            }
-
-            addBundledGame() {
-                const bundled = {
-                    id: 'bundled-' + Date.now(),
-                    name: 'Escape Road (Bundled)',
-                    url: 'escape-road-game.zip',
-                    uploadDate: new Date().toLocaleString()
-                };
-                this.games.push(bundled);
-                this.save();
-                this.render();
-            }
-
-            addGame(name, zipData) {
-                const game = {
-                    id: Date.now(),
-                    name: name,
-                    data: zipData,
-                    uploadDate: new Date().toLocaleString()
-                };
-                this.games.push(game);
-                this.save();
-                this.render();
-            }
-
-            deleteGame(id) {
-                this.games = this.games.filter(g => g.id !== id);
-                this.save();
-                this.render();
-            }
-
-            getGame(id) {
-                return this.games.find(g => g.id === id);
-            }
-
-            save() {
-                localStorage.setItem('games', JSON.stringify(this.games));
-            }
-
-            render() {
-                const grid = document.getElementById('gamesGrid');
-                const count = document.getElementById('gameCount');
-                count.textContent = this.games.length;
-
-                if (this.games.length === 0) {
-                    grid.innerHTML = `
-                        <div class="empty-state">
-                            <h2>No games yet!</h2>
-                            <p>Click "Upload Game" to add your first game.</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                grid.innerHTML = this.games.map(game => `
-                    <div class="game-card">
-                        <div class="game-thumbnail">🎮</div>
-                        <div class="game-info">
-                            <div class="game-title">${this.escapeHtml(game.name)}</div>
-                            <div class="game-meta">${game.uploadDate ? this.escapeHtml(game.uploadDate) : ''}${game.url ? ' • bundled' : ''}</div>
-                            <div class="game-buttons">
-                                <button class="btn-small btn-play" onclick="gameManager.playGame(${JSON.stringify(game.id)})">Play</button>
-                                <button class="btn-small btn-delete" onclick="gameManager.deleteGame(${JSON.stringify(game.id)})">Delete</button>
-                            </div>
-                        </div>
+        // Load games
+        async function loadGames() {
+            try {
+                const response = await fetch('games.json');
+                allGames = await response.json();
+                renderGames(allGames);
+            } catch (error) {
+                console.error('Error loading games:', error);
+                document.getElementById('gamesGrid').innerHTML = `
+                    <div class="empty-state">
+                        <h2>Error loading games</h2>
+                        <p>Please check the console for more details.</p>
                     </div>
-                `).join('');
-            }
-
-            playGame(id) {
-                const game = this.getGame(id);
-                if (!game) return;
-
-                // Display game in fullscreen iframe
-                const iframe = document.createElement('div');
-                iframe.className = 'iframe-container';
-                let src = '';
-                if (game.url) {
-                    src = `game-player.html?gameUrl=${encodeURIComponent(game.url)}`;
-                } else {
-                    // fallback to localStorage-based loading
-                    localStorage.setItem('currentGameId', id);
-                    src = `game-player.html?gameId=${id}`;
-                }
-                iframe.innerHTML = `
-                    <button class="close-game-btn" onclick="this.parentElement.remove()">❌ Close Game</button>
-                    <iframe src="${src}" style="width: 100%; height: 100%; border: none;"></iframe>
                 `;
-                document.body.appendChild(iframe);
-            }
-
-            escapeHtml(text) {
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
             }
         }
 
-        let gameManager = new GameManager();
-
-        function openUploadModal() {
-            document.getElementById('uploadModal').classList.add('active');
+        function filterGames() {
+            filteredGames = allGames.filter(game => {
+                const matchesCategory = currentCategory === 'all' || 
+                    (game.categories && game.categories.includes(currentCategory));
+                const matchesSearch = currentSearch === '' ||
+                    game.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                    game.description.toLowerCase().includes(currentSearch.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+            renderGames(filteredGames);
         }
 
-        function closeUploadModal() {
-            document.getElementById('uploadModal').classList.remove('active');
-        }
-
-        function handleFileSelect(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            if (!file.type.includes('zip') && !file.name.endsWith('.zip')) {
-                alert('Please select a ZIP file');
+        function renderGames(games) {
+            const grid = document.getElementById('gamesGrid');
+            
+            if (games.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <h2>No games found</h2>
+                        <p>Try adjusting your filters or search.</p>
+                    </div>
+                `;
                 return;
             }
 
-            const reader = new FileReader();
-            const progressBar = document.getElementById('progressBar');
-            const progressFill = document.getElementById('progressFill');
-
-            reader.onprogress = (e) => {
-                if (e.lengthComputable) {
-                    const percentComplete = (e.loaded / e.total) * 100;
-                    progressFill.style.width = percentComplete + '%';
-                    progressBar.style.display = 'block';
-                }
-            };
-
-            reader.onload = (e) => {
-                const gameName = file.name.replace('.zip', '');
-                gameManager.addGame(gameName, e.target.result);
-                closeUploadModal();
-                alert(`Game "${gameName}" uploaded successfully!`);
-                event.target.value = '';
-                progressFill.style.width = '0%';
-                progressBar.style.display = 'none';
-            };
-
-            reader.onerror = () => {
-                alert('Error reading file');
-            };
-
-            reader.readAsArrayBuffer(file);
+            grid.innerHTML = games.map(game => `
+                <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}')">
+                    <div class="game-thumbnail">
+                        ${game.icon}
+                        ${game.rating ? `<div class="game-rating">⭐ ${game.rating}</div>` : ''}
+                    </div>
+                    <div class="game-info">
+                        <div class="game-title">${game.name}</div>
+                        <div class="game-description">${game.description}</div>
+                        <button class="game-button" onclick="event.stopPropagation(); playGame('${game.gameUrl}', '${game.name}')">Play Now</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function syncLocalStorage() {
-            gameManager = new GameManager();
-            alert('Games synced!');
+        function playGame(gameUrl, gameName) {
+            document.getElementById('gameFrame').src = gameUrl;
+            document.getElementById('gameModal').classList.add('active');
         }
 
-        // Setup drag and drop
-        const uploadArea = document.getElementById('uploadArea');
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
+        function closeGame() {
+            document.getElementById('gameModal').classList.remove('active');
+            document.getElementById('gameFrame').src = '';
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            currentSearch = e.target.value;
+            filterGames();
         });
 
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentCategory = e.target.dataset.category;
+                const titles = {
+                    'all': 'All Games',
+                    'action': 'Action Games',
+                    'platformer': 'Platformer Games',
+                    'racing': 'Racing Games',
+                    'puzzle': 'Puzzle Games',
+                    '2player': '2 Player Games'
+                };
+                document.getElementById('sectionTitle').textContent = titles[currentCategory];
+                filterGames();
+            });
         });
 
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                document.getElementById('fileInput').files = files;
-                handleFileSelect({ target: { files: files } });
-            }
+        // Close game modal on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeGame();
         });
 
-        // Close modal on outside click
-        document.getElementById('uploadModal').addEventListener('click', (e) => {
-            if (e.target.id === 'uploadModal') {
-                closeUploadModal();
-            }
-        });
+        // Load games on page load
+        loadGames();
     </script>
 </body>
 </html>

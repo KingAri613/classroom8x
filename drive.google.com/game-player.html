@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Classroom</title>
     <link rel="icon" href="https://www.gstatic.com/images/branding/product/1x/classroom_48dp.png">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -15,7 +14,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #000;
+            background: #1a1a2e;
             width: 100%;
             height: 100vh;
             overflow: hidden;
@@ -30,14 +29,14 @@
         }
 
         .loading {
-            color: white;
+            color: #eaeaea;
             text-align: center;
             font-size: 1.5em;
         }
 
         .spinner {
-            border: 4px solid rgba(255,255,255,0.3);
-            border-top: 4px solid white;
+            border: 4px solid rgba(233, 69, 96, 0.3);
+            border-top: 4px solid #e94560;
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -57,13 +56,13 @@
         }
 
         .error {
-            color: white;
+            color: #eaeaea;
             padding: 20px;
             text-align: center;
         }
 
         .error h2 {
-            color: #ff6b6b;
+            color: #e94560;
             margin-bottom: 15px;
         }
     </style>
@@ -77,187 +76,24 @@
     </div>
 
     <script>
-                // Determine game source from URL: either `gameId` (localStorage) or `gameUrl` (file in repo)
-                const params = new URLSearchParams(window.location.search);
-                const gameIdParam = params.get('gameId');
-                const gameUrlParam = params.get('gameUrl');
+        // Get game file path from URL
+        const params = new URLSearchParams(window.location.search);
+        const gameUrl = params.get('gameUrl');
 
-                if (!gameIdParam && !gameUrlParam) {
-                    document.getElementById('container').innerHTML = `
-                        <div class="error">
-                            <h2>Error</h2>
-                            <p>No game specified</p>
-                        </div>
-                    `;
-                }
-
-                if (gameUrlParam) {
-                    loadGameFromUrl(decodeURIComponent(gameUrlParam));
-                } else if (gameIdParam) {
-                    const maybeId = isNaN(parseInt(gameIdParam)) ? gameIdParam : parseInt(gameIdParam);
-                    const games = JSON.parse(localStorage.getItem('games')) || [];
-                    const game = games.find(g => g.id === maybeId);
-                    if (!game) {
-                        document.getElementById('container').innerHTML = `
-                            <div class="error">
-                                <h2>Game Not Found</h2>
-                                <p>The game could not be loaded</p>
-                            </div>
-                        `;
-                    } else {
-                        extractAndRunGameFromBuffer(game.data);
-                    }
-                }
-
-        async function loadGameFromUrl(url) {
-            try {
-                const resp = await fetch(url);
-                if (!resp.ok) throw new Error('Failed to fetch game');
-                const buffer = await resp.arrayBuffer();
-                await extractAndRunGameFromBuffer(buffer);
-            } catch (err) {
-                console.error(err);
-                document.getElementById('container').innerHTML = `
-                    <div class="error">
-                        <h2>Error Loading Game</h2>
-                        <p>${err.message}</p>
-                    </div>
-                `;
-            }
-        }
-
-        async function extractAndRunGameFromBuffer(arrayBuffer) {
-            try {
-                const zip = new JSZip();
-                const loaded = await zip.loadAsync(arrayBuffer);
-
-                // Find the main HTML file (index.html or first top-level HTML file)
-                let mainHtmlFile = null;
-                let mainHtmlContent = null;
-
-                if (loaded.file('index.html')) {
-                    mainHtmlFile = 'index.html';
-                    mainHtmlContent = await loaded.file('index.html').async('string');
-                } else {
-                    for (const [filename, file] of Object.entries(loaded.files)) {
-                        if (filename.endsWith('.html') && !filename.includes('/')) {
-                            mainHtmlFile = filename;
-                            mainHtmlContent = await file.async('string');
-                            break;
-                        }
-                    }
-                }
-
-                if (!mainHtmlContent) throw new Error('No HTML file found in the game ZIP');
-
-                const htmlWithResources = await buildGameHTML(zip, mainHtmlContent, mainHtmlFile);
-                const blob = new Blob([htmlWithResources], { type: 'text/html' });
-                const blobUrl = URL.createObjectURL(blob);
-                document.getElementById('container').innerHTML = `<iframe src="${blobUrl}" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>`;
-            } catch (error) {
-                console.error('Error loading game:', error);
-                document.getElementById('container').innerHTML = `
-                    <div class="error">
-                        <h2>Error Loading Game</h2>
-                        <p>${error.message}</p>
-                    </div>
-                `;
-            }
-        }
-
-        async function buildGameHTML(zip, mainHtmlContent, baseFile) {
-            // Parse the HTML to find resource references
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(mainHtmlContent, 'text/html');
-
-            // Process stylesheets
-            const styles = doc.querySelectorAll('link[rel="stylesheet"]');
-            for (const link of styles) {
-                const href = link.getAttribute('href');
-                const relativePath = resolveFilePath(baseFile, href);
-                const file = zip.file(relativePath);
-                
-                if (file) {
-                    try {
-                        const content = await file.async('string');
-                        const style = doc.createElement('style');
-                        style.textContent = content;
-                        link.replaceWith(style);
-                    } catch (e) {
-                        console.warn('Could not load stylesheet:', href);
-                    }
-                }
-            }
-
-            // Process scripts
-            const scripts = doc.querySelectorAll('script[src]');
-            for (const script of scripts) {
-                const src = script.getAttribute('src');
-                const relativePath = resolveFilePath(baseFile, src);
-                const file = zip.file(relativePath);
-                
-                if (file) {
-                    try {
-                        const content = await file.async('string');
-                        const newScript = doc.createElement('script');
-                        newScript.textContent = content;
-                        script.replaceWith(newScript);
-                    } catch (e) {
-                        console.warn('Could not load script:', src);
-                    }
-                }
-            }
-
-            // Process images
-            const images = doc.querySelectorAll('img');
-            for (const img of images) {
-                const src = img.getAttribute('src');
-                if (!src.startsWith('data:') && !src.startsWith('http')) {
-                    const relativePath = resolveFilePath(baseFile, src);
-                    const file = zip.file(relativePath);
-                    
-                    if (file) {
-                        try {
-                            const content = await file.async('arraybuffer');
-                            const blob = new Blob([content]);
-                            const blobUrl = URL.createObjectURL(blob);
-                            img.setAttribute('src', blobUrl);
-                        } catch (e) {
-                            console.warn('Could not load image:', src);
-                        }
-                    }
-                }
-            }
-
-            // Add base tag to handle relative URLs
-            const base = doc.createElement('base');
-            base.href = window.location.href;
-            doc.head.appendChild(base);
-
-            return doc.documentElement.outerHTML;
-        }
-
-        function resolveFilePath(basePath, relativePath) {
-            if (relativePath.startsWith('/')) {
-                return relativePath.substring(1);
-            }
-
-            const baseDir = basePath.substring(0, basePath.lastIndexOf('/'));
-            let resolved = baseDir ? baseDir + '/' : '';
-
-            const parts = relativePath.split('/');
-            for (const part of parts) {
-                if (part === '.') {
-                    continue;
-                } else if (part === '..') {
-                    resolved = resolved.substring(0, resolved.lastIndexOf('/'));
-                    if (resolved) resolved += '/';
-                } else if (part) {
-                    resolved += part + '/';
-                }
-            }
-
-            return resolved.endsWith('/') ? resolved.substring(0, resolved.length - 1) : resolved;
+        if (!gameUrl) {
+            document.getElementById('container').innerHTML = `
+                <div class="error">
+                    <h2>Error</h2>
+                    <p>No game specified</p>
+                </div>
+            `;
+        } else {
+            // Load game directly from file path
+            const gameFrame = document.createElement('iframe');
+            gameFrame.src = decodeURIComponent(gameUrl);
+            gameFrame.sandbox = 'allow-scripts allow-same-origin allow-popups allow-forms allow-presentation allow-modals';
+            document.getElementById('container').innerHTML = '';
+            document.getElementById('container').appendChild(gameFrame);
         }
     </script>
 </body>
