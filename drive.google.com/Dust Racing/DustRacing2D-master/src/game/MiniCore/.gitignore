@@ -1,8 +1,0 @@
-cmake_*cmake
-moc_*
-*_automoc*
-*.a
-*CTest*
-CMakeFiles
-Makefile
-

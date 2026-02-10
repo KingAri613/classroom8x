@@ -295,7 +295,8 @@
         </div>
 
         <div class="controls">
-            <button class="btn btn-secondary" onclick="loadGames()">🔄 Refresh Games</button>
+            <button class="btn btn-primary" onclick="openUploadModal()">📤 Upload Game</button>
+            <button class="btn btn-secondary" onclick="syncLocalStorage()">🔄 Refresh Games</button>
         </div>
 
         <div class="games-grid" id="gamesGrid">
@@ -307,28 +308,56 @@
     </div>
 
     <!-- Upload Modal -->
-    <!-- Removed: Games are now loaded from games.json -->
+    <div class="modal" id="uploadModal">
+        <div class="modal-content">
+            <h2>Upload Game (ZIP File)</h2>
+            <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                <p>📦 Click to select or drag & drop a ZIP file</p>
+                <p style="font-size: 0.9em; color: #666; margin-top: 10px;">Supported: .zip files</p>
+            </div>
+            <div class="progress-bar" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeUploadModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
 
-    <input type="file" id="fileInput" accept=".zip" onchange="handleFileSelect(event)" style="display: none;">
+    <input type="file" id="fileInput" accept=".zip" onchange="handleFileSelect(event)">
 
     <script>
         // Game management system
         class GameManager {
             constructor() {
-                this.games = [];
-                this.loadGamesFromFile();
+                this.games = JSON.parse(localStorage.getItem('games')) || [];
+                this.render();
             }
 
-            async loadGamesFromFile() {
-                try {
-                    const response = await fetch('./games.json');
-                    const games = await response.json();
-                    this.games = games;
-                    this.render();
-                } catch (error) {
-                    console.error('Error loading games:', error);
-                    this.showError('Failed to load games');
-                }
+            addGame(name, zipData) {
+                const game = {
+                    id: Date.now(),
+                    name: name,
+                    data: zipData,
+                    uploadDate: new Date().toLocaleString()
+                };
+                this.games.push(game);
+                this.save();
+                this.render();
+            }
+
+            deleteGame(id) {
+                this.games = this.games.filter(g => g.id !== id);
+                this.save();
+                this.render();
+            }
+
+            getGame(id) {
+                return this.games.find(g => g.id === id);
+            }
+
+            save() {
+                localStorage.setItem('games', JSON.stringify(this.games));
             }
 
             render() {
@@ -339,8 +368,8 @@
                 if (this.games.length === 0) {
                     grid.innerHTML = `
                         <div class="empty-state">
-                            <h2>No games available.</h2>
-                            <p>Check back soon for more games!</p>
+                            <h2>No games yet!</h2>
+                            <p>Click "Upload Game" to add your first game.</p>
                         </div>
                     `;
                     return;
@@ -348,17 +377,12 @@
 
                 grid.innerHTML = this.games.map(game => `
                     <div class="game-card">
-                        <div class="game-thumbnail">${game.icon || '🎮'}</div>
+                        <div class="game-thumbnail">🎮</div>
                         <div class="game-info">
                             <div class="game-title">${this.escapeHtml(game.name)}</div>
-                            <p style="font-size: 0.85em; color: #666; margin-bottom: 10px;">${this.escapeHtml(game.description || '')}</p>
                             <div class="game-buttons">
-                                ${game.type === 'playable' ? 
-                                    `<button class="btn-small btn-play" onclick="gameManager.playGame(${game.id})">Play</button>` :
-                                    `<a href="${game.downloadUrl}" download style="text-decoration: none; flex: 1;">
-                                        <button class="btn-small btn-play" style="width: 100%;">Download</button>
-                                    </a>`
-                                }
+                                <button class="btn-small btn-play" onclick="gameManager.playGame(${game.id})">Play</button>
+                                <button class="btn-small btn-delete" onclick="gameManager.deleteGame(${game.id})">Delete</button>
                             </div>
                         </div>
                     </div>
@@ -366,29 +390,18 @@
             }
 
             playGame(id) {
-                const game = this.games.find(g => g.id === id);
+                const game = this.getGame(id);
                 if (!game) return;
 
-                if (game.gameUrl) {
-                    // Display game in fullscreen iframe
-                    const iframe = document.createElement('div');
-                    iframe.className = 'iframe-container';
-                    iframe.innerHTML = `
-                        <button class="close-game-btn" onclick="this.parentElement.remove()">❌ Close Game</button>
-                        <iframe src="${game.gameUrl}" style="width: 100%; height: 100%; border: none;"></iframe>
-                    `;
-                    document.body.appendChild(iframe);
-                }
-            }
-
-            showError(message) {
-                const grid = document.getElementById('gamesGrid');
-                grid.innerHTML = `
-                    <div class="empty-state">
-                        <h2>Error</h2>
-                        <p>${message}</p>
-                    </div>
+                // Display game in fullscreen iframe
+                const iframe = document.createElement('div');
+                iframe.className = 'iframe-container';
+                iframe.innerHTML = `
+                    <button class="close-game-btn" onclick="this.parentElement.remove()">❌ Close Game</button>
+                    <iframe src="game-player.html?gameId=${id}" style="width: 100%; height: 100%; border: none;"></iframe>
                 `;
+                document.body.appendChild(iframe);
+                localStorage.setItem('currentGameId', id);
             }
 
             escapeHtml(text) {
@@ -400,13 +413,8 @@
 
         let gameManager = new GameManager();
 
-        function loadGames() {
-            gameManager.loadGamesFromFile();
-            alert('Games refreshed!');
-        }
-
         function openUploadModal() {
-            alert('Games are pre-configured. Contact the admin to add new games.');
+            document.getElementById('uploadModal').classList.add('active');
         }
 
         function closeUploadModal() {
@@ -414,12 +422,75 @@
         }
 
         function handleFileSelect(event) {
-            // Upload functionality disabled
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.type.includes('zip') && !file.name.endsWith('.zip')) {
+                alert('Please select a ZIP file');
+                return;
+            }
+
+            const reader = new FileReader();
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+
+            reader.onprogress = (e) => {
+                if (e.lengthComputable) {
+                    const percentComplete = (e.loaded / e.total) * 100;
+                    progressFill.style.width = percentComplete + '%';
+                    progressBar.style.display = 'block';
+                }
+            };
+
+            reader.onload = (e) => {
+                const gameName = file.name.replace('.zip', '');
+                gameManager.addGame(gameName, e.target.result);
+                closeUploadModal();
+                alert(`Game "${gameName}" uploaded successfully!`);
+                event.target.value = '';
+                progressFill.style.width = '0%';
+                progressBar.style.display = 'none';
+            };
+
+            reader.onerror = () => {
+                alert('Error reading file');
+            };
+
+            reader.readAsArrayBuffer(file);
         }
 
         function syncLocalStorage() {
-            loadGames();
+            gameManager = new GameManager();
+            alert('Games synced!');
         }
+
+        // Setup drag and drop
+        const uploadArea = document.getElementById('uploadArea');
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('fileInput').files = files;
+                handleFileSelect({ target: { files: files } });
+            }
+        });
+
+        // Close modal on outside click
+        document.getElementById('uploadModal').addEventListener('click', (e) => {
+            if (e.target.id === 'uploadModal') {
+                closeUploadModal();
+            }
+        });
     </script>
 </body>
 </html>

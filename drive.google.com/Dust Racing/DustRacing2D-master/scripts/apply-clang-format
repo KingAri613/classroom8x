@@ -1,9 +1,0 @@
-#!/bin/bash
-
-CLANG_FORMAT=clang-format
-
-FILES=$(find src/editor src/game src/common -name *hpp -or -name *cpp -or -name *hh -or -name *cc -or -name *h | grep -v moc_ | grep -v qrc_)
-${CLANG_FORMAT} -i -style=file ${FILES}
-
-echo "Done."
-
