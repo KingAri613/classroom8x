@@ -4,6 +4,7 @@
     "name": "Escape Road",
     "description": "A thrilling platformer game where you must navigate obstacles and escape to freedom!",
     "icon": "🚗",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQU9XSu2gLIcURzrWyfi4IiQ7JAF8mCY7KbtGgx9foOI0KVOLp9kcRq0x9WDw&s",
     "categories": ["action", "platformer"],
     "gameUrl": "escape road/escape road.html",
     "rating": 4.5
@@ -13,6 +14,7 @@
     "name": "Candy Crush",
     "description": "Match candies and complete levels in this addictive puzzle game!",
     "icon": "🍭",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQU9XSu2gLIcURzrWyfi4IiQ7JAF8mCY7KbtGgx9foOI0KVOLp9kcRq0x9WDw&s",
     "categories": ["puzzle"],
     "gameUrl": "candy crush/index.html",
     "rating": 4.7
@@ -22,6 +24,7 @@
     "name": "Chess",
     "description": "Classic chess game - test your strategy and tactical skills.",
     "icon": "♟",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQU9XSu2gLIcURzrWyfi4IiQ7JAF8mCY7KbtGgx9foOI0KVOLp9kcRq0x9WDw&s",
     "categories": ["puzzle", "2player"],
     "gameUrl": "chess/index.html",
     "rating": 4.6
@@ -31,6 +34,7 @@
     "name": "Crossy Road",
     "description": "Cross the street while avoiding traffic and obstacles!",
     "icon": "🚦",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQISLpDCEkM8OcPawXq_jqM6TA4Tqx2Ep74eeht-Y87cEOihyhXSnXuhE9EIg&s",
     "categories": ["action", "platformer"],
     "gameUrl": "crossy road/index.html",
     "rating": 4.4
@@ -40,6 +44,7 @@
     "name": "Drive Mad",
     "description": "Drive through crazy tracks and complete insane stunts!",
     "icon": "🏎",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQf4S4preVjMGzTL5ksEANS9ZiUq5cm5keaMptKbDC0ITljThU2NXIwIRpQkFs&s",
     "categories": ["action", "racing"],
     "gameUrl": "drive mad/index.html",
     "rating": 4.8

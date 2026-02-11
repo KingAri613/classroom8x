@@ -31,18 +31,63 @@
         .header {
             background: #16213e;
             color: #eaeaea;
-            padding: 20px;
+            padding: 30px 20px;
             text-align: center;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .classroom-logo {
+            display: flex;
+            gap: 6px;
+            font-size: 2.5em;
+        }
+
+        .logo-block {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 1.2em;
+        }
+
+        .logo-red {
+            background: #EA4335;
+        }
+
+        .logo-yellow {
+            background: #FBBC04;
+        }
+
+        .logo-blue {
+            background: #4285F4;
+        }
+
+        .logo-green {
+            background: #34A853;
+        }
+
         .header h1 {
-            font-size: 2em;
-            margin-bottom: 10px;
+            font-size: 3em;
+            margin: 0;
+            font-weight: 700;
         }
 
         .header p {
             opacity: 0.9;
+            font-size: 1.3em;
+            margin-top: 8px;
         }
 
         .container {
@@ -64,7 +109,7 @@
         }
 
         .sidebar h3 {
-            font-size: 0.95em;
+            font-size: 1.2em;
             text-transform: uppercase;
             color: #eaeaea;
             margin: 15px 0 10px 0;
@@ -82,14 +127,14 @@
 
         .sidebar-list button {
             width: 100%;
-            padding: 10px 12px;
+            padding: 12px 14px;
             border: none;
             background: #0f3460;
             color: #eaeaea;
             text-align: left;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.95em;
+            font-size: 1.1em;
             transition: all 0.3s ease;
         }
 
@@ -110,10 +155,10 @@
 
         .search-box input {
             width: 100%;
-            padding: 10px 12px;
+            padding: 12px 14px;
             border: 1px solid #0f3460;
             border-radius: 6px;
-            font-size: 0.95em;
+            font-size: 1em;
             transition: border-color 0.3s ease;
             background: #0f3460;
             color: #eaeaea;
@@ -127,30 +172,33 @@
 
         .main-content {
             flex: 1;
-            padding: 30px;
+            padding: 40px;
         }
 
         .section-title {
-            font-size: 1.5em;
-            margin-bottom: 20px;
+            font-size: 2.2em;
+            margin-bottom: 30px;
             color: #eaeaea;
+            font-weight: 600;
         }
 
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
             margin-bottom: 40px;
         }
 
         .game-card {
             background: #16213e;
-            border-radius: 12px;
+            border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             cursor: pointer;
             transition: all 0.3s ease;
             border: 1px solid #0f3460;
+            position: relative;
+            aspect-ratio: 1;
         }
 
         .game-card:hover {
@@ -161,67 +209,83 @@
 
         .game-thumbnail {
             width: 100%;
-            height: 120px;
-            background: linear-gradient(135deg, #e94560 0%, #0f3460 100%);
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5em;
+            font-size: 4em;
             position: relative;
+            background-size: cover;
+            background-position: center;
         }
 
-        /* removed game-rating visuals (ratings hidden) */
+        .game-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
         .game-info {
-            padding: 12px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 26, 46, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 16px;
+        }
+
+        .game-card:hover .game-info {
+            opacity: 1;
         }
 
         .game-title {
-            font-size: 1em;
-            font-weight: 600;
-            margin-bottom: 6px;
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 20px;
             color: #eaeaea;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            text-align: center;
         }
 
         .game-description {
-            font-size: 0.8em;
-            color: #aaa;
-            margin-bottom: 10px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            display: none;
         }
 
         .game-button {
             width: 100%;
-            padding: 8px;
+            padding: 14px 20px;
             background: #e94560;
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 0.9em;
-            font-weight: 600;
+            font-size: 1.2em;
+            font-weight: 700;
             transition: all 0.3s ease;
         }
 
         .game-button:hover {
-            transform: scale(1.02);
+            transform: scale(1.05);
             box-shadow: 0 4px 12px rgba(233, 69, 96, 0.5);
+            background: #ff5a75;
         }
 
         .empty-state {
             text-align: center;
             padding: 60px 20px;
             color: #aaa;
+            grid-column: 1 / -1;
         }
 
         .empty-state h2 {
-            font-size: 1.5em;
+            font-size: 1.8em;
             margin-bottom: 10px;
         }
 
@@ -285,19 +349,39 @@
             }
 
             .games-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 15px;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 20px;
             }
 
             .main-content {
                 padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2.2em;
+            }
+
+            .header p {
+                font-size: 1.1em;
+            }
+
+            .section-title {
+                font-size: 1.8em;
             }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>🎮 Game Hub</h1>
+        <div class="logo-container">
+            <div class="classroom-logo">
+                <div class="logo-block logo-red"></div>
+                <div class="logo-block logo-yellow"></div>
+                <div class="logo-block logo-blue"></div>
+                <div class="logo-block logo-green"></div>
+            </div>
+        </div>
+        <h1>Game Hub</h1>
         <p>Play amazing games instantly</p>
     </div>
 
@@ -384,11 +468,11 @@
             grid.innerHTML = games.map(game => `
                 <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}')">
                     <div class="game-thumbnail">
-                        ${game.icon}
+                        ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
+                        <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
                     </div>
                     <div class="game-info">
                         <div class="game-title">${game.name}</div>
-                        <div class="game-description">${game.description}</div>
                         <button class="game-button" onclick="event.stopPropagation(); playGame('${game.gameUrl}', '${game.name}')">Play Now</button>
                     </div>
                 </div>
