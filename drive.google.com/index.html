@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Classroom</title>
-    <link rel="icon" href="https://www.gstatic.com/images/branding/product/1x/classroom_48dp.png">
+    <title>classrrom</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <style>
         * {
             margin: 0;
@@ -170,17 +170,7 @@
             position: relative;
         }
 
-        .game-rating {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: rgba(255, 193, 7, 0.95);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            font-weight: bold;
-        }
+        /* removed game-rating visuals (ratings hidden) */
 
         .game-info {
             padding: 12px;
@@ -395,7 +385,6 @@
                 <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}')">
                     <div class="game-thumbnail">
                         ${game.icon}
-                        ${game.rating ? `<div class="game-rating">⭐ ${game.rating}</div>` : ''}
                     </div>
                     <div class="game-info">
                         <div class="game-title">${game.name}</div>
