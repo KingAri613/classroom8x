@@ -1,107 +1,38 @@
 <!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>MR RACER</title>
-    <link rel="shortcut icon" href="favicon.ico">
-    <link rel="stylesheet" href="style.css">
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>MR. RACER - Car Racing</title>
+	<script>
+	window.config = {
+		loader: 'unity-2020',
+		debug: false,
+		maxRatio: 24 / 9,
+		minRatio: 9 / 24,
 
-<style>	
-      @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@200;500&display=swap');	
-      @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@200;500&family=MuseoModerno:wght@600&display=swap');	
-    </style>
+		title: 'MR RACER - Car Racing',
+		thumbnail: '972a0e3dabb998d2fb8fce785e2c1fa4.jfif',
+		numScreenshots:  4 ,
 
-  </head>
-  <body class="dark">
-    <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas"></canvas>
-    </div>
-    <div id="loading-cover" style="display:none;">
-      <div id="unity-loading-bar">
-        
-	
-        <div id="unity-logo">	
-          <img src="logo.png">	
-          <br>	
-          <p id="loading-txt" style="text-align: center; font-family: 'MuseoModerno', cursive;color: white;font-size: 50px;margin-top: 0px;margin-bottom: 0px;" >Loading...</p>	
-        </div>
+		unityVersion: '2022.3.14f1',
+		unityWebglBuildUrl: '',
 
-
-        <div id="unity-progress-bar-empty" style="display: none;">
-          <div id="unity-progress-bar-full"></div>
-        </div>
-        <div class="spinner"></div>
-      </div>
-    </div>
-    <div id="unity-fullscreen-button" style="display: none;"></div>
-    <script>
-      const hideFullScreenButton = "";
-      const buildUrl = ".";
-      const loaderUrl = buildUrl + "/MRR_GameMonetize.loader.js";
-      const config = {
-        dataUrl: buildUrl + "/f5713a2e01d39137e2a9273fe8260289.data.unityweb",
-        frameworkUrl: buildUrl + "/b6a175e58fde454cb8d42817a14b2af9.js.unityweb",
-        codeUrl: buildUrl + "/f69fc3005b29e3fac0670089c073f2d3.wasm.unityweb",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "ChennaiGames",
-        productName: "MR RACER",
-        productVersion: "1.5.6.2",
-      };
-
-      const container = document.querySelector("#unity-container");
-      const canvas = document.querySelector("#unity-canvas");
-      const loadingCover = document.querySelector("#loading-cover");
-      const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
-      const progressBarFull = document.querySelector("#unity-progress-bar-full");
-      const fullscreenButton = document.querySelector("#unity-fullscreen-button");
-      const spinner = document.querySelector('.spinner');
-
-      const canFullscreen = (function() {
-        for (const key of [
-            'exitFullscreen',
-            'webkitExitFullscreen',
-            'webkitCancelFullScreen',
-            'mozCancelFullScreen',
-            'msExitFullscreen',
-          ]) {
-          if (key in document) {
-            return true;
-          }
-        }
-        return false;
-      }());
-
-
-      loadingCover.style.display = "";
-
-      // Use the Unity 2019 loader from the sibling folder (if available)
-      const loaderScript = document.createElement('script');
-      loaderScript.src = '../subway-surfers/UnityLoader.2019.2.js';
-      loaderScript.onload = function() {
-        try {
-          UnityLoader.instantiate('unity-container', 'Build.json', function(instance, progress) {
-            // progress callback compatibility
-            spinner.style.display = progress < 1 ? '' : 'none';
-            progressBarEmpty.style.display = progress < 1 ? '' : 'none';
-            progressBarFull.style.width = `${100 * progress}%`;
-          });
-        } catch (e) {
-          console.error('Unity instantiate error', e);
-          alert('Failed to start MR RACER: ' + e);
-        }
-      };
-      document.body.appendChild(loaderScript);
-
-
-
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        container.className = "unity-mobile";
-        config.devicePixelRatio = 1.5;
-      }
-
-
-    </script>
-  </body>
+		fileSize:  31 ,
+		cachedDecompressedFileSizes: {
+			'02be9d9ae1a531c86986db347028ed68.js.unityweb':  83637 ,
+			'3d66475d0720d2344c040d4ced6ed87f.wasm.unityweb':  10656949 ,
+			'MRR_Poki_5.loader.js':  44284 ,
+			'b9d584e8cb4b4da7f12a62a30c8c2e81.data.unityweb':  20837749 ,
+		},
+		"metadata": {"poki_template_version":1,"background_color":"#000000","code_filename":"3d66475d0720d2344c040d4ced6ed87f.wasm.unityweb","company_name":"ChennaiGames","data_filename":"b9d584e8cb4b4da7f12a62a30c8c2e81.data.unityweb","decompression_fallback":"Gzip","development_player":"false","framework_filename":"02be9d9ae1a531c86986db347028ed68.js.unityweb","height":"600","loader_filename":"MRR_Poki_5.loader.js","product_name":"MR RACER","product_version":"1.5.6.2","splash_screen_style":"Dark","unity_version":"2022.3.14f1","use_data_caching":"true","use_threads":"false","use_wasm":"true","use_webgl_1_0":"false","use_webgl_2_0":"true","width":"960"}
+	};
+	</script>
+<!-- will be copied to the resulting head //-->
+</head>
+<body>
+	<script src="master-loader.js"></script>
+<!-- will be copied to the resulting body //-->
+<!-- will also be copied to the resulting body //-->
+</body>
 </html>
