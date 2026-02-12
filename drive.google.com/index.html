@@ -697,6 +697,17 @@
             border: none;
         }
 
+        /* Ensure game iframe fills the viewport when a game is opened */
+        #gameModal iframe {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            z-index: 2000;
+        }
+
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
