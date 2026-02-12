@@ -38,18 +38,43 @@ html, body{
 }
 
 #board .square {
-    background-image: url("img/pieces.png");
-    background-size: 600% 200%;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    z-index: 10;
-    position: relative;
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
+	z-index: 10;
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 2.2rem;
 }
 
 #board .square.empty{
 	background-image:none;
 }
+
+/* If the original sprite is missing, fall back to Unicode chess glyphs */
+#board .square::after{
+	font-family: "Segoe UI Symbol", "Segoe UI Emoji", Arial, sans-serif;
+	line-height: 1;
+	pointer-events: none;
+}
+
+/* White pieces (use white glyphs) */
+#board .square.white-king::after{ content: "\2654"; color: #ffffff; text-shadow: 0 1px 0 rgba(0,0,0,0.6); }
+#board .square.white-queen::after{ content: "\2655"; color: #ffffff; text-shadow: 0 1px 0 rgba(0,0,0,0.6); }
+#board .square.white-bishop::after{ content: "\2657"; color: #ffffff; text-shadow: 0 1px 0 rgba(0,0,0,0.6); }
+#board .square.white-knight::after{ content: "\2658"; color: #ffffff; text-shadow: 0 1px 0 rgba(0,0,0,0.6); }
+#board .square.white-castle::after{ content: "\2656"; color: #ffffff; text-shadow: 0 1px 0 rgba(0,0,0,0.6); }
+#board .square.white-pawn::after{ content: "\2659"; color: #ffffff; text-shadow: 0 1px 0 rgba(0,0,0,0.6); }
+
+/* Black pieces */
+#board .square.black-king::after{ content: "\265A"; color: #111111; text-shadow: 0 1px 0 rgba(255,255,255,0.06); }
+#board .square.black-queen::after{ content: "\265B"; color: #111111; text-shadow: 0 1px 0 rgba(255,255,255,0.06); }
+#board .square.black-bishop::after{ content: "\265D"; color: #111111; text-shadow: 0 1px 0 rgba(255,255,255,0.06); }
+#board .square.black-knight::after{ content: "\265E"; color: #111111; text-shadow: 0 1px 0 rgba(255,255,255,0.06); }
+#board .square.black-castle::after{ content: "\265C"; color: #111111; text-shadow: 0 1px 0 rgba(255,255,255,0.06); }
+#board .square.black-pawn::after{ content: "\265F"; color: #111111; text-shadow: 0 1px 0 rgba(255,255,255,0.06); }
 
 #board .square.light{
 	background-color:#B0E4B8;
@@ -184,41 +209,23 @@ html, body{
 }
 
 #board #promotionList li a{
-	background-image:url("../img/pieces.png");
-	background-size:600% 200%;
 	width:60px;
 	height:60px;
-	display:block;
+	display:inline-block;
+	text-decoration:none;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	font-size:1.6rem;
+	color: #fff;
 }
 
-#board #promotionList.white li a.queen{
-	background-position:20% 0%;
-}
+#board #promotionList.white li a.queen::after{ content: "\2655"; }
+#board #promotionList.white li a.castle::after{ content: "\2656"; }
+#board #promotionList.white li a.bishop::after{ content: "\2657"; }
+#board #promotionList.white li a.knight::after{ content: "\2658"; }
 
-#board #promotionList.white li a.castle{
-	background-position:80% 0%;
-}
-
-#board #promotionList.white li a.bishop{
-	background-position:40% 0%;
-}
-
-#board #promotionList.white li a.knight{
-	background-position:60% 0%;
-}
-
-#board #promotionList.black li a.queen{
-	background-position:20% 100%;
-}
-
-#board #promotionList.black li a.castle{
-	background-position:80% 100%;
-}
-
-#board #promotionList.black li a.bishop{
-	background-position:40% 100%;
-}
-
-#board #promotionList.black li a.knight{
-	background-position:60% 100%;
-}
+#board #promotionList.black li a.queen::after{ content: "\265B"; }
+#board #promotionList.black li a.castle::after{ content: "\265C"; }
+#board #promotionList.black li a.bishop::after{ content: "\265D"; }
+#board #promotionList.black li a.knight::after{ content: "\265E"; }

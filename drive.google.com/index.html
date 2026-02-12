@@ -624,6 +624,33 @@
             animation: fadeIn 0.3s ease-out;
         }
 
+        .soundboard-panel{
+            width:100%;
+            height:100%;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:flex-start;
+            padding-top:72px;
+            box-sizing:border-box;
+        }
+
+        .soundboard-close{
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            z-index: 2001;
+            padding: 10px 14px;
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+            color: #eaeaea;
+            border: 2px solid #e94560;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95em;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
         .close-button {
             position: fixed;
             top: 20px;
@@ -753,18 +780,13 @@
     </div>
 
     <div class="modal-overlay" id="soundboardModal" aria-hidden="true">
-        <div style="background:#16213e;padding:20px;border-radius:12px;max-width:420px;width:90%;box-shadow:0 8px 20px rgba(0,0,0,0.5);">
-            <button class="close-button" style="position:static;float:right;margin-bottom:8px" onclick="closeSoundboard()">✕</button>
-            <h3 style="margin-top:4px;margin-bottom:12px;color:#eaeaea">Soundboard</h3>
-            <div style="display:flex;flex-wrap:wrap;gap:10px;">
-                <button class="game-button" onclick="playTone('chime')">Chime</button>
-                <button class="game-button" onclick="playTone('beep')">Beep</button>
-                <button class="game-button" onclick="playTone('pop')">Pop</button>
-                <button class="game-button" onclick="playTone('drum')">Drum</button>
-                <button class="game-button" onclick="playTone('laser')">Laser</button>
-                <button class="game-button" onclick="playTone('ping')">Ping</button>
+        <div class="soundboard-panel" role="dialog" aria-label="Soundboard">
+            <button class="soundboard-close" onclick="closeSoundboard()">← Back</button>
+            <h2 class="section-title" style="color:#eaeaea;margin-top:8px">Soundboard</h2>
+            <div id="soundboardGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;width:92%;max-width:1000px;margin:18px auto;align-items:center;justify-items:center;">
+                <!-- buttons inserted dynamically -->
             </div>
-            <p style="color:#aaa;margin-top:12px;font-size:0.95em">These are generated sounds using the browser WebAudio API; add audio files later if you prefer uploaded samples.</p>
+            <p style="color:#aaa;margin-top:12px;font-size:0.95em">Play uploaded samples or use the generated tones below.</p>
         </div>
     </div>
 
@@ -813,6 +835,51 @@
             gain.gain.exponentialRampToValueAtTime(0.5, now + 0.01);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
             osc.start(now); osc.stop(now + 0.6);
+        }
+
+        // Play an audio file by URL (for files placed in /sounboard)
+        function playAudioFile(src) {
+            try {
+                const a = new Audio(src);
+                a.play();
+            } catch (e) {
+                console.error('Audio play error', e);
+            }
+        }
+
+        // Build soundboard buttons from known files and generated tones
+        const soundFiles = [
+            'sounboard/0877ca10-d121-4ff0-984b-9f3de126b3e2.mp3',
+            'sounboard/171a8e2e-4c95-45b9-abc5-83ed81442bcf.mp3',
+            'sounboard/7c68460f-e81d-4b93-be1a-aa0b28f420cc.mp3',
+            'sounboard/a289e964-1ebc-444a-928b-66ee87693ded.mp3',
+            'sounboard/f542df79-a176-492e-98b0-4f683788728a.mp3'
+        ];
+
+        function buildSoundboard() {
+            const grid = document.getElementById('soundboardGrid');
+            if(!grid) return;
+
+            // Generated tone buttons
+            const generated = ['chime','beep','pop','drum','laser','ping'];
+            generated.forEach(t => {
+                const btn = document.createElement('button');
+                btn.className = 'game-button';
+                btn.textContent = t.charAt(0).toUpperCase() + t.slice(1);
+                btn.onclick = (e) => { e.stopPropagation(); playTone(t); };
+                grid.appendChild(btn);
+            });
+
+            // Audio file buttons
+            soundFiles.forEach(path => {
+                const name = path.split('/').pop().replace(/\.mp3$/i, '');
+                const short = name.slice(0, 8);
+                const btn = document.createElement('button');
+                btn.className = 'game-button';
+                btn.textContent = 'Play ' + short;
+                btn.onclick = (e) => { e.stopPropagation(); playAudioFile(path); };
+                grid.appendChild(btn);
+            });
         }
 
         function openSoundboard() {
@@ -924,6 +991,8 @@
 
         // Load games on page load
         loadGames();
+        // build soundboard when DOM is ready
+        document.addEventListener('DOMContentLoaded', buildSoundboard);
     </script>
 </body>
 </html>
