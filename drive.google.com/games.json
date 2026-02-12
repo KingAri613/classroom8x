@@ -59,4 +59,25 @@
     "gameUrl": "stack/index.html",
     "rating": 4.7
   }
+  ,
+  {
+    "id": "mr-racer",
+    "name": "Mr Racer",
+    "description": "Fast-paced Unity racer packed into the site.",
+    "icon": "🏁",
+    "image": "",
+    "categories": ["racing", "action"],
+    "gameUrl": "mr racer/index.html",
+    "rating": 4.4
+  },
+  {
+    "id": "subway-surfers",
+    "name": "Subway Surfers",
+    "description": "Endless runner through subway tracks.",
+    "icon": "🚇",
+    "image": "",
+    "categories": ["action"],
+    "gameUrl": "subway surfers/index.html",
+    "rating": 4.5
+  }
 ]

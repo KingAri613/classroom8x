@@ -798,6 +798,8 @@
 
         // Soundboard (WebAudio) helpers
         let audioCtx = null;
+        let activeAudioElements = [];
+        let activeAudioSources = [];
         function ensureAudioCtx() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
@@ -815,6 +817,11 @@
                 const gain = ctx.createGain(); gain.gain.value = 0.8;
                 src.connect(f); f.connect(gain); gain.connect(ctx.destination);
                 src.start(); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+                // track so we can stop early
+                activeAudioSources.push({ type: 'webaudio', src, gain, f });
+                src.onended = () => {
+                    activeAudioSources = activeAudioSources.filter(s => s.src !== src);
+                };
                 return;
             }
             let freq = 440;
@@ -835,15 +842,47 @@
             gain.gain.exponentialRampToValueAtTime(0.5, now + 0.01);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
             osc.start(now); osc.stop(now + 0.6);
+            activeAudioSources.push({ type: 'webaudio', src: osc, gain });
+            osc.onended = () => {
+                activeAudioSources = activeAudioSources.filter(s => s.src !== osc);
+            };
         }
 
         // Play an audio file by URL (for files placed in /sounboard)
         function playAudioFile(src) {
             try {
                 const a = new Audio(src);
+                a.preload = 'auto';
                 a.play();
+                activeAudioElements.push(a);
+                a.addEventListener('ended', () => {
+                    activeAudioElements = activeAudioElements.filter(x => x !== a);
+                });
             } catch (e) {
                 console.error('Audio play error', e);
+            }
+        }
+
+        function stopAllAudio() {
+            try {
+                // stop HTMLAudioElements
+                activeAudioElements.forEach(a => {
+                    try { a.pause(); a.currentTime = 0; } catch (e) {}
+                });
+                activeAudioElements = [];
+                // stop WebAudio sources/oscillators
+                activeAudioSources.forEach(s => {
+                    try {
+                        if (s.type === 'webaudio') {
+                            if (s.src && typeof s.src.stop === 'function') s.src.stop();
+                            if (s.gain && typeof s.gain.disconnect === 'function') s.gain.disconnect();
+                            if (s.f && typeof s.f.disconnect === 'function') s.f.disconnect();
+                        }
+                    } catch (e) {}
+                });
+                activeAudioSources = [];
+            } catch (e) {
+                console.error('stopAllAudio error', e);
             }
         }
 
@@ -883,13 +922,21 @@
         }
 
         function openSoundboard() {
-            document.getElementById('soundboardModal').classList.add('active');
-            document.getElementById('soundboardModal').removeAttribute('aria-hidden');
+            const modal = document.getElementById('soundboardModal');
+            if (modal.classList.contains('active')) {
+                // toggle: close and stop audio
+                closeSoundboard();
+                stopAllAudio();
+                return;
+            }
+            modal.classList.add('active');
+            modal.removeAttribute('aria-hidden');
         }
 
         function closeSoundboard() {
             document.getElementById('soundboardModal').classList.remove('active');
             document.getElementById('soundboardModal').setAttribute('aria-hidden', 'true');
+            stopAllAudio();
         }
 
         // Load games
