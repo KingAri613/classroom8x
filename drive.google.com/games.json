@@ -14,7 +14,7 @@
     "name": "Candy Crush",
     "description": "Match candies and complete levels in this addictive puzzle game!",
     "icon": "🍭",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQU9XSu2gLIcURzrWyfi4IiQ7JAF8mCY7KbtGgx9foOI0KVOLp9kcRq0x9WDw&s",
+    "image": "https://www.google.com/url?esrc=s&q=&rct=j&sa=U&url=https://www.shutterstock.com/search/candy-crush-logo&ved=2ahUKEwjX5uK-g9SSAxXdzAIHHZ_xGd0QqoUBegQIBRAB&usg=AOvVaw3j4wvZi_aH1Zhe1x3_Q-Wb",
     "categories": ["puzzle"],
     "gameUrl": "candy crush/index.html",
     "rating": 4.7
@@ -24,7 +24,7 @@
     "name": "Chess",
     "description": "Classic chess game - test your strategy and tactical skills.",
     "icon": "♟",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQU9XSu2gLIcURzrWyfi4IiQ7JAF8mCY7KbtGgx9foOI0KVOLp9kcRq0x9WDw&s",
+    "image": "https://www.google.com/url?esrc=s&q=&rct=j&sa=U&url=https://www.freepik.com/premium-vector/chess-logo-design-vector-illustration_173258786.htm&ved=2ahUKEwji5MDHg9SSAxUW_wIHHffLJS8QqoUBegQIEBAB&usg=AOvVaw3ZcJi8zup97xO2_miqVbTb",
     "categories": ["puzzle", "2player"],
     "gameUrl": "chess/index.html",
     "rating": 4.6
