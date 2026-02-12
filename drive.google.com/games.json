@@ -14,7 +14,7 @@
     "name": "Candy Crush",
     "description": "Match candies and complete levels in this addictive puzzle game!",
     "icon": "🍭",
-    "image": "https://www.google.com/url?esrc=s&q=&rct=j&sa=U&url=https://www.shutterstock.com/search/candy-crush-logo&ved=2ahUKEwjX5uK-g9SSAxXdzAIHHZ_xGd0QqoUBegQIBRAB&usg=AOvVaw3j4wvZi_aH1Zhe1x3_Q-Wb",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLhEaPKLmfKPdWj-JKwMXQVp3TBdXwPw6tUqLOzaJ2eg&s",
     "categories": ["puzzle"],
     "gameUrl": "candy crush/index.html",
     "rating": 4.7
@@ -24,7 +24,7 @@
     "name": "Chess",
     "description": "Classic chess game - test your strategy and tactical skills.",
     "icon": "♟",
-    "image": "https://www.google.com/url?esrc=s&q=&rct=j&sa=U&url=https://www.freepik.com/premium-vector/chess-logo-design-vector-illustration_173258786.htm&ved=2ahUKEwji5MDHg9SSAxUW_wIHHffLJS8QqoUBegQIEBAB&usg=AOvVaw3ZcJi8zup97xO2_miqVbTb",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4d5Y_-DPD5u9QnC0T6fh_-v8sNK_Kx7PkN2zJ8w&s",
     "categories": ["puzzle", "2player"],
     "gameUrl": "chess/index.html",
     "rating": 4.6
@@ -48,5 +48,15 @@
     "categories": ["action", "racing"],
     "gameUrl": "drive mad/index.html",
     "rating": 4.8
+  },
+  {
+    "id": "stack",
+    "name": "Stack",
+    "description": "Stack blocks higher and higher without falling! Test your timing and precision.",
+    "icon": "📦",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOt6fK8wbNOQUGlVY3JmOCFsjt9Daa89hhidk64w0p6sFV9Q7EElRt6oqUwg&s",
+    "categories": ["action", "puzzle"],
+    "gameUrl": "stack/index.html",
+    "rating": 4.7
   }
 ]
