@@ -42,40 +42,58 @@
             justify-content: center;
             gap: 15px;
             margin-bottom: 15px;
+            position: relative;
         }
 
-        .classroom-logo {
+        .topbar {
+            position: absolute;
+            right: 18px;
+            top: 12px;
             display: flex;
-            gap: 6px;
-            font-size: 2.5em;
-        }
-
-        .logo-block {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            display: flex;
+            gap: 8px;
             align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: white;
-            font-size: 1.2em;
         }
 
-        .logo-red {
-            background: #EA4335;
+        .soundboard-button {
+            padding: 8px 12px;
+            background: #0f3460;
+            color: #eaeaea;
+            border: 1px solid #0f3460;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
         }
 
-        .logo-yellow {
-            background: #FBBC04;
+        .gc-logo {
+            width: 56px;
+            height: 46px;
+            border-radius: 10px;
+            background: #34A853; /* outer green */
+            display: inline-block;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.25);
         }
 
-        .logo-blue {
-            background: #4285F4;
+        .gc-logo::before {
+            content: "";
+            position: absolute;
+            left: 6px;
+            top: 6px;
+            right: 6px;
+            bottom: 10px;
+            border-radius: 6px;
+            background: #f4d03f; /* inner yellow panel */
         }
 
-        .logo-green {
-            background: #34A853;
+        .gc-logo::after {
+            content: "";
+            position: absolute;
+            left: 10px;
+            top: 12px;
+            right: 10px;
+            bottom: 14px;
+            border-radius: 4px;
+            background: #2b6a3a; /* darker inner area */
         }
 
         .header h1 {
@@ -374,11 +392,9 @@
 <body>
     <div class="header">
         <div class="logo-container">
-            <div class="classroom-logo">
-                <div class="logo-block logo-red"></div>
-                <div class="logo-block logo-yellow"></div>
-                <div class="logo-block logo-blue"></div>
-                <div class="logo-block logo-green"></div>
+            <div class="gc-logo" aria-hidden="true"></div>
+            <div class="topbar">
+                <button class="soundboard-button" type="button" onclick="openSoundboard()">Soundboard</button>
             </div>
         </div>
         <h1>classroom 8x</h1>
@@ -417,11 +433,78 @@
         <iframe id="gameFrame"></iframe>
     </div>
 
+    <div class="modal-overlay" id="soundboardModal" aria-hidden="true">
+        <div style="background:#16213e;padding:20px;border-radius:12px;max-width:420px;width:90%;box-shadow:0 8px 20px rgba(0,0,0,0.5);">
+            <button class="close-button" style="position:static;float:right;margin-bottom:8px" onclick="closeSoundboard()">✕</button>
+            <h3 style="margin-top:4px;margin-bottom:12px;color:#eaeaea">Soundboard</h3>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;">
+                <button class="game-button" onclick="playTone('chime')">Chime</button>
+                <button class="game-button" onclick="playTone('beep')">Beep</button>
+                <button class="game-button" onclick="playTone('pop')">Pop</button>
+                <button class="game-button" onclick="playTone('drum')">Drum</button>
+                <button class="game-button" onclick="playTone('laser')">Laser</button>
+                <button class="game-button" onclick="playTone('ping')">Ping</button>
+            </div>
+            <p style="color:#aaa;margin-top:12px;font-size:0.95em">These are generated sounds using the browser WebAudio API; add audio files later if you prefer uploaded samples.</p>
+        </div>
+    </div>
+
     <script>
         let allGames = [];
         let filteredGames = [];
         let currentCategory = 'all';
         let currentSearch = '';
+
+        // Soundboard (WebAudio) helpers
+        let audioCtx = null;
+        function ensureAudioCtx() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        function playTone(type) {
+            ensureAudioCtx();
+            const ctx = audioCtx;
+            if (type === 'drum') {
+                const buffer = ctx.createBuffer(1, ctx.sampleRate * 0.2, ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 2);
+                const src = ctx.createBufferSource();
+                src.buffer = buffer;
+                const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 1200;
+                const gain = ctx.createGain(); gain.gain.value = 0.8;
+                src.connect(f); f.connect(gain); gain.connect(ctx.destination);
+                src.start(); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+                return;
+            }
+            let freq = 440;
+            switch (type) {
+                case 'chime': freq = 880; break;
+                case 'beep': freq = 440; break;
+                case 'pop': freq = 600; break;
+                case 'laser': freq = 1200; break;
+                case 'ping': freq = 1000; break;
+            }
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = (type === 'chime' ? 'sine' : 'square');
+            osc.frequency.value = freq;
+            gain.gain.value = 0.0001;
+            osc.connect(gain); gain.connect(ctx.destination);
+            const now = ctx.currentTime;
+            gain.gain.exponentialRampToValueAtTime(0.5, now + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+            osc.start(now); osc.stop(now + 0.6);
+        }
+
+        function openSoundboard() {
+            document.getElementById('soundboardModal').classList.add('active');
+            document.getElementById('soundboardModal').removeAttribute('aria-hidden');
+        }
+
+        function closeSoundboard() {
+            document.getElementById('soundboardModal').classList.remove('active');
+            document.getElementById('soundboardModal').setAttribute('aria-hidden', 'true');
+        }
 
         // Load games
         async function loadGames() {
@@ -512,9 +595,12 @@
             });
         });
 
-        // Close game modal on escape
+        // Close modals on escape
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeGame();
+            if (e.key === 'Escape') {
+                closeGame();
+                closeSoundboard();
+            }
         });
 
         // Load games on page load
