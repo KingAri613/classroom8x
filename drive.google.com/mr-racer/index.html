@@ -76,28 +76,23 @@
 
       loadingCover.style.display = "";
 
-      const script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          spinner.style.display = "none";
-          progressBarEmpty.style.display = "";
-          progressBarFull.style.width = `${100 * progress}%`;
-        }).then((unityInstance) => {
-          loadingCover.style.display = "none";
-          if (canFullscreen) {
-            if (!hideFullScreenButton) {
-              fullscreenButton.style.display = "";
-            }
-            fullscreenButton.onclick = () => {
-              unityInstance.SetFullscreen(1);
-            };
-          }
-        }).catch((message) => {
-          alert(message);
-        });
+      // Use the Unity 2019 loader from the sibling folder (if available)
+      const loaderScript = document.createElement('script');
+      loaderScript.src = '../subway-surfers/UnityLoader.2019.2.js';
+      loaderScript.onload = function() {
+        try {
+          UnityLoader.instantiate('unity-container', 'Build.json', function(instance, progress) {
+            // progress callback compatibility
+            spinner.style.display = progress < 1 ? '' : 'none';
+            progressBarEmpty.style.display = progress < 1 ? '' : 'none';
+            progressBarFull.style.width = `${100 * progress}%`;
+          });
+        } catch (e) {
+          console.error('Unity instantiate error', e);
+          alert('Failed to start MR RACER: ' + e);
+        }
       };
-      document.body.appendChild(script);
+      document.body.appendChild(loaderScript);
 
 
 
