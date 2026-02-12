@@ -67,7 +67,7 @@
     "icon": "🏁",
     "image": "",
     "categories": ["racing", "action"],
-    "gameUrl": "mr racer/index.html",
+    "gameUrl": "mr-racer/index.html",
     "rating": 4.4
   },
   {
@@ -77,7 +77,7 @@
     "icon": "🚇",
     "image": "",
     "categories": ["action"],
-    "gameUrl": "subway surfers/index.html",
+    "gameUrl": "subway-surfers/index.html",
     "rating": 4.5
   }
 ]
