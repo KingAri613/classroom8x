@@ -188,8 +188,30 @@ body {
 
 
 <span id="loading-progress">...</span>
+</span>
 
+<div id="missing-overlay" style="display:none;position:fixed;inset:0;background:#000;color:#fff;z-index:9999;align-items:center;justify-content:center;flex-direction:column;">
+  <div style="text-align:center;max-width:720px;padding:20px;margin:auto;">
+    <img id="missing-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVfMa5KjlgGxERxRgJcQoZNEwZAW7eFwAKYWD8pblwNIpKfQ59V7BitawWpco&s" alt="Geometry Dash" style="max-width:100%;height:auto;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,0.6)">
+    <h2 style="margin-top:18px">Game files missing</h2>
+    <p style="color:#ccc">The main game script <code>gdash.js</code> was not found or failed to load. If you uploaded the game files, make sure <strong>gdash.js</strong> and any asset files are in this folder.</p>
+  </div>
+</div>
 
-<script type="text/javascript" src="./gdash.js"></script>
+<script>
+function showMissing() {
+  try {
+    var s = document.getElementById('stage'); if (s) s.style.display = 'none';
+    var m = document.getElementById('monitors'); if (m) m.style.display = 'none';
+    var o = document.getElementById('missing-overlay'); if (o) o.style.display = 'flex';
+    var p = document.getElementById('loading-progress'); if (p) p.textContent = 'Missing game files';
+  } catch (e) { console.error(e); }
+}
+function hideMissing() {
+  try { var o = document.getElementById('missing-overlay'); if (o) o.style.display = 'none'; var p = document.getElementById('loading-progress'); if (p) p.textContent = ''; } catch(e){}
+}
+</script>
+
+<script type="text/javascript" src="./gdash.js" onerror="showMissing()" onload="hideMissing()"></script>
 </body>
 </html>

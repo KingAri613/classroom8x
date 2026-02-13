@@ -78,7 +78,7 @@
     "icon": "🔫",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQg6mcSW3oMiPV3qQ5qJ_5OlERIGRJAzmSxgdf4_x34F3anntfayfeHrt8-FQ&s",
     "categories": ["action", "multiplayer"],
-    "gameUrl": "getaway shootout/index.html",
+    "gameUrl": "../getaway shootout/index.html",
     "rating": 4.6
   },
   {
