@@ -59,25 +59,15 @@
     "gameUrl": "stack/index.html",
     "rating": 4.7
   }
-  ,
+,
   {
-    "id": "mr-racer",
-    "name": "Mr Racer",
-    "description": "Fast-paced Unity racer packed into the site.",
-    "icon": "🏁",
-    "image": "",
-    "categories": ["racing", "action"],
-    "gameUrl": "mr-racer/index.html",
-    "rating": 4.4
-  },
-  {
-    "id": "subway-surfers",
-    "name": "Subway Surfers",
-    "description": "Endless runner through subway tracks.",
-    "icon": "🚇",
-    "image": "",
-    "categories": ["action"],
-    "gameUrl": "subway-surfers/index.html",
-    "rating": 4.5
+    "id": "pac-man",
+    "name": "Pac Man",
+    "description": "Classic arcade Pac-Man is here — eat pellets and avoid ghosts!",
+    "icon": "🟡",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSppnrQRLHSWIKPKCULIH0VT8RE3xfpkETD8--o6-EpxWSIPpcE1KbZLJNfQ2I&s",
+    "categories": ["arcade", "action"],
+    "gameUrl": "../pac man/result (35).html",
+    "rating": 4.8
   }
 ]
