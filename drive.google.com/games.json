@@ -14,7 +14,7 @@
     "name": "Candy Crush",
     "description": "Match candies and complete levels in this addictive puzzle game!",
     "icon": "🍭",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLhEaPKLmfKPdWj-JKwMXQVp3TBdXwPw6tUqLOzaJ2eg&s",
+    "image": "",
     "categories": ["puzzle"],
     "gameUrl": "candy crush/index.html",
     "rating": 4.7
@@ -24,7 +24,7 @@
     "name": "Chess",
     "description": "Classic chess game - test your strategy and tactical skills.",
     "icon": "♟",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4d5Y_-DPD5u9QnC0T6fh_-v8sNK_Kx7PkN2zJ8w&s",
+    "image": "",
     "categories": ["puzzle", "2player"],
     "gameUrl": "chess/index.html",
     "rating": 4.6
@@ -90,5 +90,16 @@
     "categories": ["platformer", "arcade"],
     "gameUrl": "geometry dash/index (2).html",
     "rating": 4.5
+  }
+  ,
+  {
+    "id": "drift-hunters",
+    "name": "Drift Hunters",
+    "description": "High-octane drifting racer — tune your car and race.",
+    "icon": "🏁",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6xnWYH8nQznWxbfMPIus50fwCEin1eno3Rnr9kobxgHRMMCFdRlCqgPx7bA&s",
+    "categories": ["racing", "action"],
+    "gameUrl": "drift hunters/drift-hunters-unblocked.html",
+    "rating": 4.4
   }
 ]
