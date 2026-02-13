@@ -70,4 +70,25 @@
     "gameUrl": "../pac man/result (35).html",
     "rating": 4.8
   }
+  ,
+  {
+    "id": "getaway-shootout",
+    "name": "Getaway Shootout",
+    "description": "Chaotic multiplayer shooter where players push each other off the map!",
+    "icon": "🔫",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQg6mcSW3oMiPV3qQ5qJ_5OlERIGRJAzmSxgdf4_x34F3anntfayfeHrt8-FQ&s",
+    "categories": ["action", "multiplayer"],
+    "gameUrl": "getaway shootout/index.html",
+    "rating": 4.6
+  },
+  {
+    "id": "geometry-dash",
+    "name": "Geometry Dash",
+    "description": "Fast-paced rhythm platformer — jump and fly to the beat.",
+    "icon": "⬛",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVfMa5KjlgGxERxRgJcQoZNEwZAW7eFwAKYWD8pblwNIpKfQ59V7BitawWpco&s",
+    "categories": ["platformer", "arcade"],
+    "gameUrl": "geometry dash/index (2).html",
+    "rating": 4.5
+  }
 ]
