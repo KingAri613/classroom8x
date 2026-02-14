@@ -91,15 +91,5 @@
     "categories": ["racing", "action"],
     "gameUrl": "drift hunters/drift-hunters-unblocked.html",
     "rating": 4.4
-  },
-  {
-    "id": "extprint3r",
-    "name": "ExtPrint3r",
-    "description": "ExtPrint3r is an exploit created by Blobby Boi. A powerful tool for security testing.",
-    "icon": "🔧",
-    "image": "",
-    "categories": ["utility", "tools"],
-    "gameUrl": "ExtPrint3r/index (3).html",
-    "rating": 4.0
   }
 ]

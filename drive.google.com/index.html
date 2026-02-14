@@ -752,7 +752,6 @@
             <div class="gc-logo" aria-hidden="true"></div>
             <div class="topbar">
                 <button class="soundboard-button" type="button" onclick="openSoundboard()">Soundboard</button>
-                <button class="soundboard-button" type="button" onclick="openExtPrint3r()">ExtPrint3r</button>
             </div>
         </div>
         <h1>classroom 8x</h1>
@@ -1052,11 +1051,6 @@
         loadGames();
         // build soundboard when DOM is ready
         document.addEventListener('DOMContentLoaded', buildSoundboard);
-
-        function openExtPrint3r() {
-            const gameUrl = 'ExtPrint3r/index (3).html';
-            window.location.href = 'game-player.html?gameUrl=' + encodeURIComponent(gameUrl);
-        }
     </script>
 </body>
 </html>
