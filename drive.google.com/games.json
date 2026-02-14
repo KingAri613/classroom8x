@@ -72,16 +72,6 @@
   }
   ,
   {
-    "id": "getaway-shootout",
-    "name": "Getaway Shootout",
-    "description": "Chaotic multiplayer shooter where players push each other off the map!",
-    "icon": "🔫",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQg6mcSW3oMiPV3qQ5qJ_5OlERIGRJAzmSxgdf4_x34F3anntfayfeHrt8-FQ&s",
-    "categories": ["action", "multiplayer"],
-    "gameUrl": "../getaway shootout/index.html",
-    "rating": 4.6
-  },
-  {
     "id": "geometry-dash",
     "name": "Geometry Dash",
     "description": "Fast-paced rhythm platformer — jump and fly to the beat.",
@@ -101,5 +91,15 @@
     "categories": ["racing", "action"],
     "gameUrl": "drift hunters/drift-hunters-unblocked.html",
     "rating": 4.4
+  },
+  {
+    "id": "extprint3r",
+    "name": "ExtPrint3r",
+    "description": "ExtPrint3r is an exploit created by Blobby Boi. A powerful tool for security testing.",
+    "icon": "🔧",
+    "image": "",
+    "categories": ["utility", "tools"],
+    "gameUrl": "ExtPrint3r/index (3).html",
+    "rating": 4.0
   }
 ]
