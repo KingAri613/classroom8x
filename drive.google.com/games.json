@@ -91,5 +91,55 @@
     "categories": ["racing", "action"],
     "gameUrl": "drift hunters/drift-hunters-unblocked.html",
     "rating": 4.4
+  },
+  {
+    "id": "3d-truck",
+    "name": "3D Truck",
+    "description": "Drive a big rig through tricky terrain and tight turns.",
+    "icon": "🚚",
+    "image": "",
+    "categories": ["racing", "action"],
+    "gameUrl": "https://exquisite-truckquizizz-128a36.netlify.app/",
+    "rating": 4.3
+  },
+  {
+    "id": "idle-soccer",
+    "name": "Idle Soccer",
+    "description": "Build your team and watch the goals roll in.",
+    "icon": "⚽",
+    "image": "",
+    "categories": ["sports", "idle"],
+    "gameUrl": "https://creative-idlesoccerquizizz-4170f5.netlify.app/",
+    "rating": 4.2
+  },
+  {
+    "id": "monkey-mart",
+    "name": "Monkey Mart",
+    "description": "Run your own market and keep the shelves stocked.",
+    "icon": "🐵",
+    "image": "",
+    "categories": ["simulation", "idle"],
+    "gameUrl": "https://monkeymartquizizz.netlify.app/",
+    "rating": 4.6
+  },
+  {
+    "id": "paper-io",
+    "name": "Paper.io",
+    "description": "Claim territory and outmaneuver opponents.",
+    "icon": "🟦",
+    "image": "",
+    "categories": ["arcade", "action"],
+    "gameUrl": "https://magical-paperquizizz-492e95.netlify.app/",
+    "rating": 4.4
+  },
+  {
+    "id": "hook-stickman",
+    "name": "Hook Stickman",
+    "description": "Swing from hooks and time your jumps.",
+    "icon": "🪝",
+    "image": "",
+    "categories": ["action", "platformer"],
+    "gameUrl": "https://phenomenal-stickmanquizizz-f91382.netlify.app/",
+    "rating": 4.5
   }
 ]
