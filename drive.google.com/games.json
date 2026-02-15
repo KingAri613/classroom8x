@@ -107,7 +107,7 @@
     "name": "Idle Soccer",
     "description": "Build your team and watch the goals roll in.",
     "icon": "⚽",
-    "image": "",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnUspBktYCZ6OCzSqFn9CpwXZ2TZdSG-_U-nsRvubgEUXMgZojMOAEzj-lVw&s",
     "categories": ["sports", "idle"],
     "gameUrl": "https://creative-idlesoccerquizizz-4170f5.netlify.app/",
     "rating": 4.2
@@ -117,7 +117,7 @@
     "name": "Monkey Mart",
     "description": "Run your own market and keep the shelves stocked.",
     "icon": "🐵",
-    "image": "",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAYZywQ5VLGKbHlH7YBmasd0_xcJsElQyVegrriOyMJN8PJI4W7CVwZW5FBmA&s",
     "categories": ["simulation", "idle"],
     "gameUrl": "https://monkeymartquizizz.netlify.app/",
     "rating": 4.6
@@ -127,7 +127,7 @@
     "name": "Paper.io",
     "description": "Claim territory and outmaneuver opponents.",
     "icon": "🟦",
-    "image": "",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTg234g1grmtcYccS3AYpE4IHePAQd2lmNBduLKNOFI6QKKAnVta-gO9m2dtuA&s",
     "categories": ["arcade", "action"],
     "gameUrl": "https://magical-paperquizizz-492e95.netlify.app/",
     "rating": 4.4
@@ -137,7 +137,7 @@
     "name": "Hook Stickman",
     "description": "Swing from hooks and time your jumps.",
     "icon": "🪝",
-    "image": "",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbzAiU7SPqCIvz2Kfsx4dxIUBV_j83WUNaDiGU3SVLDu8JGrCduKoVhbuA6Q&s",
     "categories": ["action", "platformer"],
     "gameUrl": "https://phenomenal-stickmanquizizz-f91382.netlify.app/",
     "rating": 4.5
