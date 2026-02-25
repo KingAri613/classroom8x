@@ -83,16 +83,6 @@
   }
   ,
   {
-    "id": "drift-hunters",
-    "name": "Drift Hunters",
-    "description": "High-octane drifting racer — tune your car and race.",
-    "icon": "🏁",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6xnWYH8nQznWxbfMPIus50fwCEin1eno3Rnr9kobxgHRMMCFdRlCqgPx7bA&s",
-    "categories": ["racing", "action"],
-    "gameUrl": "drift hunters/drift-hunters-unblocked.html",
-    "rating": 4.4
-  },
-  {
     "id": "3d-truck",
     "name": "3D Truck",
     "description": "Drive a big rig through tricky terrain and tight turns.",

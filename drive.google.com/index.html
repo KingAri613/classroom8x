@@ -795,10 +795,10 @@
         <div class="soundboard-panel" role="dialog" aria-label="Soundboard">
             <button class="soundboard-close" onclick="closeSoundboard()">← Back</button>
             <h2 class="section-title" style="color:#eaeaea;margin-top:8px">Soundboard</h2>
-            <div id="soundboardGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;width:92%;max-width:1000px;margin:18px auto;align-items:center;justify-items:center;">
+            <div id="soundboardGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;width:92%;max-width:1000px;margin:18px auto;align-items:start;justify-items:stretch;">
                 <!-- buttons inserted dynamically -->
             </div>
-            <p style="color:#aaa;margin-top:12px;font-size:0.95em">Play uploaded samples or use the generated tones below.</p>
+            <p style="color:#aaa;margin-top:12px;font-size:0.95em">Click the image button above each sound name to play it.</p>
         </div>
     </div>
 
@@ -808,59 +808,9 @@
         let currentCategory = 'all';
         let currentSearch = '';
 
-        // Soundboard (WebAudio) helpers
-        let audioCtx = null;
         let activeAudioElements = [];
-        let activeAudioSources = [];
-        function ensureAudioCtx() {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
 
-        function playTone(type) {
-            ensureAudioCtx();
-            const ctx = audioCtx;
-            if (type === 'drum') {
-                const buffer = ctx.createBuffer(1, ctx.sampleRate * 0.2, ctx.sampleRate);
-                const data = buffer.getChannelData(0);
-                for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 2);
-                const src = ctx.createBufferSource();
-                src.buffer = buffer;
-                const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 1200;
-                const gain = ctx.createGain(); gain.gain.value = 0.8;
-                src.connect(f); f.connect(gain); gain.connect(ctx.destination);
-                src.start(); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
-                // track so we can stop early
-                activeAudioSources.push({ type: 'webaudio', src, gain, f });
-                src.onended = () => {
-                    activeAudioSources = activeAudioSources.filter(s => s.src !== src);
-                };
-                return;
-            }
-            let freq = 440;
-            switch (type) {
-                case 'chime': freq = 880; break;
-                case 'beep': freq = 440; break;
-                case 'pop': freq = 600; break;
-                case 'laser': freq = 1200; break;
-                case 'ping': freq = 1000; break;
-            }
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = (type === 'chime' ? 'sine' : 'square');
-            osc.frequency.value = freq;
-            gain.gain.value = 0.0001;
-            osc.connect(gain); gain.connect(ctx.destination);
-            const now = ctx.currentTime;
-            gain.gain.exponentialRampToValueAtTime(0.5, now + 0.01);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-            osc.start(now); osc.stop(now + 0.6);
-            activeAudioSources.push({ type: 'webaudio', src: osc, gain });
-            osc.onended = () => {
-                activeAudioSources = activeAudioSources.filter(s => s.src !== osc);
-            };
-        }
-
-        // Play an audio file by URL (for files placed in /sounboard)
+        // Play an audio file by URL (for files placed in /soundboard)
         function playAudioFile(src) {
             try {
                 const a = new Audio(src);
@@ -882,54 +832,161 @@
                     try { a.pause(); a.currentTime = 0; } catch (e) {}
                 });
                 activeAudioElements = [];
-                // stop WebAudio sources/oscillators
-                activeAudioSources.forEach(s => {
-                    try {
-                        if (s.type === 'webaudio') {
-                            if (s.src && typeof s.src.stop === 'function') s.src.stop();
-                            if (s.gain && typeof s.gain.disconnect === 'function') s.gain.disconnect();
-                            if (s.f && typeof s.f.disconnect === 'function') s.f.disconnect();
-                        }
-                    } catch (e) {}
-                });
-                activeAudioSources = [];
             } catch (e) {
                 console.error('stopAllAudio error', e);
             }
         }
 
-        // Build soundboard buttons from known files and generated tones
+        // Build soundboard buttons from uploaded files
+        const soundButtonImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQypWiBZlWrB4BGiFJE63iZRFRr7jy2IPm1igBmFGBjb_Ytngl3qyWDLWgTs1s&s';
         const soundFiles = [
-            'sounboard/0877ca10-d121-4ff0-984b-9f3de126b3e2.mp3',
-            'sounboard/171a8e2e-4c95-45b9-abc5-83ed81442bcf.mp3',
-            'sounboard/7c68460f-e81d-4b93-be1a-aa0b28f420cc.mp3',
-            'sounboard/a289e964-1ebc-444a-928b-66ee87693ded.mp3',
-            'sounboard/f542df79-a176-492e-98b0-4f683788728a.mp3'
+            'soundboard/3D3PVTP5-Goofy-ahh-SpongeBob-sound-.mp3',
+            'soundboard/67-Merry-Rizzmas.mp3',
+            'soundboard/67.mp3',
+            'soundboard/ALL-all-my-fellas.mp3',
+            'soundboard/Cake-At-Stake-theme.mp3',
+            'soundboard/Chicken-Star.mp3',
+            'soundboard/Chinese-Doit.mp3',
+            'soundboard/Clinking-glasses-sound-effect.mp3',
+            'soundboard/Devesto.mp3',
+            'soundboard/Doodle-Dance-Pipe.mp3',
+            'soundboard/Dracula-Flow-They-forgot-Im-him.mp3',
+            'soundboard/Dragon-Cannelloni.mp3',
+            'soundboard/Fahhh.mp3',
+            'soundboard/Hello-everybody-my-name-is-Markiplier.mp3',
+            'soundboard/I-just-want-to-be-part-of-your-symphony-tiktok.mp3',
+            'soundboard/Jaydens-bus-is-here.mp3',
+            'soundboard/Jordan-Peterson-Dreams-About-His-Grandma.mp3',
+            'soundboard/Kawhi-Leonard-Laugh.mp3',
+            'soundboard/Kpop-Demon-Hunters.mp3',
+            'soundboard/Lizard-Lizard-Lizard.mp3',
+            'soundboard/Low-Tier-God-You-should-kill-yourself-NOW (1).mp3',
+            'soundboard/Low-Tier-God-You-should-kill-yourself-NOW.mp3',
+            'soundboard/MI-BOMBO.mp3',
+            'soundboard/Milkaholic.mp3',
+            'soundboard/NECK-HURT-FUNK-Rupertgamingboy.mp3',
+            'soundboard/Nothing-beats-a-jet2-holiday.mp3',
+            'soundboard/Obama-Have-Dih.mp3',
+            'soundboard/PeterParkerPizza-Time.mp3',
+            'soundboard/REPO-ROBE.mp3',
+            'soundboard/Say-Drake-I-Heard-You-Like-Em-Young.mp3',
+            'soundboard/Shimmy-shimmy.mp3',
+            'soundboard/Sith-Lightsaber-Ignition.mp3',
+            'soundboard/Spectre.mp3',
+            'soundboard/Steal-a-brainrot.mp3',
+            'soundboard/TUCA-DONKAA.mp3',
+            'soundboard/Wait-wait-wait-what-the-hell-legend-sound.mp3',
+            'soundboard/Yes-King-AHHHHHHHHHHHHHHHH.mp3',
+            'soundboard/bluetooth-device-connected-asuccesfullay.mp3',
+            'soundboard/clash-royale-bowler.mp3',
+            'soundboard/habibi-hamood.mp3',
+            'soundboard/he-he-he-ha-clash-royale-DEEP-FRIED.mp3',
+            'soundboard/its-about-Drive.mp3',
+            'soundboard/katseye.mp3',
+            'soundboard/la-grande-combinacion-Meme.mp3',
+            'soundboard/nope-meme.mp3',
+            'soundboard/o-o-o-oi-oi-a-eye-eye.mp3',
+            'soundboard/qwK9Iqqk-mega-giga-nger-knight-.mp3',
+            'soundboard/the-more-you-know.mp3',
+            'soundboard/tung-tung-sahur.mp3',
+            'soundboard/uwu.mp3',
+            'soundboard/what-is-this-diddy-blud-doing-on-the-calculator-meme-pesa.mp3'
         ];
 
-        function buildSoundboard() {
+        function formatSoundName(path) {
+            return path
+                .split('/')
+                .pop()
+                .replace(/\.mp3$/i, '')
+                .replace(/[-_]+/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        async function isAudioFile(path) {
+            try {
+                const response = await fetch(path, {
+                    method: 'GET',
+                    headers: { Range: 'bytes=0-512' }
+                });
+
+                if (!response.ok) return false;
+
+                const contentType = (response.headers.get('content-type') || '').toLowerCase();
+                if (contentType.includes('audio/')) return true;
+
+                const snippet = (await response.text()).trim().slice(0, 120).toLowerCase();
+                const looksLikeHtml = snippet.startsWith('<!doctype') || snippet.startsWith('<html') || snippet.includes('<head');
+                if (looksLikeHtml) return false;
+
+                return /\.(mp3|wav|ogg|m4a|aac|flac)$/i.test(path);
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function buildSoundboard() {
             const grid = document.getElementById('soundboardGrid');
             if(!grid) return;
 
-            // Generated tone buttons
-            const generated = ['chime','beep','pop','drum','laser','ping'];
-            generated.forEach(t => {
-                const btn = document.createElement('button');
-                btn.className = 'game-button';
-                btn.textContent = t.charAt(0).toUpperCase() + t.slice(1);
-                btn.onclick = (e) => { e.stopPropagation(); playTone(t); };
-                grid.appendChild(btn);
+            grid.innerHTML = '';
+            const validSoundFiles = [];
+            const checks = soundFiles.map(async (path) => {
+                if (await isAudioFile(path)) validSoundFiles.push(path);
             });
+            await Promise.all(checks);
 
-            // Audio file buttons
-            soundFiles.forEach(path => {
-                const name = path.split('/').pop().replace(/\.mp3$/i, '');
-                const short = name.slice(0, 8);
-                const btn = document.createElement('button');
-                btn.className = 'game-button';
-                btn.textContent = 'Play ' + short;
-                btn.onclick = (e) => { e.stopPropagation(); playAudioFile(path); };
-                grid.appendChild(btn);
+            validSoundFiles.forEach(path => {
+                const wrapper = document.createElement('div');
+                wrapper.style.display = 'flex';
+                wrapper.style.flexDirection = 'column';
+                wrapper.style.alignItems = 'center';
+                wrapper.style.gap = '8px';
+                wrapper.style.background = 'rgba(15,52,96,0.35)';
+                wrapper.style.border = '1px solid rgba(233,69,96,0.35)';
+                wrapper.style.borderRadius = '12px';
+                wrapper.style.padding = '12px 10px';
+                wrapper.style.minHeight = '150px';
+
+                const imageButton = document.createElement('button');
+                imageButton.type = 'button';
+                imageButton.style.border = '1.5px solid #e94560';
+                imageButton.style.borderRadius = '10px';
+                imageButton.style.padding = '0';
+                imageButton.style.background = 'transparent';
+                imageButton.style.cursor = 'pointer';
+                imageButton.style.width = '72px';
+                imageButton.style.height = '72px';
+                imageButton.style.overflow = 'hidden';
+
+                const image = document.createElement('img');
+                image.src = soundButtonImage;
+                image.alt = `Play ${formatSoundName(path)}`;
+                image.style.width = '100%';
+                image.style.height = '100%';
+                image.style.objectFit = 'cover';
+                imageButton.appendChild(image);
+
+                const label = document.createElement('div');
+                label.textContent = formatSoundName(path);
+                label.style.color = '#eaeaea';
+                label.style.fontSize = '0.9em';
+                label.style.textAlign = 'center';
+                label.style.wordBreak = 'break-word';
+
+                imageButton.onclick = (e) => {
+                    e.stopPropagation();
+                    grid.querySelectorAll('button[data-sound-btn="true"]').forEach(btn => {
+                        btn.style.boxShadow = 'none';
+                    });
+                    imageButton.style.boxShadow = '0 0 0 3px rgba(233,69,96,0.45)';
+                    playAudioFile(path);
+                };
+                imageButton.dataset.soundBtn = 'true';
+
+                wrapper.appendChild(imageButton);
+                wrapper.appendChild(label);
+                grid.appendChild(wrapper);
             });
         }
 
