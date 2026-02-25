@@ -677,6 +677,28 @@
             animation: scaleIn 0.3s ease-out;
         }
 
+        .fullscreen-button {
+            position: fixed;
+            top: 20px;
+            right: 178px;
+            z-index: 2001;
+            width: 46px;
+            height: 46px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+            color: #eaeaea;
+            border: 2px solid #e94560;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+            animation: scaleIn 0.3s ease-out;
+        }
+
         @keyframes scaleIn {
             from {
                 opacity: 0;
@@ -696,6 +718,17 @@
         }
 
         .close-button:active {
+            transform: translateY(0);
+        }
+
+        .fullscreen-button:hover {
+            background: linear-gradient(135deg, #e94560 0%, #ff5a75 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 69, 96, 0.5);
+        }
+
+        .fullscreen-button:active {
             transform: translateY(0);
         }
 
@@ -795,8 +828,9 @@
     </div>
 
     <div class="modal-overlay" id="gameModal">
+        <button class="fullscreen-button" type="button" onclick="toggleGameFullscreen()" title="Fullscreen">⛶</button>
         <button class="close-button" onclick="closeGame()">✕ Close Game</button>
-        <iframe id="gameFrame"></iframe>
+        <iframe id="gameFrame" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
     </div>
 
     <div class="modal-overlay" id="soundboardModal" aria-hidden="true">
@@ -1121,6 +1155,29 @@
         function playGame(gameUrl, gameName) {
             document.getElementById('gameFrame').src = gameUrl;
             document.getElementById('gameModal').classList.add('active');
+        }
+
+        async function toggleGameFullscreen() {
+            const frame = document.getElementById('gameFrame');
+            if (!frame) return;
+
+            try {
+                if (!document.fullscreenElement) {
+                    if (frame.requestFullscreen) {
+                        await frame.requestFullscreen();
+                    } else if (frame.webkitRequestFullscreen) {
+                        frame.webkitRequestFullscreen();
+                    }
+                } else {
+                    if (document.exitFullscreen) {
+                        await document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    }
+                }
+            } catch (error) {
+                console.error('Fullscreen error:', error);
+            }
         }
 
         function closeGame() {

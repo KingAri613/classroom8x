@@ -139,7 +139,7 @@
     "icon": "🚗",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTl3FTPoWpppnjHOgm0K8hwNHRPZppi7OUwedTIvHy4Fs3VxXjjsG3Pe_H4Q&s",
     "categories": ["racing", "action"],
-    "gameUrl": "https://html5.gamedistribution.com/0a8b51e5eaee42e7b4db83ca00afc92e/?gd_sdk_referrer_url=https://www.example.com/games/{game-path}",
+    "gameUrl": "https://driftbossonline.github.io/",
     "rating": 4.5
   }
 ]
