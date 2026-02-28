@@ -141,5 +141,45 @@
     "categories": ["racing", "action"],
     "gameUrl": "https://www.gameflare.com/embed/drift-boss/",
     "rating": 4.5
+  },
+  {
+    "id": "1v1-lol",
+    "name": "1v1.lol",
+    "description": "Build and battle in this fast-paced online shooter.",
+    "icon": "🎯",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNIPmErtI94FLFCyY6A17vPpenDu1hUtUY0M2EDIV0JLw1lz7n6rlzpZxj4A&s",
+    "categories": ["action", "2player"],
+    "gameUrl": "https://stalwart-1v1lolquizizz-a4c901.netlify.app/",
+    "rating": 4.7
+  },
+  {
+    "id": "slope-3",
+    "name": "Slope 3",
+    "description": "Roll down the slope at high speed and try to survive as long as possible.",
+    "icon": "🎱",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGcYRVPrLvBzCCNsQV1gyxAjjqM0ScNNg-ezxzsY7r8HZBIA3GV6i3Icu1mA&s",
+    "categories": ["action", "arcade"],
+    "gameUrl": "https://cute-df7b43slopethreequizizz.netlify.app/",
+    "rating": 4.6
+  },
+  {
+    "id": "basketball-stars",
+    "name": "Basketball Stars",
+    "description": "Show off your basketball skills in this exciting sports game.",
+    "icon": "🏀",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTtYzCZ-_y3Q9rfEHXATolGZ8a__7IvFXjqj9VHY3EnzqHaNg4wYGJcMjj8A&s",
+    "categories": ["sports", "2player"],
+    "gameUrl": "https://rad-quizizzbasketballstars-a2ffe0.netlify.app/",
+    "rating": 4.5
+  },
+  {
+    "id": "fruit-ninja",
+    "name": "Fruit Ninja",
+    "description": "Slice fruits and avoid bombs in this classic arcade game.",
+    "icon": "🍉",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVBDF7ZValUiwirLKbXQZzfDDQ8uuFYwvY1b3Yh4pT3suc3_Bg9aST1Pvn6-Q&s",
+    "categories": ["arcade", "action"],
+    "gameUrl": "https://iridescent-furitninquizizz-ed2fd9.netlify.app/",
+    "rating": 4.6
   }
 ]

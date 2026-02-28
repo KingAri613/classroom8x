@@ -859,16 +859,48 @@
 
         let activeAudioElements = [];
         let validSoundFiles = [];
+        let audioMap = new Map(); // Track audio elements by sound path
 
         // Play an audio file by URL (for files placed in /soundboard)
-        function playAudioFile(src) {
+        function playAudioFile(src, button) {
             try {
+                // Check if this sound is already playing
+                if (audioMap.has(src)) {
+                    const existing = audioMap.get(src);
+                    existing.audio.pause();
+                    existing.audio.currentTime = 0;
+                    activeAudioElements = activeAudioElements.filter(x => x !== existing.audio);
+                    audioMap.delete(src);
+                    if (existing.button) {
+                        existing.button.style.boxShadow = 'none';
+                    }
+                    return;
+                }
+
+                // Stop all other sounds and reset their buttons
+                audioMap.forEach((value, key) => {
+                    value.audio.pause();
+                    value.audio.currentTime = 0;
+                    if (value.button) {
+                        value.button.style.boxShadow = 'none';
+                    }
+                });
+                audioMap.clear();
+                activeAudioElements = [];
+
+                // Play new sound
                 const a = new Audio(src);
                 a.preload = 'auto';
                 a.play();
                 activeAudioElements.push(a);
+                audioMap.set(src, { audio: a, button: button });
+                
                 a.addEventListener('ended', () => {
                     activeAudioElements = activeAudioElements.filter(x => x !== a);
+                    audioMap.delete(src);
+                    if (button) {
+                        button.style.boxShadow = 'none';
+                    }
                 });
             } catch (e) {
                 console.error('Audio play error', e);
@@ -1031,13 +1063,14 @@
 
                 imageButton.onclick = (e) => {
                     e.stopPropagation();
-                    grid.querySelectorAll('button[data-sound-btn="true"]').forEach(btn => {
-                        btn.style.boxShadow = 'none';
-                    });
-                    imageButton.style.boxShadow = '0 0 0 3px rgba(233,69,96,0.45)';
-                    playAudioFile(path);
+                    const isPlaying = audioMap.has(path);
+                    if (!isPlaying) {
+                        imageButton.style.boxShadow = '0 0 0 3px rgba(233,69,96,0.45)';
+                    }
+                    playAudioFile(path, imageButton);
                 };
                 imageButton.dataset.soundBtn = 'true';
+                imageButton.dataset.soundPath = path;
 
                 wrapper.appendChild(imageButton);
                 wrapper.appendChild(label);
