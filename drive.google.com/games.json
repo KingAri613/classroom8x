@@ -170,6 +170,26 @@
     "rating": 4.5
   },
   {
+    "id": "jetpack-joyride",
+    "name": "Jetpack Joyride",
+    "description": "Fly through the lab with a jetpack, dodge obstacles and collect coins!",
+    "icon": "🚀",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhunLaHGj7axX5p2QAImuCY5mNFBfJOOTmVsvKGG8xdVX10Ppu7rINJErYJQ&s",
+    "categories": ["action", "arcade"],
+    "gameUrl": "jetpack joyride/index.html",
+    "rating": 4.7
+  },
+  {
+    "id": "death-run-3d",
+    "name": "Death Run 3D",
+    "description": "Run through a deadly neon tunnel and dodge obstacles at high speed!",
+    "icon": "💀",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJl822V4kaJdHTkdgU5vtEQUnAIi-29Geb1NlG39VYQ4UeaB03WP-dR5ngPns&s",
+    "categories": ["action", "arcade"],
+    "gameUrl": "death run 3d/index.html",
+    "rating": 4.6
+  },
+  {
     "id": "candy-crush",
     "name": "Candy Crush",
     "description": "Match candies and complete levels in this addictive puzzle game!",
