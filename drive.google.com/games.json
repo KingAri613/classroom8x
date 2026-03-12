@@ -10,26 +10,6 @@
     "rating": 4.5
   },
   {
-    "id": "candy-crush",
-    "name": "Candy Crush",
-    "description": "Match candies and complete levels in this addictive puzzle game!",
-    "icon": "🍭",
-    "image": "",
-    "categories": ["puzzle"],
-    "gameUrl": "candy crush/index.html",
-    "rating": 4.7
-  },
-  {
-    "id": "chess",
-    "name": "Chess",
-    "description": "Classic chess game - test your strategy and tactical skills.",
-    "icon": "♟",
-    "image": "",
-    "categories": ["puzzle", "2player"],
-    "gameUrl": "chess/index.html",
-    "rating": 4.6
-  },
-  {
     "id": "crossy-road",
     "name": "Crossy Road",
     "description": "Cross the street while avoiding traffic and obstacles!",
@@ -58,8 +38,7 @@
     "categories": ["action", "puzzle"],
     "gameUrl": "stack/index.html",
     "rating": 4.7
-  }
-,
+  },
   {
     "id": "pac-man",
     "name": "Pac Man",
@@ -69,8 +48,7 @@
     "categories": ["arcade", "action"],
     "gameUrl": "../pac man/result (35).html",
     "rating": 4.8
-  }
-  ,
+  },
   {
     "id": "geometry-dash",
     "name": "Geometry Dash",
@@ -80,8 +58,7 @@
     "categories": ["platformer", "arcade"],
     "gameUrl": "geometry dash/index (2).html",
     "rating": 4.5
-  }
-  ,
+  },
   {
     "id": "3d-truck",
     "name": "3D Truck",
@@ -139,7 +116,7 @@
     "icon": "🚗",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTl3FTPoWpppnjHOgm0K8hwNHRPZppi7OUwedTIvHy4Fs3VxXjjsG3Pe_H4Q&s",
     "categories": ["racing", "action"],
-    "gameUrl": "https://www.gameflare.com/embed/drift-boss/",
+    "gameUrl": "drift boss/index.html",
     "rating": 4.5
   },
   {
@@ -180,6 +157,36 @@
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVBDF7ZValUiwirLKbXQZzfDDQ8uuFYwvY1b3Yh4pT3suc3_Bg9aST1Pvn6-Q&s",
     "categories": ["arcade", "action"],
     "gameUrl": "https://iridescent-furitninquizizz-ed2fd9.netlify.app/",
+    "rating": 4.6
+  },
+  {
+    "id": "getaway-shootout",
+    "name": "Getaway Shootout",
+    "description": "Race, jump, and blast your way to the getaway before everyone else.",
+    "icon": "🔫",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvZzOi5IVUSpaiSatOxDS_UbVh2lSLLJCeS-NcDFo5ntFAr8rDO1isJk_MaWQ&s",
+    "categories": ["action", "2player"],
+    "gameUrl": "https://relaxed-quzizzgetawayl-50d3f0.netlify.app/",
+    "rating": 4.5
+  },
+  {
+    "id": "candy-crush",
+    "name": "Candy Crush",
+    "description": "Match candies and complete levels in this addictive puzzle game!",
+    "icon": "🍭",
+    "image": "",
+    "categories": ["puzzle"],
+    "gameUrl": "candy crush/index.html",
+    "rating": 4.7
+  },
+  {
+    "id": "chess",
+    "name": "Chess",
+    "description": "Classic chess game - test your strategy and tactical skills.",
+    "icon": "♟",
+    "image": "",
+    "categories": ["puzzle", "2player"],
+    "gameUrl": "chess/index.html",
     "rating": 4.6
   }
 ]
