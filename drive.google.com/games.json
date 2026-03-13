@@ -190,6 +190,16 @@
     "rating": 4.6
   },
   {
+    "id": "subway-surfers",
+    "name": "Subway Surfers",
+    "description": "Dash through the subway, dodge trains, and surf your way to a high score!",
+    "icon": "🏃",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0bOZ2uK5j3aGXVN9xcmrizxUcNwEQkEGnA1hDC9Vi5O0t-R4fEKeVo_9OBA&s",
+    "categories": ["action", "arcade"],
+    "gameUrl": "subway surfers new york/index.html",
+    "rating": 4.8
+  },
+  {
     "id": "candy-crush",
     "name": "Candy Crush",
     "description": "Match candies and complete levels in this addictive puzzle game!",
