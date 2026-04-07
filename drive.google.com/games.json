@@ -150,16 +150,6 @@
     "rating": 4.6
   },
   {
-    "id": "getaway-shootout",
-    "name": "Getaway Shootout",
-    "description": "Race, jump, and blast your way to the getaway before everyone else.",
-    "icon": "🔫",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvZzOi5IVUSpaiSatOxDS_UbVh2lSLLJCeS-NcDFo5ntFAr8rDO1isJk_MaWQ&s",
-    "categories": ["action", "2player"],
-    "gameUrl": "https://relaxed-quzizzgetawayl-50d3f0.netlify.app/",
-    "rating": 4.5
-  },
-  {
     "id": "death-run-3d",
     "name": "Death Run 3D",
     "description": "Run through a deadly neon tunnel and dodge obstacles at high speed!",
@@ -180,23 +170,13 @@
     "rating": 4.6
   },
   {
-    "id": "candy-crush",
-    "name": "Candy Crush",
-    "description": "Match candies and complete levels in this addictive puzzle game!",
-    "icon": "🍭",
-    "image": "",
-    "categories": ["puzzle"],
-    "gameUrl": "candy crush/index.html",
-    "rating": 4.7
-  },
-  {
-    "id": "chess",
-    "name": "Chess",
-    "description": "Classic chess game - test your strategy and tactical skills.",
-    "icon": "♟",
-    "image": "",
-    "categories": ["puzzle", "2player"],
-    "gameUrl": "chess/index.html",
-    "rating": 4.6
+    "id": "escape-road-city-2",
+    "name": "Escape Road City 2",
+    "description": "Navigate through the city and escape obstacles in this thrilling sequel!",
+    "icon": "🏙",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKBlrNARMEcl0dEtC0TqEVsBaVUuM6qfEwpApaZVPhvzWzhEqwSzIawPd-oBQ&s",
+    "categories": ["action", "platformer"],
+    "gameUrl": "Escape Road 2 City/clescaperoadcity2.html",
+    "rating": 4.5
   }
 ]
