@@ -178,5 +178,45 @@
     "categories": ["action", "platformer"],
     "gameUrl": "Escape Road 2 City/clescaperoadcity2.html",
     "rating": 4.5
+  },
+  {
+    "id": "jetpack-joyride",
+    "name": "Jetpack Joyride",
+    "description": "Fly through the lab with a jetpack, dodge obstacles and collect coins!",
+    "icon": "🚀",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQq2ndgRlE0yXQ4Rr82JjjBkS34ttRQeoMSmrVBYZ-UrNQap2GIDn7k5Lc8mqI&s",
+    "categories": ["action", "arcade"],
+    "gameUrl": "jetpack joyride/cljetpackjoyride.html",
+    "rating": 4.7
+  },
+  {
+    "id": "poly-track",
+    "name": "Poly Track",
+    "description": "Navigate the challenging track in this precision racing game!",
+    "icon": "🏁",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToCGgBaUlOdKGvvgrrh7kQi5i5y6vLKbH7sSNh8gOckFMACZ5NkeUawZy99w&s",
+    "categories": ["racing", "action"],
+    "gameUrl": "poly track/clpolytrackworksnow.html",
+    "rating": 4.6
+  },
+  {
+    "id": "subway-surfers-london",
+    "name": "Subway Surfers London",
+    "description": "Run through the London subway and dodge trains while collecting coins!",
+    "icon": "🚇",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYTQapjD5EAAKEeJ5apGgzeYuKFp4hgNLWFXjIJUidxAHyE0EAb9d1t6woEUE&s",
+    "categories": ["action", "arcade"],
+    "gameUrl": "subway surfers london/clsubwaysurferslondon.html",
+    "rating": 4.8
+  },
+  {
+    "id": "chess",
+    "name": "Chess",
+    "description": "Classic chess game - test your strategy and tactical skills against opponents!",
+    "icon": "♟",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThkzlWS3zu80KjfGxYFHxnLBhSWP5D1pHufLxHgU_VDTxvq9vH5I2iwIM1WoY&s",
+    "categories": ["puzzle", "2player"],
+    "gameUrl": "chess/clchessclassic.html",
+    "rating": 4.6
   }
 ]
