@@ -218,5 +218,35 @@
     "categories": ["puzzle", "2player"],
     "gameUrl": "chess/clchessclassic.html",
     "rating": 4.6
+  },
+  {
+    "id": "basket-random",
+    "name": "Basket Random",
+    "description": "Shoot hoops with unpredictable physics in this fun basketball game!",
+    "icon": "🏀",
+    "image": "",
+    "categories": ["sports", "arcade"],
+    "gameUrl": "basket random/clbasketrandom.html",
+    "rating": 4.5
+  },
+  {
+    "id": "among-us",
+    "name": "Among Us",
+    "description": "Work together to complete tasks or deceive your crewmates as the impostor!",
+    "icon": "👽",
+    "image": "",
+    "categories": ["social", "puzzle"],
+    "gameUrl": "Among Us/clamongus.html",
+    "rating": 4.4
+  },
+  {
+    "id": "fireboy-watergirl-3",
+    "name": "Fireboy and Watergirl 3",
+    "description": "Help Fireboy and Watergirl solve puzzles and escape the temples together!",
+    "icon": "🔥",
+    "image": "",
+    "categories": ["puzzle", "2player"],
+    "gameUrl": "Fireboy and Watergirl 3/clfireboyandwatergirl3.html",
+    "rating": 4.7
   }
 ]
