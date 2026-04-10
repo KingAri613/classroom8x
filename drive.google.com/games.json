@@ -60,16 +60,6 @@
     "rating": 4.5
   },
   {
-    "id": "3d-truck",
-    "name": "3D Truck",
-    "description": "Drive a big rig through tricky terrain and tight turns.",
-    "icon": "🚚",
-    "image": "",
-    "categories": ["racing", "action"],
-    "gameUrl": "https://exquisite-truckquizizz-128a36.netlify.app/",
-    "rating": 4.3
-  },
-  {
     "id": "idle-soccer",
     "name": "Idle Soccer",
     "description": "Build your team and watch the goals roll in.",
@@ -140,17 +130,17 @@
     "rating": 4.5
   },
   {
-    "id": "fruit-ninja",
-    "name": "Fruit Ninja",
-    "description": "Slice fruits and avoid bombs in this classic arcade game.",
-    "icon": "🍉",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVBDF7ZValUiwirLKbXQZzfDDQ8uuFYwvY1b3Yh4pT3suc3_Bg9aST1Pvn6-Q&s",
-    "categories": ["arcade", "action"],
-    "gameUrl": "https://iridescent-furitninquizizz-ed2fd9.netlify.app/",
+    "id": "death-run-3d",
+    "name": "Death Run 3D",
+    "description": "Run through a deadly neon tunnel and dodge obstacles at high speed!",
+    "icon": "💀",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJl822V4kaJdHTkdgU5vtEQUnAIi-29Geb1NlG39VYQ4UeaB03WP-dR5ngPns&s",
+    "categories": ["action", "arcade"],
+    "gameUrl": "death run 3d/index.html",
     "rating": 4.6
   },
   {
-    "id": "death-run-3d",
+    "id": "volley-random",
     "name": "Death Run 3D",
     "description": "Run through a deadly neon tunnel and dodge obstacles at high speed!",
     "icon": "💀",
