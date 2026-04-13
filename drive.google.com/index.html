@@ -667,11 +667,42 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
 
-        .close-button {
+        .side-hint {
             position: fixed;
-            top: 20px;
-            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
             z-index: 2001;
+            width: 44px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 999px;
+        }
+
+        .side-hint.left-side {
+            left: 10px;
+        }
+
+        .side-hint.right-side {
+            right: 10px;
+        }
+
+        .side-arrow {
+            color: #eaeaea;
+            font-size: 1.5em;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .modal-action {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 46px;
             height: 46px;
             display: inline-flex;
@@ -682,58 +713,36 @@
             border: 2px solid #e94560;
             border-radius: 8px;
             cursor: pointer;
-            font-weight: 600;
             font-size: 1.2em;
             box-shadow: 0 4px 12px rgba(0,0,0,0.4);
             transition: all 0.3s ease;
-            animation: scaleIn 0.3s ease-out;
         }
 
-        .close-button:hover,
-        .fullscreen-button:hover {
+        .side-hint:hover {
+            background: rgba(22, 33, 62, 0.35);
+        }
+
+        .side-hint:hover .modal-action {
+            display: inline-flex;
+        }
+
+        .side-hint:hover .side-arrow {
+            opacity: 0.35;
+        }
+
+        .modal-action:hover {
             background: linear-gradient(135deg, #e94560 0%, #ff5a75 100%);
             color: white;
-            transform: translateY(-2px);
+            transform: translate(-50%, -50%) translateY(-2px);
             box-shadow: 0 6px 20px rgba(233, 69, 96, 0.5);
         }
 
-        .close-button:active,
-        .fullscreen-button:active {
-            transform: translateY(0);
-        }
-
-        .fullscreen-button {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 2001;
-            width: 46px;
-            height: 46px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
-            color: #eaeaea;
-            border: 2px solid #e94560;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.2em;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            transition: all 0.3s ease;
-            animation: scaleIn 0.3s ease-out;
+        .modal-action:active {
+            transform: translate(-50%, -50%) translateY(0);
         }
 
         .esc-hint {
             display: none;
-        }
-
-        .side-hint {
-            display: none !important;
-        }
-
-        .close-button {
-            display: inline-flex !important;
         }
 
         iframe {
@@ -838,8 +847,14 @@
     </div>
 
     <div class="modal-overlay" id="gameModal">
-        <button class="close-button" onclick="closeGame()" title="Close">✕</button>
-        <button class="fullscreen-button" type="button" onclick="toggleGameFullscreen()" title="Fullscreen">⛶</button>
+        <div class="side-hint left-side" title="Close" onclick="closeGame()">
+            <span class="side-arrow">◀</span>
+            <button class="modal-action close-button" onclick="closeGame()" title="Close">✕</button>
+        </div>
+        <div class="side-hint right-side" title="Fullscreen" onclick="toggleGameFullscreen()">
+            <span class="side-arrow">▶</span>
+            <button class="modal-action fullscreen-button" type="button" onclick="toggleGameFullscreen()" title="Fullscreen">⛶</button>
+        </div>
         <iframe id="gameFrame" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
     </div>
 
