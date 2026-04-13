@@ -729,6 +729,21 @@
             transform: translateY(0);
         }
 
+        .esc-hint {
+            position: fixed;
+            top: 22px;
+            left: 20px;
+            z-index: 2001;
+            padding: 10px 14px;
+            background: rgba(22, 33, 62, 0.9);
+            color: #eaeaea;
+            border: 2px solid #e94560;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95em;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
         .fullscreen-button:hover {
             background: linear-gradient(135deg, #e94560 0%, #ff5a75 100%);
             color: white;
@@ -843,7 +858,7 @@
 
     <div class="modal-overlay" id="gameModal">
         <button class="fullscreen-button" type="button" onclick="toggleGameFullscreen()" title="Fullscreen">⛶</button>
-        <button class="close-button" onclick="closeGame()">✕</button>
+        <div class="esc-hint">Press ESC to exit</div>
         <iframe id="gameFrame" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
     </div>
 
