@@ -141,16 +141,6 @@
   },
   {
     "id": "volley-random",
-    "name": "Death Run 3D",
-    "description": "Run through a deadly neon tunnel and dodge obstacles at high speed!",
-    "icon": "💀",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJl822V4kaJdHTkdgU5vtEQUnAIi-29Geb1NlG39VYQ4UeaB03WP-dR5ngPns&s",
-    "categories": ["action", "arcade"],
-    "gameUrl": "death run 3d/index.html",
-    "rating": 4.6
-  },
-  {
-    "id": "volley-random",
     "name": "Volley Random",
     "description": "Spike, block, and smash your way to victory in this fun volleyball game!",
     "icon": "🏐",
@@ -158,6 +148,126 @@
     "categories": ["sports", "arcade"],
     "gameUrl": "volley random/index.html",
     "rating": 4.6
+  },
+  {
+    "id": "infinite-craft",
+    "name": "Infinite Craft",
+    "description": "Build, explore, and survive in this endless crafting adventure.",
+    "icon": "⛏️",
+    "image": "https://tse2.mm.bing.net/th/id/OIP.bis5I1EEsrnhGEtNqzL0EwAAAA?pid=Api",
+    "categories": ["sandbox", "adventure"],
+    "gameUrl": "Infinite Craft/clinfinitecraft.html",
+    "rating": 4.7
+  },
+  {
+    "id": "fireboy-watergirl-2",
+    "name": "Fireboy and Watergirl 2",
+    "description": "Help Fireboy and Watergirl solve puzzles in the forest temple.",
+    "icon": "🔥",
+    "image": "https://tse4.mm.bing.net/th/id/OIP.bSzW6bWpxVt9iqLaRJTNYQAAAA?pid=Api",
+    "categories": ["puzzle", "2player"],
+    "gameUrl": "fireboy and watergirl 2/clfireboyandwatergirl2.html",
+    "rating": 4.7
+  },
+  {
+    "id": "snow-rider",
+    "name": "Snow Rider",
+    "description": "Ride through snowy tracks and dodge obstacles in this icy racer.",
+    "icon": "❄️",
+    "image": "https://tse1.mm.bing.net/th/id/OIP.b6lC2nQaCqbAZMmUzgSc1wHaHa?pid=Api",
+    "categories": ["racing", "arcade"],
+    "gameUrl": "Snow rider/clsnowrider.html",
+    "rating": 4.6
+  },
+  {
+    "id": "helix-jump",
+    "name": "Helix Jump",
+    "description": "Drop through the helix tower and avoid the red zones.",
+    "icon": "🌀",
+    "image": "https://tse2.mm.bing.net/th/id/OIP.ivuhz6J1oLjIktXo3Lmf5QHaHa?pid=Api",
+    "categories": ["arcade", "reflex"],
+    "gameUrl": "helix jump/clhelixjump.html",
+    "rating": 4.5
+  },
+  {
+    "id": "johnny-trigger",
+    "name": "Johnny Trigger",
+    "description": "Take out enemies with precise sharpshooter moves.",
+    "icon": "🔫",
+    "image": "https://tse4.mm.bing.net/th/id/OIP.kqTF4uoL0EX_NszqEF2gLgHaHa?pid=Api",
+    "categories": ["shooter", "action"],
+    "gameUrl": "Johnny Trigger/cljohnnytrigger.html",
+    "rating": 4.6
+  },
+  {
+    "id": "pixel-shooter",
+    "name": "Pixel Shooter",
+    "description": "Shoot down pixel enemies in this fast-paced arcade shooter.",
+    "icon": "🟦",
+    "image": "https://tse4.mm.bing.net/th/id/OIP.B5Bi19EGf7eGz3wLuk8n_wHaHa?pid=Api",
+    "categories": ["shooter", "arcade"],
+    "gameUrl": "Pixel shooter/clpixelshooter.html",
+    "rating": 4.5
+  },
+  {
+    "id": "snowball-io",
+    "name": "Snowball.io",
+    "description": "Throw snowballs and knock rivals out in this icy battle arena.",
+    "icon": "☃️",
+    "image": "https://tse2.mm.bing.net/th/id/OIP.fWKdBgE3Rf1GEQHjBOUfYgAAAA?pid=Api",
+    "categories": ["action", "io"],
+    "gameUrl": "Snowball.io/clsnowballio.html",
+    "rating": 4.5
+  },
+  {
+    "id": "tag",
+    "name": "Tag",
+    "description": "Chase or escape in this classic game of tag.",
+    "icon": "🏃",
+    "image": "https://tse1.mm.bing.net/th/id/OIP.zcNP6LH5HANeuYXFg2YyzAAAAA?pid=Api",
+    "categories": ["action", "multiplayer"],
+    "gameUrl": "tag/cltagcm.html",
+    "rating": 4.4
+  },
+  {
+    "id": "temple-run-2",
+    "name": "Temple Run 2",
+    "description": "Run, jump, and slide through dangerous temple paths.",
+    "icon": "🏃‍♂️",
+    "image": "https://tse3.mm.bing.net/th/id/OIP.e2uLyunWgaZ2z_FqovUw1AHaHa?pid=Api",
+    "categories": ["endless", "arcade"],
+    "gameUrl": "temple run 2/cltemplerun2.html",
+    "rating": 4.6
+  },
+  {
+    "id": "yohoho-io",
+    "name": "Yohoho.io",
+    "description": "Sail the seas and battle other pirates in this io adventure.",
+    "icon": "🏴‍☠️",
+    "image": "https://tse3.mm.bing.net/th/id/OIP.XMQj_T-ISRzDDCQqjpnhhAHaHa?pid=Api",
+    "categories": ["io", "action"],
+    "gameUrl": "yohoho.io/clyohohoio.html",
+    "rating": 4.5
+  },
+  {
+    "id": "vex-8",
+    "name": "Vex 8",
+    "description": "Dash, jump, and avoid traps in this precision platformer.",
+    "icon": "🕹️",
+    "image": "https://tse1.mm.bing.net/th/id/OIP.4XqpeZFWXeioDa5bWaav0gHaHa?pid=Api",
+    "categories": ["platformer", "action"],
+    "gameUrl": "vex8/clvex8.html",
+    "rating": 4.6
+  },
+  {
+    "id": "space-waves",
+    "name": "Space Waves",
+    "description": "Fight through waves of enemies in this space shooter.",
+    "icon": "🚀",
+    "image": "https://tse1.mm.bing.net/th/id/OIP.HknCfhAxzsAppxmzoKeYkQAAAA?pid=Api",
+    "categories": ["shooter", "arcade"],
+    "gameUrl": "space waves/clspacewaves.html",
+    "rating": 4.5
   },
   {
     "id": "escape-road-city-2",
