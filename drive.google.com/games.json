@@ -324,7 +324,7 @@
     "name": "Basket Random",
     "description": "Shoot hoops with unpredictable physics in this fun basketball game!",
     "icon": "🏀",
-    "image": "",
+    "image": "https://tse2.mm.bing.net/th/id/OIP.BW0Hn4L27TZwvNJHr1PtXwHaHa?pid=Api",
     "categories": ["sports", "arcade"],
     "gameUrl": "basket random/clbasketrandom.html",
     "rating": 4.5
@@ -344,7 +344,7 @@
     "name": "Fireboy and Watergirl 3",
     "description": "Help Fireboy and Watergirl solve puzzles and escape the temples together!",
     "icon": "🔥",
-    "image": "",
+    "image": "https://tse4.mm.bing.net/th/id/OIP.l1GSR1ISFQvvqyYMndwphAAAAA?pid=Api",
     "categories": ["puzzle", "2player"],
     "gameUrl": "Fireboy and Watergirl 3/clfireboyandwatergirl3.html",
     "rating": 4.7
