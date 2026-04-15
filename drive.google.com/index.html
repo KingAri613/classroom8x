@@ -667,80 +667,46 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
 
-        .side-hint {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 2001;
-            width: 44px;
-            height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-radius: 999px;
-        }
-
-        .side-hint.left-side {
-            left: 10px;
-        }
-
-        .side-hint.right-side {
-            right: 10px;
-        }
-
-        .side-arrow {
-            color: #eaeaea;
-            font-size: 1.5em;
-            user-select: none;
-            pointer-events: none;
-        }
-
         .modal-action {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            position: fixed;
+            z-index: 2001;
             width: 46px;
             height: 46px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             background: rgba(22, 33, 62, 0.15);
-            color: #eaeaea;
-            border: 2px solid rgba(233, 69, 96, 0.3);
+            color: #e94560;
+            border: 2px solid #e94560;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1.2em;
+            font-size: 1.4em;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             transition: all 0.3s ease;
             backdrop-filter: blur(4px);
+            padding: 0;
         }
 
-        .side-hint:hover {
-            background: rgba(22, 33, 62, 0.2);
+        .close-button {
+            top: 20px;
+            left: 20px;
         }
 
-        .side-hint:hover .modal-action {
-            display: inline-flex;
-        }
-
-        .side-hint:hover .side-arrow {
-            opacity: 0.35;
+        .fullscreen-button {
+            top: 20px;
+            right: 20px;
         }
 
         .modal-action:hover {
             background: rgba(233, 69, 96, 0.25);
-            color: white;
-            transform: translate(-50%, -50%) translateY(-2px);
+            color: #e94560;
+            transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(233, 69, 96, 0.3);
-            border-color: rgba(233, 69, 96, 0.6);
+            border-color: #e94560;
         }
 
         .modal-action:active {
-            transform: translate(-50%, -50%) translateY(0);
+            transform: translateY(0);
         }
 
         .esc-hint {
@@ -849,14 +815,8 @@
     </div>
 
     <div class="modal-overlay" id="gameModal">
-        <div class="side-hint left-side" title="Close" onclick="closeGame()">
-            <span class="side-arrow">◀</span>
-            <button class="modal-action close-button" onclick="closeGame()" title="Close">✕</button>
-        </div>
-        <div class="side-hint right-side" title="Fullscreen" onclick="toggleGameFullscreen()">
-            <span class="side-arrow">▶</span>
-            <button class="modal-action fullscreen-button" type="button" onclick="toggleGameFullscreen()" title="Fullscreen">⛶</button>
-        </div>
+        <button class="modal-action close-button" onclick="closeGame()" title="Close">✕</button>
+        <button class="modal-action fullscreen-button" type="button" onclick="toggleGameFullscreen()" title="Fullscreen">⛶</button>
         <iframe id="gameFrame" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
     </div>
 
@@ -1375,7 +1335,7 @@
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                 e.preventDefault();
-                window.location.href = 'https://classroom.google.com';
+                window.open('https://classroom.google.com', '_blank');
             }
         });
 

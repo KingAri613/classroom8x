@@ -5,7 +5,10 @@
     "description": "A thrilling platformer game where you must navigate obstacles and escape to freedom!",
     "icon": "🚗",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQU9XSu2gLIcURzrWyfi4IiQ7JAF8mCY7KbtGgx9foOI0KVOLp9kcRq0x9WDw&s",
-    "categories": ["action", "platformer"],
+    "categories": [
+      "action",
+      "platformer"
+    ],
     "gameUrl": "escape road/escape road.html",
     "rating": 4.5
   },
@@ -15,7 +18,10 @@
     "description": "Cross the street while avoiding traffic and obstacles!",
     "icon": "🚦",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQISLpDCEkM8OcPawXq_jqM6TA4Tqx2Ep74eeht-Y87cEOihyhXSnXuhE9EIg&s",
-    "categories": ["action", "platformer"],
+    "categories": [
+      "action",
+      "platformer"
+    ],
     "gameUrl": "crossy road/index.html",
     "rating": 4.4
   },
@@ -25,7 +31,10 @@
     "description": "Drive through crazy tracks and complete insane stunts!",
     "icon": "🏎",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQf4S4preVjMGzTL5ksEANS9ZiUq5cm5keaMptKbDC0ITljThU2NXIwIRpQkFs&s",
-    "categories": ["action", "racing"],
+    "categories": [
+      "action",
+      "racing"
+    ],
     "gameUrl": "drive mad/index.html",
     "rating": 4.8
   },
@@ -35,7 +44,10 @@
     "description": "Stack blocks higher and higher without falling! Test your timing and precision.",
     "icon": "📦",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOt6fK8wbNOQUGlVY3JmOCFsjt9Daa89hhidk64w0p6sFV9Q7EElRt6oqUwg&s",
-    "categories": ["action", "puzzle"],
+    "categories": [
+      "action",
+      "puzzle"
+    ],
     "gameUrl": "stack/index.html",
     "rating": 4.7
   },
@@ -45,7 +57,10 @@
     "description": "Classic arcade Pac-Man is here — eat pellets and avoid ghosts!",
     "icon": "🟡",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSppnrQRLHSWIKPKCULIH0VT8RE3xfpkETD8--o6-EpxWSIPpcE1KbZLJNfQ2I&s",
-    "categories": ["arcade", "action"],
+    "categories": [
+      "arcade",
+      "action"
+    ],
     "gameUrl": "../pac man/result (35).html",
     "rating": 4.8
   },
@@ -55,7 +70,10 @@
     "description": "Fast-paced rhythm platformer — jump and fly to the beat.",
     "icon": "⬛",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVfMa5KjlgGxERxRgJcQoZNEwZAW7eFwAKYWD8pblwNIpKfQ59V7BitawWpco&s",
-    "categories": ["platformer", "arcade"],
+    "categories": [
+      "platformer",
+      "arcade"
+    ],
     "gameUrl": "geometry dash/index (2).html",
     "rating": 4.5
   },
@@ -65,7 +83,10 @@
     "description": "Build your team and watch the goals roll in.",
     "icon": "⚽",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnUspBktYCZ6OCzSqFn9CpwXZ2TZdSG-_U-nsRvubgEUXMgZojMOAEzj-lVw&s",
-    "categories": ["sports", "idle"],
+    "categories": [
+      "sports",
+      "idle"
+    ],
     "gameUrl": "https://creative-idlesoccerquizizz-4170f5.netlify.app/",
     "rating": 4.2
   },
@@ -75,7 +96,10 @@
     "description": "Run your own market and keep the shelves stocked.",
     "icon": "🐵",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAYZywQ5VLGKbHlH7YBmasd0_xcJsElQyVegrriOyMJN8PJI4W7CVwZW5FBmA&s",
-    "categories": ["simulation", "idle"],
+    "categories": [
+      "simulation",
+      "idle"
+    ],
     "gameUrl": "monkey mart/clmonkeymart.html",
     "rating": 4.6
   },
@@ -85,8 +109,11 @@
     "description": "Claim territory and outmaneuver opponents.",
     "icon": "🟦",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTg234g1grmtcYccS3AYpE4IHePAQd2lmNBduLKNOFI6QKKAnVta-gO9m2dtuA&s",
-    "categories": ["arcade", "action"],
-    "gameUrl": "https://magical-paperquizizz-492e95.netlify.app/",
+    "categories": [
+      "arcade",
+      "action"
+    ],
+    "gameUrl": "paper.io/clpaperio.html",
     "rating": 4.4
   },
   {
@@ -95,7 +122,10 @@
     "description": "Swing from hooks and time your jumps.",
     "icon": "🪝",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbzAiU7SPqCIvz2Kfsx4dxIUBV_j83WUNaDiGU3SVLDu8JGrCduKoVhbuA6Q&s",
-    "categories": ["action", "platformer"],
+    "categories": [
+      "action",
+      "platformer"
+    ],
     "gameUrl": "stickman hook/clstickmanhook.html",
     "rating": 4.5
   },
@@ -105,7 +135,10 @@
     "description": "Build and battle in this fast-paced online shooter.",
     "icon": "🎯",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNIPmErtI94FLFCyY6A17vPpenDu1hUtUY0M2EDIV0JLw1lz7n6rlzpZxj4A&s",
-    "categories": ["action", "2player"],
+    "categories": [
+      "action",
+      "2player"
+    ],
     "gameUrl": "https://stalwart-1v1lolquizizz-a4c901.netlify.app/",
     "rating": 4.7
   },
@@ -115,7 +148,10 @@
     "description": "Roll down the slope at high speed and try to survive as long as possible.",
     "icon": "🎱",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGcYRVPrLvBzCCNsQV1gyxAjjqM0ScNNg-ezxzsY7r8HZBIA3GV6i3Icu1mA&s",
-    "categories": ["action", "arcade"],
+    "categories": [
+      "action",
+      "arcade"
+    ],
     "gameUrl": "https://cute-df7b43slopethreequizizz.netlify.app/",
     "rating": 4.6
   },
@@ -125,7 +161,10 @@
     "description": "Show off your basketball skills in this exciting sports game.",
     "icon": "🏀",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTtYzCZ-_y3Q9rfEHXATolGZ8a__7IvFXjqj9VHY3EnzqHaNg4wYGJcMjj8A&s",
-    "categories": ["sports", "2player"],
+    "categories": [
+      "sports",
+      "2player"
+    ],
     "gameUrl": "https://rad-quizizzbasketballstars-a2ffe0.netlify.app/",
     "rating": 4.5
   },
@@ -135,7 +174,10 @@
     "description": "Run through a deadly neon tunnel and dodge obstacles at high speed!",
     "icon": "💀",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJl822V4kaJdHTkdgU5vtEQUnAIi-29Geb1NlG39VYQ4UeaB03WP-dR5ngPns&s",
-    "categories": ["action", "arcade"],
+    "categories": [
+      "action",
+      "arcade"
+    ],
     "gameUrl": "death run 3d/index.html",
     "rating": 4.6
   },
@@ -145,7 +187,10 @@
     "description": "Spike, block, and smash your way to victory in this fun volleyball game!",
     "icon": "🏐",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSL9dAfwR2LEtzqeupIfuujKEIb28ipJjuww47FnBYXGkkI3G1V4_QaxFCbDw&s",
-    "categories": ["sports", "arcade"],
+    "categories": [
+      "sports",
+      "arcade"
+    ],
     "gameUrl": "volley random/index.html",
     "rating": 4.6
   },
@@ -155,18 +200,11 @@
     "description": "Build, explore, and survive in this endless crafting adventure.",
     "icon": "⛏️",
     "image": "https://tse2.mm.bing.net/th/id/OIP.bis5I1EEsrnhGEtNqzL0EwAAAA?pid=Api",
-    "categories": ["sandbox", "adventure"],
+    "categories": [
+      "sandbox",
+      "adventure"
+    ],
     "gameUrl": "Infinite Craft/clinfinitecraft.html",
-    "rating": 4.7
-  },
-  {
-    "id": "fireboy-watergirl-2",
-    "name": "Fireboy and Watergirl 2",
-    "description": "Help Fireboy and Watergirl solve puzzles in the forest temple.",
-    "icon": "🔥",
-    "image": "https://tse4.mm.bing.net/th/id/OIP.bSzW6bWpxVt9iqLaRJTNYQAAAA?pid=Api",
-    "categories": ["puzzle", "2player"],
-    "gameUrl": "fireboy and watergirl 2/clfireboyandwatergirl2.html",
     "rating": 4.7
   },
   {
@@ -175,7 +213,10 @@
     "description": "Ride through snowy tracks and dodge obstacles in this icy racer.",
     "icon": "❄️",
     "image": "https://tse1.mm.bing.net/th/id/OIP.b6lC2nQaCqbAZMmUzgSc1wHaHa?pid=Api",
-    "categories": ["racing", "arcade"],
+    "categories": [
+      "racing",
+      "arcade"
+    ],
     "gameUrl": "Snow rider/clsnowrider.html",
     "rating": 4.6
   },
@@ -185,7 +226,10 @@
     "description": "Drop through the helix tower and avoid the red zones.",
     "icon": "🌀",
     "image": "https://tse2.mm.bing.net/th/id/OIP.ivuhz6J1oLjIktXo3Lmf5QHaHa?pid=Api",
-    "categories": ["arcade", "reflex"],
+    "categories": [
+      "arcade",
+      "reflex"
+    ],
     "gameUrl": "helix jump/clhelixjump.html",
     "rating": 4.5
   },
@@ -195,19 +239,12 @@
     "description": "Take out enemies with precise sharpshooter moves.",
     "icon": "🔫",
     "image": "https://tse4.mm.bing.net/th/id/OIP.kqTF4uoL0EX_NszqEF2gLgHaHa?pid=Api",
-    "categories": ["shooter", "action"],
+    "categories": [
+      "shooter",
+      "action"
+    ],
     "gameUrl": "Johnny Trigger/cljohnnytrigger.html",
     "rating": 4.6
-  },
-  {
-    "id": "pixel-shooter",
-    "name": "Pixel Shooter",
-    "description": "Shoot down pixel enemies in this fast-paced arcade shooter.",
-    "icon": "🟦",
-    "image": "https://tse4.mm.bing.net/th/id/OIP.B5Bi19EGf7eGz3wLuk8n_wHaHa?pid=Api",
-    "categories": ["shooter", "arcade"],
-    "gameUrl": "Pixel shooter/clpixelshooter.html",
-    "rating": 4.5
   },
   {
     "id": "snowball-io",
@@ -215,7 +252,10 @@
     "description": "Throw snowballs and knock rivals out in this icy battle arena.",
     "icon": "☃️",
     "image": "https://tse2.mm.bing.net/th/id/OIP.fWKdBgE3Rf1GEQHjBOUfYgAAAA?pid=Api",
-    "categories": ["action", "io"],
+    "categories": [
+      "action",
+      "io"
+    ],
     "gameUrl": "Snowball.io/clsnowballio.html",
     "rating": 4.5
   },
@@ -225,7 +265,10 @@
     "description": "Chase or escape in this classic game of tag.",
     "icon": "🏃",
     "image": "https://tse1.mm.bing.net/th/id/OIP.zcNP6LH5HANeuYXFg2YyzAAAAA?pid=Api",
-    "categories": ["action", "multiplayer"],
+    "categories": [
+      "action",
+      "multiplayer"
+    ],
     "gameUrl": "tag/cltagcm.html",
     "rating": 4.4
   },
@@ -235,7 +278,10 @@
     "description": "Run, jump, and slide through dangerous temple paths.",
     "icon": "🏃‍♂️",
     "image": "https://tse3.mm.bing.net/th/id/OIP.e2uLyunWgaZ2z_FqovUw1AHaHa?pid=Api",
-    "categories": ["endless", "arcade"],
+    "categories": [
+      "endless",
+      "arcade"
+    ],
     "gameUrl": "temple run 2/cltemplerun2.html",
     "rating": 4.6
   },
@@ -245,7 +291,10 @@
     "description": "Sail the seas and battle other pirates in this io adventure.",
     "icon": "🏴‍☠️",
     "image": "https://tse3.mm.bing.net/th/id/OIP.XMQj_T-ISRzDDCQqjpnhhAHaHa?pid=Api",
-    "categories": ["io", "action"],
+    "categories": [
+      "io",
+      "action"
+    ],
     "gameUrl": "yohoho.io/clyohohoio.html",
     "rating": 4.5
   },
@@ -255,7 +304,10 @@
     "description": "Dash, jump, and avoid traps in this precision platformer.",
     "icon": "🕹️",
     "image": "https://tse1.mm.bing.net/th/id/OIP.4XqpeZFWXeioDa5bWaav0gHaHa?pid=Api",
-    "categories": ["platformer", "action"],
+    "categories": [
+      "platformer",
+      "action"
+    ],
     "gameUrl": "vex8/clvex8.html",
     "rating": 4.6
   },
@@ -265,7 +317,10 @@
     "description": "Fight through waves of enemies in this space shooter.",
     "icon": "🚀",
     "image": "https://tse1.mm.bing.net/th/id/OIP.HknCfhAxzsAppxmzoKeYkQAAAA?pid=Api",
-    "categories": ["shooter", "arcade"],
+    "categories": [
+      "shooter",
+      "arcade"
+    ],
     "gameUrl": "space waves/clspacewaves.html",
     "rating": 4.5
   },
@@ -275,7 +330,10 @@
     "description": "Navigate through the city and escape obstacles in this thrilling sequel!",
     "icon": "🏙",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKBlrNARMEcl0dEtC0TqEVsBaVUuM6qfEwpApaZVPhvzWzhEqwSzIawPd-oBQ&s",
-    "categories": ["action", "platformer"],
+    "categories": [
+      "action",
+      "platformer"
+    ],
     "gameUrl": "Escape Road 2 City/clescaperoadcity2.html",
     "rating": 4.5
   },
@@ -285,7 +343,10 @@
     "description": "Fly through the lab with a jetpack, dodge obstacles and collect coins!",
     "icon": "🚀",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQq2ndgRlE0yXQ4Rr82JjjBkS34ttRQeoMSmrVBYZ-UrNQap2GIDn7k5Lc8mqI&s",
-    "categories": ["action", "arcade"],
+    "categories": [
+      "action",
+      "arcade"
+    ],
     "gameUrl": "jetpack joyride/cljetpackjoyride.html",
     "rating": 4.7
   },
@@ -295,7 +356,10 @@
     "description": "Navigate the challenging track in this precision racing game!",
     "icon": "🏁",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToCGgBaUlOdKGvvgrrh7kQi5i5y6vLKbH7sSNh8gOckFMACZ5NkeUawZy99w&s",
-    "categories": ["racing", "action"],
+    "categories": [
+      "racing",
+      "action"
+    ],
     "gameUrl": "poly track/clpolytrackworksnow.html",
     "rating": 4.6
   },
@@ -305,7 +369,10 @@
     "description": "Run through the London subway and dodge trains while collecting coins!",
     "icon": "🚇",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYTQapjD5EAAKEeJ5apGgzeYuKFp4hgNLWFXjIJUidxAHyE0EAb9d1t6woEUE&s",
-    "categories": ["action", "arcade"],
+    "categories": [
+      "action",
+      "arcade"
+    ],
     "gameUrl": "subway surfers london/clsubwaysurferslondon.html",
     "rating": 4.8
   },
@@ -315,7 +382,10 @@
     "description": "Classic chess game - test your strategy and tactical skills against opponents!",
     "icon": "♟",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThkzlWS3zu80KjfGxYFHxnLBhSWP5D1pHufLxHgU_VDTxvq9vH5I2iwIM1WoY&s",
-    "categories": ["puzzle", "2player"],
+    "categories": [
+      "puzzle",
+      "2player"
+    ],
     "gameUrl": "chess/clchessclassic.html",
     "rating": 4.6
   },
@@ -325,7 +395,10 @@
     "description": "Shoot hoops with unpredictable physics in this fun basketball game!",
     "icon": "🏀",
     "image": "https://tse2.mm.bing.net/th/id/OIP.BW0Hn4L27TZwvNJHr1PtXwHaHa?pid=Api",
-    "categories": ["sports", "arcade"],
+    "categories": [
+      "sports",
+      "arcade"
+    ],
     "gameUrl": "basket random/clbasketrandom.html",
     "rating": 4.5
   },
@@ -335,29 +408,12 @@
     "description": "Work together to complete tasks or deceive your crewmates as the impostor!",
     "icon": "👽",
     "image": "https://tse1.mm.bing.net/th/id/OIP.dXprjkeC23Lbjsizz-sk0AHaHa?pid=Api",
-    "categories": ["social", "puzzle"],
+    "categories": [
+      "social",
+      "puzzle"
+    ],
     "gameUrl": "Among Us/clamongus.html",
     "rating": 4.4
-  },
-  {
-    "id": "fireboy-watergirl-3",
-    "name": "Fireboy and Watergirl 3",
-    "description": "Help Fireboy and Watergirl solve puzzles and escape the temples together!",
-    "icon": "🔥",
-    "image": "https://tse4.mm.bing.net/th/id/OIP.l1GSR1ISFQvvqyYMndwphAAAAA?pid=Api",
-    "categories": ["puzzle", "2player"],
-    "gameUrl": "Fireboy and Watergirl 3/clfireboyandwatergirl3.html",
-    "rating": 4.7
-  },
-  {
-    "id": "death-chase",
-    "name": "Death Chase",
-    "description": "Chase your enemies or escape from them in this thrilling action game.",
-    "icon": "💀",
-    "image": "https://tse1.mm.bing.net/th/id/OIP.uKedaX0BYHqQ4lgRrsk3XwHaHa?cb=thfvnext&pid=Api",
-    "categories": ["action", "arcade"],
-    "gameUrl": "death chase/cldeathchase.html",
-    "rating": 4.5
   },
   {
     "id": "fnaf-4",
@@ -365,7 +421,10 @@
     "description": "Defend against terrifying animatronics in your home.",
     "icon": "🐻",
     "image": "https://tse3.mm.bing.net/th/id/OIP.4wnyUEXR6Bub8Jh97uMk_QHaHa?pid=Api",
-    "categories": ["horror", "puzzle"],
+    "categories": [
+      "horror",
+      "puzzle"
+    ],
     "gameUrl": "FNAF4/clFNAF4.html",
     "rating": 4.6
   },
@@ -375,19 +434,12 @@
     "description": "Ride motocross bikes and perform extreme stunts on challenging tracks.",
     "icon": "🏍️",
     "image": "https://tse2.mm.bing.net/th/id/OIP.3l32MSj2LOimXS8rJ3yNjAHaHa?pid=Api",
-    "categories": ["racing", "action"],
+    "categories": [
+      "racing",
+      "action"
+    ],
     "gameUrl": "motoxm3/clmotox3m3.html",
     "rating": 4.7
-  },
-  {
-    "id": "getaway-shootout",
-    "name": "Getaway Shootout",
-    "description": "Battle opponents in wild west shootouts with hilarious physics.",
-    "icon": "🤠",
-    "image": "https://tse4.mm.bing.net/th/id/OIP.4fhoON2KtZKMnf3Zb4e29wHaHa?pid=Api",
-    "categories": ["action", "2player"],
-    "gameUrl": "getaway shootout/clgetawayshootout.html",
-    "rating": 4.6
   },
   {
     "id": "rooftop-snipers",
@@ -395,7 +447,10 @@
     "description": "Snipe opponents from rooftops in this fun physics-based shooter.",
     "icon": "🎯",
     "image": "https://tse2.mm.bing.net/th/id/OIP.pSq_fG8wa8s6ziJS4U9RAAHaHa?pid=Api",
-    "categories": ["shooter", "2player"],
+    "categories": [
+      "shooter",
+      "2player"
+    ],
     "gameUrl": "rooftop snipers/clrooftopsnipers2.html",
     "rating": 4.5
   },
@@ -405,7 +460,10 @@
     "description": "Use physics and arrows to defeat your ragdoll opponents.",
     "icon": "🏹",
     "image": "https://tse3.mm.bing.net/th/id/OIP.-X63byTwm_XerxZUy-I8nwHaHa?pid=Api",
-    "categories": ["action", "2player"],
+    "categories": [
+      "action",
+      "2player"
+    ],
     "gameUrl": "ragdoll archers/clragdollarchers.html",
     "rating": 4.5
   },
@@ -415,8 +473,89 @@
     "description": "Eat food to grow your snake and eliminate other players.",
     "icon": "🐍",
     "image": "https://tse2.mm.bing.net/th/id/OIP.42JjUnWjsfRMul5HsO76AgHaHa?pid=Api",
-    "categories": ["io", "action"],
+    "categories": [
+      "io",
+      "action"
+    ],
     "gameUrl": "slither.io/clslitherio.html",
     "rating": 4.6
+  },
+  {
+    "id": "eggy-car",
+    "name": "Eggy Car",
+    "description": "Drive an egg-filled car and deliver your cargo without breaking it!",
+    "icon": "🥚",
+    "image": "https://tse1.mm.bing.net/th/id/OIP.0b01tQmpNMdj9c0e4xWNcwHaHa?pid=Api",
+    "categories": [
+      "racing",
+      "action"
+    ],
+    "gameUrl": "eggy car/cleggycar.html",
+    "rating": 4.5
+  },
+  {
+    "id": "escape-road-3",
+    "name": "Escape Road 3",
+    "description": "Navigate through obstacles and escape to safety in this thrilling third installment!",
+    "icon": "🚗",
+    "image": "https://tse4.mm.bing.net/th/id/OIP.P4h_93y9k2ylw5-YE7bhdgAAAA?pid=Api",
+    "categories": [
+      "action",
+      "platformer"
+    ],
+    "gameUrl": "escape road 3/clescaperoad3.html",
+    "rating": 4.6
+  },
+  {
+    "id": "football-bros",
+    "name": "Football Bros",
+    "description": "Play football with your bros in this fun sports game!",
+    "icon": "🏈",
+    "image": "https://tse2.mm.bing.net/th/id/OIP.QOTwHFf7QLkemkL-PH2cEAHaHa?pid=Api",
+    "categories": [
+      "sports",
+      "2player"
+    ],
+    "gameUrl": "football bros/clfootballbros.html",
+    "rating": 4.5
+  },
+  {
+    "id": "hole-io",
+    "name": "Hole.io",
+    "description": "Create a black hole that swallows everything in its path!",
+    "icon": "🕳️",
+    "image": "https://tse4.mm.bing.net/th/id/OIP.yXx0cfEjDd6e0mJt8Bd-TAHaHa?pid=Api",
+    "categories": [
+      "io",
+      "action"
+    ],
+    "gameUrl": "hole.io/clholeio.html",
+    "rating": 4.6
+  },
+  {
+    "id": "smashy-karts",
+    "name": "Smashy Karts",
+    "description": "Race and smash other karts in this chaotic racing game!",
+    "icon": "🏎️",
+    "image": "https://tse2.mm.bing.net/th/id/OIP.DxZWrIdnYQ_YyVa-eqEeWAHaHa?pid=Api",
+    "categories": [
+      "racing",
+      "action"
+    ],
+    "gameUrl": "smashykarts/clsmashkartsworking.html",
+    "rating": 4.6
+  },
+  {
+    "id": "stack-ball-io",
+    "name": "Stack Ball.io",
+    "description": "Break through colored platforms by stacking balls!",
+    "icon": "⚽",
+    "image": "https://tse2.mm.bing.net/th/id/OIP.mvQlj0DN1XEuqwWr332U7gAAAA?pid=Api",
+    "categories": [
+      "arcade",
+      "action"
+    ],
+    "gameUrl": "stack ball.io/clstackballio.html",
+    "rating": 4.5
   }
 ]
