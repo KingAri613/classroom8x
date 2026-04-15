@@ -708,18 +708,19 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+            background: rgba(22, 33, 62, 0.15);
             color: #eaeaea;
-            border: 2px solid #e94560;
+            border: 2px solid rgba(233, 69, 96, 0.3);
             border-radius: 8px;
             cursor: pointer;
             font-size: 1.2em;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
         }
 
         .side-hint:hover {
-            background: rgba(22, 33, 62, 0.35);
+            background: rgba(22, 33, 62, 0.2);
         }
 
         .side-hint:hover .modal-action {
@@ -731,10 +732,11 @@
         }
 
         .modal-action:hover {
-            background: linear-gradient(135deg, #e94560 0%, #ff5a75 100%);
+            background: rgba(233, 69, 96, 0.25);
             color: white;
             transform: translate(-50%, -50%) translateY(-2px);
-            box-shadow: 0 6px 20px rgba(233, 69, 96, 0.5);
+            box-shadow: 0 6px 20px rgba(233, 69, 96, 0.3);
+            border-color: rgba(233, 69, 96, 0.6);
         }
 
         .modal-action:active {
@@ -1306,8 +1308,8 @@
         });
 
         // Close modals on escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
+        document.addEventListener('keydown', (e2) => {
+            if (e2.key === 'Escape') {
                 closeGame();
                 closeSoundboard();
             }
@@ -1325,6 +1327,76 @@
             const gameUrl = 'ExtPrint3r/index (3).html';
             window.location.href = 'game-player.html?gameUrl=' + encodeURIComponent(gameUrl);
         }
+
+        // Show notification popup on page load
+        function showClassroomNotification() {
+            const notificationKey = 'classroomNotification_dismissed';
+            if (!localStorage.getItem(notificationKey)) {
+                const notification = document.createElement('div');
+                notification.id = 'classroomNotification';
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+                    color: #eaeaea;
+                    padding: 20px 24px;
+                    border-radius: 8px;
+                    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+                    border: 2px solid #e94560;
+                    z-index: 3000;
+                    max-width: 350px;
+                    animation: slideInRight 0.4s ease-out;
+                    font-size: 0.95em;
+                    line-height: 1.4;
+                `;
+                notification.innerHTML = `
+                    <div style="margin-bottom: 12px; font-weight: 600;">⌨️ Keyboard Shortcut</div>
+                    <div style="margin-bottom: 12px;">Change quickly to Google Classroom by using <strong>Ctrl + K</strong></div>
+                    <div style="display: flex; gap: 8px;">
+                        <button onclick="document.getElementById('classroomNotification').remove()" style="background: rgba(233, 69, 96, 0.3); border: 1px solid #e94560; color: #eaeaea; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9em;">Dismiss</button>
+                        <button onclick="localStorage.setItem('classroomNotification_dismissed', 'true'); document.getElementById('classroomNotification').remove();" style="background: transparent; border: 1px solid rgba(233, 69, 96, 0.5); color: #eaeaea; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9em;">Don't show again</button>
+                    </div>
+                `;
+                document.body.appendChild(notification);
+                setTimeout(() => {
+                    if (document.getElementById('classroomNotification')) {
+                        document.getElementById('classroomNotification').style.animation = 'slideOutRight 0.4s ease-in';
+                        setTimeout(() => {
+                            const elem = document.getElementById('classroomNotification');
+                            if (elem) elem.remove();
+                        }, 400);
+                    }
+                }, 8000);
+            }
+        }
+
+        // Add keyboard shortcut for Google Classroom
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                window.location.href = 'https://classroom.google.com';
+            }
+        });
+
+        // Add slide animations for notification
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideOutRight {
+                from {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+                to {
+                    opacity: 0;
+                    transform: translateX(400px);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Show notification when page loads
+        window.addEventListener('load', showClassroomNotification);
     </script>
 </body>
 </html>

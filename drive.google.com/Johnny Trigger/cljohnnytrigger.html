@@ -22,7 +22,7 @@
             height: 100%;
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/gh/yrgen73/Jtrigger@858a22f47db1fabd07d6ac0707df0173b92a9052/js/adsdk.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/gh/yrgen73/Jtrigger@858a22f47db1fabd07d6ac0707df0173b92a9052/js/adsdk.js"></script> -->
     <script type="text/javascript">
         window.SDK_OPTIONS = {
             gameId: "xkvlejbo5n64aox2uatq53r5r10znqlk",
@@ -37,10 +37,11 @@
                 }
             },
         };
-        (function (a, b, c) {
+        // Disabled ad SDK for classroom environment
+        /* (function (a, b, c) {
             var d = a.getElementsByTagName(b)[0];
             a.getElementById(c) || ((a = a.createElement(b)), (a.id = c), (a.src = "https://cdn.jsdelivr.net/gh/st39/sdk@main/sdk.js"), d.parentNode.insertBefore(a, d));
-        })(document, "script", "gamemonetize-sdk");
+        })(document, "script", "gamemonetize-sdk"); */
     </script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
 </head>
@@ -97,12 +98,10 @@
             });
         });
         xhr.send(null);
-        setTimeout(function () {
-            sdk.showBanner();
-        }, 3000);
-        window.setInterval(function () {
-            sdk.showBanner();
-        }, 90000);
+        // sdk.showBanner(); // Disabled ads for classroom
+        // window.setInterval(function () {
+        //     sdk.showBanner();
+        // }, 90000);
     </script>
 </body>
 

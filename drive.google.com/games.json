@@ -76,7 +76,7 @@
     "icon": "🐵",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAYZywQ5VLGKbHlH7YBmasd0_xcJsElQyVegrriOyMJN8PJI4W7CVwZW5FBmA&s",
     "categories": ["simulation", "idle"],
-    "gameUrl": "https://monkeymartquizizz.netlify.app/",
+    "gameUrl": "monkey mart/clmonkeymart.html",
     "rating": 4.6
   },
   {
@@ -96,7 +96,7 @@
     "icon": "🪝",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbzAiU7SPqCIvz2Kfsx4dxIUBV_j83WUNaDiGU3SVLDu8JGrCduKoVhbuA6Q&s",
     "categories": ["action", "platformer"],
-    "gameUrl": "https://phenomenal-stickmanquizizz-f91382.netlify.app/",
+    "gameUrl": "stickman hook/clstickmanhook.html",
     "rating": 4.5
   },
   {
@@ -348,5 +348,75 @@
     "categories": ["puzzle", "2player"],
     "gameUrl": "Fireboy and Watergirl 3/clfireboyandwatergirl3.html",
     "rating": 4.7
+  },
+  {
+    "id": "death-chase",
+    "name": "Death Chase",
+    "description": "Chase your enemies or escape from them in this thrilling action game.",
+    "icon": "💀",
+    "image": "https://tse1.mm.bing.net/th/id/OIP.uKedaX0BYHqQ4lgRrsk3XwHaHa?cb=thfvnext&pid=Api",
+    "categories": ["action", "arcade"],
+    "gameUrl": "death chase/cldeathchase.html",
+    "rating": 4.5
+  },
+  {
+    "id": "fnaf-4",
+    "name": "FNAF 4",
+    "description": "Defend against terrifying animatronics in your home.",
+    "icon": "🐻",
+    "image": "https://tse3.mm.bing.net/th/id/OIP.4wnyUEXR6Bub8Jh97uMk_QHaHa?pid=Api",
+    "categories": ["horror", "puzzle"],
+    "gameUrl": "FNAF4/clFNAF4.html",
+    "rating": 4.6
+  },
+  {
+    "id": "motox-3m",
+    "name": "MotoX M3",
+    "description": "Ride motocross bikes and perform extreme stunts on challenging tracks.",
+    "icon": "🏍️",
+    "image": "https://tse2.mm.bing.net/th/id/OIP.3l32MSj2LOimXS8rJ3yNjAHaHa?pid=Api",
+    "categories": ["racing", "action"],
+    "gameUrl": "motoxm3/clmotox3m3.html",
+    "rating": 4.7
+  },
+  {
+    "id": "getaway-shootout",
+    "name": "Getaway Shootout",
+    "description": "Battle opponents in wild west shootouts with hilarious physics.",
+    "icon": "🤠",
+    "image": "https://tse4.mm.bing.net/th/id/OIP.4fhoON2KtZKMnf3Zb4e29wHaHa?pid=Api",
+    "categories": ["action", "2player"],
+    "gameUrl": "getaway shootout/clgetawayshootout.html",
+    "rating": 4.6
+  },
+  {
+    "id": "rooftop-snipers",
+    "name": "Rooftop Snipers",
+    "description": "Snipe opponents from rooftops in this fun physics-based shooter.",
+    "icon": "🎯",
+    "image": "https://tse2.mm.bing.net/th/id/OIP.pSq_fG8wa8s6ziJS4U9RAAHaHa?pid=Api",
+    "categories": ["shooter", "2player"],
+    "gameUrl": "rooftop snipers/clrooftopsnipers2.html",
+    "rating": 4.5
+  },
+  {
+    "id": "ragdoll-archers",
+    "name": "Ragdoll Archers",
+    "description": "Use physics and arrows to defeat your ragdoll opponents.",
+    "icon": "🏹",
+    "image": "https://tse3.mm.bing.net/th/id/OIP.-X63byTwm_XerxZUy-I8nwHaHa?pid=Api",
+    "categories": ["action", "2player"],
+    "gameUrl": "ragdoll archers/clragdollarchers.html",
+    "rating": 4.5
+  },
+  {
+    "id": "slither-io",
+    "name": "Slither.io",
+    "description": "Eat food to grow your snake and eliminate other players.",
+    "icon": "🐍",
+    "image": "https://tse2.mm.bing.net/th/id/OIP.42JjUnWjsfRMul5HsO76AgHaHa?pid=Api",
+    "categories": ["io", "action"],
+    "gameUrl": "slither.io/clslitherio.html",
+    "rating": 4.6
   }
 ]
