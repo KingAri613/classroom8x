@@ -1,0 +1,84 @@
+{
+  "name": "classroom 8x - Amazing Games Portal",
+  "short_name": "classroom 8x",
+  "description": "Play 41+ unblocked games instantly. Action, platformer, racing, puzzle and more.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#1a1a2e",
+  "theme_color": "#e94560",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "favicon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    },
+    {
+      "src": "favicon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "favicon.svg",
+      "sizes": "540x720",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "favicon.svg",
+      "sizes": "1280x720",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    }
+  ],
+  "categories": ["games", "entertainment"],
+  "shortcuts": [
+    {
+      "name": "All Games",
+      "short_name": "Games",
+      "description": "View all available games",
+      "url": "/?category=all",
+      "icons": [
+        {
+          "src": "favicon.svg",
+          "sizes": "any"
+        }
+      ]
+    },
+    {
+      "name": "Action Games",
+      "short_name": "Action",
+      "description": "Play action games",
+      "url": "/?category=action",
+      "icons": [
+        {
+          "src": "favicon.svg",
+          "sizes": "any"
+        }
+      ]
+    },
+    {
+      "name": "Puzzle Games",
+      "short_name": "Puzzle",
+      "description": "Play puzzle games",
+      "url": "/?category=puzzle",
+      "icons": [
+        {
+          "src": "favicon.svg",
+          "sizes": "any"
+        }
+      ]
+    }
+  ]
+}

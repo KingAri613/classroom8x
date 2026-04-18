@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+Allow: /index.html
+Disallow: /*.json$
+Disallow: /node_modules/
+Disallow: /.git/
+
+# Allow search engines to crawl static assets
+Allow: *.css
+Allow: *.js
+Allow: *.svg
+Allow: *.html
+
+# Sitemap location
+Sitemap: https://classroom8x.netlify.app/sitemap.xml
+
+# Crawl delay (ms)
+Crawl-delay: 1

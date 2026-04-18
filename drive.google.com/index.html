@@ -3,7 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Classroom</title>
+    <meta name="description" content="classroom 8x - Play 41+ amazing unblocked games instantly. Action, platformer, racing, puzzle games and more. Free online gaming portal.">
+    <meta name="keywords" content="unblocked games, online games, classroom games, free games, action games, puzzle games, racing games, browser games, HTML5 games">
+    <meta name="author" content="classroom 8x">
+    <meta name="theme-color" content="#e94560">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="classroom 8x - 41+ Amazing Games">
+    <meta property="og:description" content="Play 41+ unblocked games instantly. Action, platformer, racing, puzzle games and more. Free to play.">
+    <meta property="og:image" content="https://classroom8x.netlify.app/favicon.svg">
+    <meta property="og:locale" content="en_US">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="classroom 8x - Play Amazing Games">
+    <meta name="twitter:description" content="41+ unblocked games. Action, platformer, racing, puzzle and more. Play free online.">
+    
+    <meta name="canonical" content="https://classroom8x.netlify.app/">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <title>classroom 8x - 41+ Unblocked Games | Play Online Free</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="alternate" hreflang="en" href="https://classroom8x.netlify.app/">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "classroom 8x",
+      "description": "Play 41+ amazing unblocked games instantly",
+      "url": "https://classroom8x.netlify.app/",
+      "applicationCategory": "GameApplication",
+      "image": "https://classroom8x.netlify.app/favicon.svg",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+    
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-FEKCEXRBE2"></script>
     <script>
@@ -1363,6 +1406,33 @@
 
         // Show notification when page loads
         window.addEventListener('load', showClassroomNotification);
+
+        // Generate and inject JSON-LD schema for games (SEO)
+        fetch('games.json')
+            .then(res => res.json())
+            .then(games => {
+                const gameSchemas = games.slice(0, 10).map(game => ({
+                    "@type": "Thing",
+                    "name": game.name,
+                    "description": game.description,
+                    "image": game.image,
+                    "url": `https://classroom8x.netlify.app/?game=${game.id}`
+                }));
+
+                const collectionSchema = {
+                    "@context": "https://schema.org",
+                    "@type": "Collection",
+                    "name": "classroom 8x - Game Collection",
+                    "description": "Collection of unblocked games for classroom entertainment",
+                    "hasPart": gameSchemas
+                };
+
+                const script = document.createElement('script');
+                script.type = 'application/ld+json';
+                script.textContent = JSON.stringify(collectionSchema);
+                document.head.appendChild(script);
+            })
+            .catch(err => console.log('SEO: Could not load game schema', err));
     </script>
 </body>
 </html>
