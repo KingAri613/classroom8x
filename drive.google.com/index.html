@@ -98,25 +98,31 @@
         }
 
         .topbar {
-            position: absolute;
-            right: 18px;
-            top: 12px;
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
-            gap: 8px;
+            flex-direction: column;
+            gap: 20px;
             align-items: center;
+            z-index: 1999;
         }
 
         .soundboard-button {
-            padding: 8px 12px;
+            padding: 16px 24px;
+            font-size: 1.05em;
             background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);
             color: #eaeaea;
-            border: 1.5px solid #e94560;
-            border-radius: 8px;
+            border: 2px solid #e94560;
+            border-radius: 10px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            min-width: 130px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
         }
 
         .soundboard-button::before {
@@ -139,8 +145,8 @@
 
         .soundboard-button:hover {
             background: linear-gradient(135deg, #e94560 0%, #ff5a75 100%);
-            box-shadow: 0 4px 16px rgba(233, 69, 96, 0.5);
-            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(233, 69, 96, 0.6);
+            transform: translateY(-3px);
         }
 
         .soundboard-button:active {
@@ -775,13 +781,13 @@
     </style>
 </head>
 <body>
+    <div class="topbar">
+        <button class="soundboard-button" type="button" onclick="openSoundboard()">Soundboard</button>
+        <button class="soundboard-button" type="button" onclick="openExtPrint3r()">ExtPrint3r</button>
+    </div>
     <div class="header">
         <div class="logo-container">
             <div class="gc-logo" aria-hidden="true"></div>
-            <div class="topbar">
-                <button class="soundboard-button" type="button" onclick="openSoundboard()">Soundboard</button>
-                <button class="soundboard-button" type="button" onclick="openExtPrint3r()">ExtPrint3r</button>
-            </div>
         </div>
         <h1>classroom 8x</h1>
         <p>Play amazing games instantly</p>

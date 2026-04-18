@@ -520,32 +520,6 @@
     "rating": 4.5
   },
   {
-    "id": "hole-io",
-    "name": "Hole.io",
-    "description": "Create a black hole that swallows everything in its path!",
-    "icon": "🕳️",
-    "image": "https://tse1.mm.bing.net/th/id/OIP.z4rHw4rYHvZ5CEf3wdL6WQHaEK?pid=Api",
-    "categories": [
-      "io",
-      "action"
-    ],
-    "gameUrl": "hole.io/clholeio.html",
-    "rating": 4.6
-  },
-  {
-    "id": "smashy-karts",
-    "name": "Smashy Karts",
-    "description": "Race and smash other karts in this chaotic racing game!",
-    "icon": "🏎️",
-    "image": "https://tse2.mm.bing.net/th/id/OIP.DxZWrIdnYQ_YyVa-eqEeWAHaHa?pid=Api",
-    "categories": [
-      "racing",
-      "action"
-    ],
-    "gameUrl": "smashykarts/clsmashkartsworking.html",
-    "rating": 4.6
-  },
-  {
     "id": "stack-ball-io",
     "name": "Stack Ball.io",
     "description": "Break through colored platforms by stacking balls!",
