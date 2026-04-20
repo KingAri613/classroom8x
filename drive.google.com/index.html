@@ -777,7 +777,6 @@
             border: none;
         }
 
-        /* Ensure game iframe fills the viewport when a game is opened */
         #gameModal iframe {
             position: fixed;
             top: 0;
@@ -786,6 +785,44 @@
             height: 100vh;
             border: none;
             z-index: 2000;
+            background: #1a1a2e;
+        }
+
+        .hacks-dropdown {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);
+            border: 2px solid #e94560;
+            border-radius: 10px;
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            padding: 12px;
+            z-index: 2001;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .hacks-dropdown.active {
+            display: flex;
+        }
+
+        .hack-option {
+            padding: 10px 16px;
+            background: rgba(233, 69, 96, 0.1);
+            color: #eaeaea;
+            border: 1px solid #e94560;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .hack-option:hover {
+            background: #e94560;
+            transform: translateX(4px);
         }
 
         @media (max-width: 768px) {
@@ -844,8 +881,13 @@
             </div>
             <p>Play amazing games instantly</p>
         </div>
-        <div class="topbar">
-            <button class="soundboard-button" type="button" onclick="openExtPrint3r()">ExtPrint3r</button>
+        <div class="topbar" style="position: relative;">
+            <button class="soundboard-button" id="hacksBtn" type="button" onclick="toggleHacks()">Hacks</button>
+            <div class="hacks-dropdown" id="hacksDropdown">
+                <button class="hack-option" onclick="openExtPrint3r()">ExtPrint3r</button>
+                <button class="hack-option" onclick="openSandstone()">Sandstone Browser</button>
+                <button class="hack-option" onclick="openHelios()">Helios Browser</button>
+            </div>
         </div>
     </div>
 
@@ -883,20 +925,8 @@
     </div>
 
     <div class="modal-overlay" id="soundboardModal" aria-hidden="true">
-        <div class="soundboard-panel" role="dialog" aria-label="Soundboard">
-            <button class="soundboard-close" onclick="closeSoundboard()">← Back</button>
-            <h2 class="section-title" style="color:#eaeaea;margin-top:8px">Soundboard</h2>
-            <input
-                type="text"
-                id="soundSearchInput"
-                placeholder="Search sounds..."
-                style="width:92%;max-width:520px;margin:8px auto 2px auto;padding:10px 14px;border:1.5px solid #e94560;border-radius:10px;background:rgba(22,33,62,0.9);color:#eaeaea;outline:none"
-            >
-            <div id="soundboardGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;width:92%;max-width:1000px;margin:18px auto;align-items:start;justify-items:stretch;">
-                <!-- buttons inserted dynamically -->
-            </div>
-            <p style="color:#aaa;margin-top:12px;font-size:0.95em">Click the image button above each sound name to play it.</p>
-        </div>
+        <button class="soundboard-close" onclick="closeSoundboard()">← Back</button>
+        <iframe id="soundboardFrame" style="width:100%;height:100%;border:none;" allow="camera;microphone;geolocation"></iframe>
     </div>
 
     <script>
@@ -1197,24 +1227,23 @@
 
         function openSoundboard() {
             const modal = document.getElementById('soundboardModal');
-            if (modal.classList.contains('active')) {
-                // toggle: close and stop audio
-                closeSoundboard();
-                stopAllAudio();
-                return;
-            }
             modal.classList.add('active');
             modal.removeAttribute('aria-hidden');
             document.body.style.overflow = 'hidden';
-            const searchInput = document.getElementById('soundSearchInput');
-            if (searchInput) searchInput.focus();
+            const frame = document.getElementById('soundboardFrame');
+            if (frame && !frame.src) {
+                frame.src = 'soundboard html/clsoundboard.html';
+            }
         }
 
         function closeSoundboard() {
             document.getElementById('soundboardModal').classList.remove('active');
             document.getElementById('soundboardModal').setAttribute('aria-hidden', 'true');
             document.body.style.overflow = '';
-            stopAllAudio();
+        }
+
+        function stopAllAudio() {
+            // Music stop handled by external soundboard
         }
 
         // Load games
@@ -1334,6 +1363,16 @@
             if (e2.key === 'Escape') {
                 closeGame();
                 closeSoundboard();
+                closeHacks();
+            }
+        });
+
+        // Close hacks dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const hacksBtn = document.getElementById('hacksBtn');
+            const hacksDropdown = document.getElementById('hacksDropdown');
+            if (hacksDropdown && !hacksBtn.contains(e.target) && !hacksDropdown.contains(e.target)) {
+                closeHacks();
             }
         });
 
@@ -1342,12 +1381,34 @@
         // build soundboard when DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
             setupSoundboardSearch();
-            buildSoundboard();
         });
 
+        // Hacks menu functions
+        function toggleHacks() {
+            const dropdown = document.getElementById('hacksDropdown');
+            dropdown.classList.toggle('active');
+        }
+
         function openExtPrint3r() {
-            const gameUrl = 'ExtPrint3r/index (3).html';
-            window.location.href = 'game-player.html?gameUrl=' + encodeURIComponent(gameUrl);
+            window.open('ExtPrint3r/index (3).html', '_blank');
+            closeHacks();
+        }
+
+        function openSandstone() {
+            window.open('sandstone/clsandstone.html', '_blank');
+            closeHacks();
+        }
+
+        function openHelios() {
+            window.open('helios/Helios-Offline (1).html', '_blank');
+            closeHacks();
+        }
+
+        function closeHacks() {
+            const dropdown = document.getElementById('hacksDropdown');
+            if (dropdown) {
+                dropdown.classList.remove('active');
+            }
         }
 
         // Show notification popup on page load
