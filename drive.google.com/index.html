@@ -78,7 +78,6 @@
             color: #eaeaea;
             min-height: 100vh;
             animation: fadeIn 0.6s ease-out;
-            overflow: hidden;
         }
 
         body.game-open {
@@ -1236,7 +1235,7 @@
             const modal = document.getElementById('soundboardModal');
             modal.classList.add('active');
             modal.removeAttribute('aria-hidden');
-            document.body.style.overflow = 'hidden';
+            document.body.classList.add('game-open');
             const frame = document.getElementById('soundboardFrame');
             if (frame && !frame.src) {
                 frame.src = 'soundboard html/clsoundboard.html';
@@ -1246,7 +1245,7 @@
         function closeSoundboard() {
             document.getElementById('soundboardModal').classList.remove('active');
             document.getElementById('soundboardModal').setAttribute('aria-hidden', 'true');
-            document.body.style.overflow = '';
+            document.body.classList.remove('game-open');
         }
 
         function stopAllAudio() {
@@ -1401,17 +1400,26 @@
         }
 
         function openExtPrint3r() {
-            window.open('ExtPrint3r/index (3).html', '_blank');
+            const path = window.location.pathname.includes('drive.google.com') ? 
+                './ExtPrint3r/index (3).html' : 
+                './drive.google.com/ExtPrint3r/index (3).html';
+            window.open(path, '_blank');
             closeHacks();
         }
 
         function openSandstone() {
-            window.open('sandstone/clsandstone.html', '_blank');
+            const path = window.location.pathname.includes('drive.google.com') ? 
+                './sandstone/clsandstone.html' : 
+                './drive.google.com/sandstone/clsandstone.html';
+            window.open(path, '_blank');
             closeHacks();
         }
 
         function openHelios() {
-            window.open('helios/Helios-Offline (1).html', '_blank');
+            const path = window.location.pathname.includes('drive.google.com') ? 
+                './helios/Helios-Offline (1).html' : 
+                './drive.google.com/helios/Helios-Offline (1).html';
+            window.open(path, '_blank');
             closeHacks();
         }
 
