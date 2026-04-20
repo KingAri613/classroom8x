@@ -78,6 +78,11 @@
             color: #eaeaea;
             min-height: 100vh;
             animation: fadeIn 0.6s ease-out;
+            overflow: hidden;
+        }
+
+        body.game-open {
+            overflow: hidden;
         }
 
         @keyframes fadeIn {
@@ -681,6 +686,8 @@
             justify-content: center;
             transition: background 0.3s ease;
             backdrop-filter: blur(0px);
+            margin: 0;
+            padding: 0;
         }
 
         .modal-overlay.active {
@@ -1305,6 +1312,8 @@
         function playGame(gameUrl, gameName) {
             document.getElementById('gameFrame').src = gameUrl;
             document.getElementById('gameModal').classList.add('active');
+            document.body.classList.add('game-open');
+            document.body.style.overflow = 'hidden';
         }
 
         async function toggleGameFullscreen() {
@@ -1333,6 +1342,8 @@
         function closeGame() {
             document.getElementById('gameModal').classList.remove('active');
             document.getElementById('gameFrame').src = '';
+            document.body.classList.remove('game-open');
+            document.body.style.overflow = '';
         }
 
         document.getElementById('searchInput').addEventListener('input', (e) => {
