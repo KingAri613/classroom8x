@@ -13,6 +13,7 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-"></script>
     
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soundboard</title>
     <script src="sounds.js" type="module"></script>
     <script src="main.js" type="module"></script>
@@ -27,6 +28,66 @@
         <input id="searchInput" type="text" placeholder="Search sounds...">
     </div>
     <div id="soundboard"></div>
+
+    <script>
+        // Filter sounds with "hub" in the name
+        function filterHubSounds() {
+            const soundboard = document.getElementById('soundboard');
+            if (!soundboard || soundboard.children.length === 0) {
+                // Retry if soundboard not ready
+                setTimeout(filterHubSounds, 500);
+                return;
+            }
+
+            // Find all sound buttons and hide those with "hub" in the name
+            const buttons = soundboard.querySelectorAll('button');
+            let hidCount = 0;
+            buttons.forEach(button => {
+                const text = button.textContent.toLowerCase();
+                const title = button.getAttribute('title')?.toLowerCase() || '';
+                if (text.includes('hub') || title.includes('hub')) {
+                    button.style.display = 'none';
+                    hidCount++;
+                }
+            });
+
+            // Also check parent containers
+            const allElements = soundboard.querySelectorAll('*');
+            allElements.forEach(el => {
+                const text = el.textContent?.toLowerCase() || '';
+                // Only hide if this element directly contains "hub" and is a container
+                if (text.includes('hub') && (el.classList.length > 0 || el.tagName === 'BUTTON')) {
+                    if (el.tagName === 'BUTTON' || el.parentElement?.tagName === 'BUTTON') {
+                        el.closest('button')?.style.setProperty('display', 'none', 'important');
+                    }
+                }
+            });
+        }
+
+        // Run filter after sounds load
+        window.addEventListener('load', () => {
+            setTimeout(filterHubSounds, 1000);
+        });
+        
+        // Run periodically to catch dynamically added sounds
+        setInterval(filterHubSounds, 2000);
+        
+        // Use MutationObserver to watch for new sounds being added
+        const observer = new MutationObserver(() => {
+            filterHubSounds();
+        });
+
+        setTimeout(() => {
+            const soundboard = document.getElementById('soundboard');
+            if (soundboard) {
+                observer.observe(soundboard, {
+                    childList: true,
+                    subtree: true
+                });
+                filterHubSounds();
+            }
+        }, 1000);
+    </script>
 </body>
 
 </html>
