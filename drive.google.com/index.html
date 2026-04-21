@@ -675,7 +675,7 @@
             animation: slideUp 0.6s ease-out;
         }
 
-        .modal-overlay {
+        #gameModal {
             display: none;
             position: fixed;
             top: 0;
@@ -695,11 +695,15 @@
             overflow: hidden;
         }
 
-        .modal-overlay.active {
+        #gameModal.active {
             display: flex;
             background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(4px);
             animation: fadeIn 0.3s ease-out;
+        }
+
+        #gameModal.active iframe {
+            display: block !important;
         }
 
         .soundboard-panel{
@@ -715,10 +719,13 @@
         }
 
         #soundboardModal.active {
+            display: flex !important;
             align-items: flex-start;
             overflow-y: auto;
             overscroll-behavior: contain;
             -webkit-overflow-scrolling: touch;
+            background: rgba(0, 0, 0, 0.7) !important;
+            backdrop-filter: blur(4px) !important;
         }
 
         .soundboard-close{
@@ -793,11 +800,18 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            right: 0;
+            bottom: 0;
+            width: 100% !important;
+            height: 100% !important;
             border: none;
             z-index: 2000;
             background: #1a1a2e;
+            transform: scale(1) !important;
+            transform-origin: top left !important;
+            display: none;
+            min-width: 100vw;
+            min-height: 100vh;
         }
 
         .hacks-dropdown {
@@ -933,7 +947,13 @@
     <div class="modal-overlay" id="gameModal">
         <button class="modal-action close-button" onclick="closeGame()" title="Close">✕</button>
         <button class="modal-action fullscreen-button" type="button" onclick="toggleGameFullscreen()" title="Fullscreen">⛶</button>
-        <iframe id="gameFrame" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
+        <iframe id="gameFrame" 
+            allowfullscreen 
+            webkitallowfullscreen 
+            mozallowfullscreen 
+            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-presentation"
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
     </div>
 
     <div class="modal-overlay" id="soundboardModal" aria-hidden="true">
@@ -1315,10 +1335,14 @@
         }
 
         function playGame(gameUrl, gameName) {
-            document.getElementById('gameFrame').src = gameUrl;
+            document.getElementById('gameFrame').src = '';
             document.getElementById('gameModal').classList.add('active');
             document.body.classList.add('game-open');
-            document.body.style.overflow = 'hidden';
+            
+            // Small delay to ensure modal is active before loading game
+            setTimeout(() => {
+                document.getElementById('gameFrame').src = gameUrl;
+            }, 50);
         }
 
         async function toggleGameFullscreen() {
