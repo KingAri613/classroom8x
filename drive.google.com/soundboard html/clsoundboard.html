@@ -41,36 +41,57 @@
         }
     </style>
     <script>
-        // Aggressive filter for hub sounds
-        const observer = new MutationObserver(() => {
+        // Comprehensive hub sound filter
+        function filterHubSounds() {
             const buttons = document.querySelectorAll('button');
+            let filtered = 0;
+            
             buttons.forEach(btn => {
-                const name = btn.textContent.toLowerCase() || btn.getAttribute('data-name')?.toLowerCase() || '';
-                if (name.includes('hub')) {
-                    btn.style.display = 'none';
+                // Check multiple places for "hub"
+                const text = btn.textContent.toLowerCase();
+                const dataName = (btn.getAttribute('data-name') || '').toLowerCase();
+                const title = (btn.getAttribute('title') || '').toLowerCase();
+                const ariaLabel = (btn.getAttribute('aria-label') || '').toLowerCase();
+                
+                // Hide if contains hub in any form
+                if (text.includes('hub') || dataName.includes('hub') || title.includes('hub') || ariaLabel.includes('hub')) {
+                    btn.style.cssText = 'display: none !important; visibility: hidden !important; height: 0 !important; overflow: hidden !important;';
+                    btn.disabled = true;
                     btn.style.pointerEvents = 'none';
+                    btn.removeAttribute('onclick');
+                    filtered++;
                 }
             });
+            
+            return filtered;
+        }
+        
+        // Run immediately
+        filterHubSounds();
+        
+        // Run on page load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(filterHubSounds, 100);
+                setTimeout(filterHubSounds, 500);
+                setTimeout(filterHubSounds, 1000);
+            });
+        } else {
+            setTimeout(filterHubSounds, 100);
+            setTimeout(filterHubSounds, 500);
+            setTimeout(filterHubSounds, 1000);
+        }
+        
+        // Aggressive mutation observer
+        const observer = new MutationObserver(() => {
+            filterHubSounds();
         });
         
         observer.observe(document.body, {
             childList: true,
             subtree: true,
-            characterData: true
-        });
-        
-        // Run filter when page loads
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const buttons = document.querySelectorAll('button');
-                buttons.forEach(btn => {
-                    const name = btn.textContent.toLowerCase() || btn.getAttribute('data-name')?.toLowerCase() || '';
-                    if (name.includes('hub')) {
-                        btn.style.display = 'none !important';
-                        btn.style.pointerEvents = 'none';
-                    }
-                });
-            }, 500);
+            attributes: true,
+            attributeFilter: ['style', 'class', 'data-name', 'title']
         });
     </script>
 </body>

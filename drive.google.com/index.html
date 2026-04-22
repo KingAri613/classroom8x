@@ -215,36 +215,38 @@
 
         .gc-logo {
             width: 56px;
-            height: 46px;
-            border-radius: 10px;
-            background: #34A853;
+            height: 56px;
+            border-radius: 12px;
+            background: #FFD93D;
             display: inline-block;
             position: relative;
-            box-shadow: 0 4px 16px rgba(52, 168, 83, 0.4);
-            animation: float 3s ease-in-out infinite, pulse 2s ease-in-out infinite;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            animation: float 3s ease-in-out infinite;
+            padding: 4px;
         }
 
         .gc-logo::before {
             content: "";
             position: absolute;
-            left: 6px;
-            top: 6px;
-            right: 6px;
-            bottom: 10px;
-            border-radius: 6px;
-            background: #f4d03f;
+            left: 4px;
+            top: 4px;
+            right: 4px;
+            bottom: 12px;
+            border-radius: 4px;
+            background: #2DBE8D;
+            border: 1px solid #1a8f6b;
             transition: transform 0.3s ease;
         }
 
         .gc-logo::after {
             content: "";
             position: absolute;
-            left: 10px;
-            top: 12px;
-            right: 10px;
-            bottom: 14px;
-            border-radius: 4px;
-            background: #2b6a3a;
+            left: 16px;
+            bottom: 4px;
+            width: 24px;
+            height: 6px;
+            border-radius: 2px;
+            background: #FFFFFF;
             transition: transform 0.3s ease;
         }
 
@@ -253,7 +255,7 @@
         }
 
         .gc-logo:hover::after {
-            transform: scale(1.05);
+            transform: translateX(2px);
         }
 
         @keyframes float {
@@ -262,15 +264,6 @@
             }
             50% {
                 transform: translateY(-8px);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                box-shadow: 0 4px 16px rgba(52, 168, 83, 0.4);
-            }
-            50% {
-                box-shadow: 0 4px 24px rgba(52, 168, 83, 0.7);
             }
         }
 
