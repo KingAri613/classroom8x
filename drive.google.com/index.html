@@ -957,7 +957,7 @@
     </div>
 
     <div class="modal-overlay" id="soundboardModal" aria-hidden="true">
-        <button class="soundboard-close" onclick="closeSoundboard()">← Back</button>
+        <button class="soundboard-close" onclick="closeSoundboard()" style="display:none;">← Back</button>
         <iframe id="soundboardFrame" style="width:100%;height:100%;border:none;" allow="camera;microphone;geolocation"></iframe>
     </div>
 
@@ -1259,9 +1259,11 @@
 
         function openSoundboard() {
             const modal = document.getElementById('soundboardModal');
+            const closeBtn = document.querySelector('.soundboard-close');
             modal.classList.add('active');
             modal.removeAttribute('aria-hidden');
             document.body.classList.add('game-open');
+            if (closeBtn) closeBtn.style.display = 'block';
             const frame = document.getElementById('soundboardFrame');
             if (frame && !frame.src) {
                 frame.src = 'soundboard html/clsoundboard.html';
@@ -1269,9 +1271,12 @@
         }
 
         function closeSoundboard() {
-            document.getElementById('soundboardModal').classList.remove('active');
-            document.getElementById('soundboardModal').setAttribute('aria-hidden', 'true');
+            const modal = document.getElementById('soundboardModal');
+            const closeBtn = document.querySelector('.soundboard-close');
+            modal.classList.remove('active');
+            modal.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('game-open');
+            if (closeBtn) closeBtn.style.display = 'none';
         }
 
         function stopAllAudio() {

@@ -17,6 +17,12 @@
     <script src="sounds.js" type="module"></script>
     <script src="main.js" type="module"></script>
     <link href="style.css" rel="stylesheet">
+    <script>
+        // Filter out sounds with "hub" in the name
+        window.filterSounds = function(sounds) {
+            return sounds.filter(sound => !sound.name.toLowerCase().includes('hub'));
+        };
+    </script>
 </head>
 
 <body>
@@ -27,6 +33,28 @@
         <input id="searchInput" type="text" placeholder="Search sounds...">
     </div>
     <div id="soundboard"></div>
+    <script>
+        // Hook into the soundboard rendering to filter out "hub" sounds
+        const originalSetInnerHTML = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML').set;
+        Object.defineProperty(Element.prototype, 'innerHTML', {
+            set(value) {
+                if (this.id === 'soundboard' && value) {
+                    // Filter out any sound buttons containing "hub" in their data or text
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(value, 'text/html');
+                    const buttons = doc.querySelectorAll('[data-name]');
+                    buttons.forEach(btn => {
+                        if (btn.getAttribute('data-name').toLowerCase().includes('hub')) {
+                            btn.remove();
+                        }
+                    });
+                    return originalSetInnerHTML.call(this, doc.body.innerHTML);
+                }
+                return originalSetInnerHTML.call(this, value);
+            },
+            configurable: true
+        });
+    </script>
 </body>
 
 </html>
