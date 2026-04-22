@@ -33,26 +33,44 @@
         <input id="searchInput" type="text" placeholder="Search sounds...">
     </div>
     <div id="soundboard"></div>
+    <style>
+        /* Hide sounds with "hub" in the name */
+        button[data-name*="hub"], button[data-name*="Hub"], 
+        button:has(:contains("hub")), button:has(:contains("Hub")) {
+            display: none !important;
+        }
+    </style>
     <script>
-        // Hook into the soundboard rendering to filter out "hub" sounds
-        const originalSetInnerHTML = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML').set;
-        Object.defineProperty(Element.prototype, 'innerHTML', {
-            set(value) {
-                if (this.id === 'soundboard' && value) {
-                    // Filter out any sound buttons containing "hub" in their data or text
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(value, 'text/html');
-                    const buttons = doc.querySelectorAll('[data-name]');
-                    buttons.forEach(btn => {
-                        if (btn.getAttribute('data-name').toLowerCase().includes('hub')) {
-                            btn.remove();
-                        }
-                    });
-                    return originalSetInnerHTML.call(this, doc.body.innerHTML);
+        // Aggressive filter for hub sounds
+        const observer = new MutationObserver(() => {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(btn => {
+                const name = btn.textContent.toLowerCase() || btn.getAttribute('data-name')?.toLowerCase() || '';
+                if (name.includes('hub')) {
+                    btn.style.display = 'none';
+                    btn.style.pointerEvents = 'none';
                 }
-                return originalSetInnerHTML.call(this, value);
-            },
-            configurable: true
+            });
+        });
+        
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            characterData: true
+        });
+        
+        // Run filter when page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const buttons = document.querySelectorAll('button');
+                buttons.forEach(btn => {
+                    const name = btn.textContent.toLowerCase() || btn.getAttribute('data-name')?.toLowerCase() || '';
+                    if (name.includes('hub')) {
+                        btn.style.display = 'none !important';
+                        btn.style.pointerEvents = 'none';
+                    }
+                });
+            }, 500);
         });
     </script>
 </body>

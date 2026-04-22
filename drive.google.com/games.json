@@ -531,5 +531,83 @@
     ],
     "gameUrl": "stack ball.io/clstackballio.html",
     "rating": 4.5
+  },
+  {
+    "id": "mr-racer",
+    "name": "Mr Racer",
+    "description": "Race fast and furious in this intense racing game!",
+    "icon": "🏎",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWqwKuMSTVnQH7EOA7aeXpQ_Bu99ANXyQoDck-sg6P1oLiK8-7PBIsjXWAiA&s",
+    "categories": [
+      "racing",
+      "action"
+    ],
+    "gameUrl": "mr racer/clmrracer.html",
+    "rating": 4.5
+  },
+  {
+    "id": "ice-dodo",
+    "name": "Ice Dodo",
+    "description": "Guide the ice dodo through frozen landscapes and complete tricky puzzles!",
+    "icon": "🐧",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD52-60-h7vs9CmYHIQSaV85XcSOxh2Jdeo_Co9KyJxo85W8rBxCibKVlmEg&s",
+    "categories": [
+      "puzzle",
+      "platformer"
+    ],
+    "gameUrl": "ice dodo/clicedodo.html",
+    "rating": 4.4
+  },
+  {
+    "id": "drift-hunters",
+    "name": "Drift Hunters",
+    "description": "Perform epic drifts and compete in intense racing challenges!",
+    "icon": "🏎",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSOxfHPE-rHmSA5OSRK-U-ecDThbROyVYqE-85uQZOXNnydoSUD9yaVQlBPw&s",
+    "categories": [
+      "racing",
+      "action"
+    ],
+    "gameUrl": "drift hunters/cldrifthuntersmerge.html",
+    "rating": 4.6
+  },
+  {
+    "id": "bob-the-robber-2",
+    "name": "Bob the Robber 2",
+    "description": "Help Bob the robber pull off daring heists and solve challenging puzzles!",
+    "icon": "🕵️",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1A9AQxU4W9BCx1VslIAaH8zCdCzLsFbfBtxJ-zh956pj5kRROgpMS69pTWQ&s",
+    "categories": [
+      "puzzle",
+      "adventure"
+    ],
+    "gameUrl": "bob the robber 2/clbobtherobber2.html",
+    "rating": 4.5
+  },
+  {
+    "id": "cookie-clicker",
+    "name": "Cookie Clicker",
+    "description": "Click cookies and build an empire! Addictive idle game at its finest.",
+    "icon": "🍪",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT86bIJWpfbwxjopsW7RLCYUMOrjPhDy184b4wBtmWUEWdR2NEyahDGwyqjhw&s",
+    "categories": [
+      "idle",
+      "arcade"
+    ],
+    "gameUrl": "cookie clicker/clcookieclicker.html",
+    "rating": 4.5
+  },
+  {
+    "id": "dunk-shot",
+    "name": "Dunk Shot",
+    "description": "Flick the ball and make epic dunks in this arcade basketball game!",
+    "icon": "🏀",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST0Tj8OlwPxQfXu8C_EsNisluHpvGr2LndUq7ABmDSEm3mUZHfpehhQporEuQ&s",
+    "categories": [
+      "sports",
+      "arcade"
+    ],
+    "gameUrl": "dunk shot/cldunkshot.html",
+    "rating": 4.6
   }
 ]
