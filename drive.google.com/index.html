@@ -706,6 +706,26 @@
             display: block !important;
         }
 
+        #soundboardModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0);
+            z-index: 2000;
+            align-items: flex-start;
+            justify-content: flex-start;
+            transition: background 0.3s ease;
+            backdrop-filter: blur(0px);
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
         .soundboard-panel{
             width:100%;
             min-height:100%;
@@ -726,6 +746,13 @@
             -webkit-overflow-scrolling: touch;
             background: rgba(0, 0, 0, 0.7) !important;
             backdrop-filter: blur(4px) !important;
+        }
+
+        #soundboardFrame {
+            width: 100% !important;
+            height: 100% !important;
+            border: none;
+            display: block;
         }
 
         .soundboard-close{
