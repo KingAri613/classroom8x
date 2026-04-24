@@ -76,6 +76,15 @@
     </div>
 
     <script>
+        // Add Ctrl+K keyboard shortcut for Google Classroom
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open('https://classroom.google.com', '_blank');
+            }
+        }, true);
+
         // Get game file path from URL
         const params = new URLSearchParams(window.location.search);
         const gameUrl = params.get('gameUrl');

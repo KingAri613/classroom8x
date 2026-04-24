@@ -1535,13 +1535,14 @@
             }
         }
 
-        // Add keyboard shortcut for Google Classroom
+        // Add keyboard shortcut for Google Classroom (global with capture phase)
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                 e.preventDefault();
+                e.stopPropagation();
                 window.open('https://classroom.google.com', '_blank');
             }
-        });
+        }, true);
 
         // Add slide animations for notification
         const style = document.createElement('style');
