@@ -609,18 +609,5 @@
     ],
     "gameUrl": "dunk shot/cldunkshot.html",
     "rating": 4.6
-  },
-  {
-    "id": "getaway-shootout",
-    "name": "Getaway Shootout",
-    "description": "Escape with the loot in this fast-paced action-packed shootout game!",
-    "icon": "🔫",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQO0LVqwLyciYzkalQ2KnjGA5OrowHMZCLajLZOh5aBP3wGAYfXNxfh3clKusA&s",
-    "categories": [
-      "action",
-      "2player"
-    ],
-    "gameUrl": "getaway shootout/clgetawayshootout (1).html",
-    "rating": 4.5
   }
 ]
