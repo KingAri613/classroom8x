@@ -1425,7 +1425,7 @@
             if (currentCategory === 'all' && currentSearch === '') {
                 const topGameIds = getTopGames(4);
                 if (topGameIds.length > 0) {
-                    const topGames = allGames.filter(game => topGameIds.includes(game.id));
+                    const topGames = allGames.filter(game => topGameIds.includes(game.id)).slice(0, 4);
                     
                     if (topGames.length > 0) {
                         htmlContent += `
