@@ -21,14 +21,23 @@ function candyCrushGame() {
     let gameInterval = null;
     let timerInterval = null;
 
+    // Optimized candy colors using simple CSS colors instead of external images
+    // This loads much faster than remote images from GitHub
     const candyColors = [
-        "url(https://raw.githubusercontent.com/arpit456jain/Amazing-Js-Projects/master/Candy%20Crush/utils/red-candy.png)",
-        "url(https://raw.githubusercontent.com/arpit456jain/Amazing-Js-Projects/master/Candy%20Crush/utils/blue-candy.png)",
-        "url(https://raw.githubusercontent.com/arpit456jain/Amazing-Js-Projects/master/Candy%20Crush/utils/green-candy.png)",
-        "url(https://raw.githubusercontent.com/arpit456jain/Amazing-Js-Projects/master/Candy%20Crush/utils/yellow-candy.png)",
-        "url(https://raw.githubusercontent.com/arpit456jain/Amazing-Js-Projects/master/Candy%20Crush/utils/orange-candy.png)",
-        "url(https://raw.githubusercontent.com/arpit456jain/Amazing-Js-Projects/master/Candy%20Crush/utils/purple-candy.png)",
+        "#FF4444", // Red
+        "#4444FF", // Blue
+        "#44FF44", // Green
+        "#FFFF44", // Yellow
+        "#FF8844", // Orange
+        "#FF44FF", // Purple
     ];
+
+    // Preload candy colors for instant rendering
+    const candyGradients = candyColors.map(color => ({
+        backgroundColor: color,
+        backgroundImage: `linear-gradient(135deg, ${color}cc 0%, ${color}ff 100%)`,
+        boxShadow: `inset 0 2px 4px rgba(255,255,255,0.3), inset 0 -2px 4px rgba(0,0,0,0.2)`
+    }));
 
     // Create the Game Board
     function createBoard() {
@@ -39,65 +48,94 @@ function candyCrushGame() {
             square.setAttribute("draggable", true);
             square.setAttribute("id", i);
             let randomColor = Math.floor(Math.random() * candyColors.length);
-            square.style.backgroundImage = candyColors[randomColor];
+            
+            // Use data attribute to store color and apply CSS for fast rendering
+            square.dataset.color = randomColor;
+            square.style.backgroundColor = candyColors[randomColor];
+            square.style.backgroundImage = candyGradients[randomColor].backgroundImage;
+            square.style.boxShadow = candyGradients[randomColor].boxShadow;
+            square.style.borderRadius = "8px";
+            
             grid.appendChild(square);
             squares.push(square);
         }
-        // Add drag event listeners
-        squares.forEach(square => square.addEventListener("dragstart", dragStart));
-        squares.forEach(square => square.addEventListener("dragend", dragEnd));
-        squares.forEach(square => square.addEventListener("dragover", dragOver));
-        squares.forEach(square => square.addEventListener("dragenter", dragEnter));
-        squares.forEach(square => square.addEventListener("dragleave", dragLeave));
-        squares.forEach(square => square.addEventListener("drop", dragDrop));
+        // Add drag event listeners using delegation for better performance
+        grid.addEventListener("dragstart", handleDragStart);
+        grid.addEventListener("dragend", handleDragEnd);
+        grid.addEventListener("dragover", handleDragOver);
+        grid.addEventListener("dragenter", handleDragEnter);
+        grid.addEventListener("dragleave", handleDragLeave);
+        grid.addEventListener("drop", handleDrop);
     }
 
-    // Drag and Drop Functions
+    // Drag and Drop Functions (optimized with event delegation)
     let colorBeingDragged, colorBeingReplaced, squareIdBeingDragged, squareIdBeingReplaced;
 
-    function dragStart() {
-        colorBeingDragged = this.style.backgroundImage;
-        squareIdBeingDragged = parseInt(this.id);
+    function handleDragStart(e) {
+        if (e.target.id) {
+            colorBeingDragged = e.target.dataset.color;
+            squareIdBeingDragged = parseInt(e.target.id);
+            e.target.style.opacity = "0.7";
+        }
     }
 
-    function dragOver(e) {
+    function handleDragOver(e) {
         e.preventDefault();
     }
 
-    function dragEnter(e) {
+    function handleDragEnter(e) {
         e.preventDefault();
     }
 
-    function dragLeave() {
+    function handleDragLeave() {
         // No action needed
     }
 
-    function dragDrop() {
-        colorBeingReplaced = this.style.backgroundImage;
-        squareIdBeingReplaced = parseInt(this.id);
-        this.style.backgroundImage = colorBeingDragged;
-        squares[squareIdBeingDragged].style.backgroundImage = colorBeingReplaced;
+    function handleDrop(e) {
+        e.preventDefault();
+        if (e.target.id) {
+            colorBeingReplaced = e.target.dataset.color;
+            squareIdBeingReplaced = parseInt(e.target.id);
+            
+            // Swap colors
+            const temp = squares[squareIdBeingDragged].dataset.color;
+            squares[squareIdBeingDragged].dataset.color = squares[squareIdBeingReplaced].dataset.color;
+            squares[squareIdBeingReplaced].dataset.color = temp;
+            
+            // Update styles
+            squares[squareIdBeingDragged].style.backgroundColor = candyColors[squares[squareIdBeingDragged].dataset.color];
+            squares[squareIdBeingDragged].style.backgroundImage = candyGradients[squares[squareIdBeingDragged].dataset.color].backgroundImage;
+            
+            squares[squareIdBeingReplaced].style.backgroundColor = candyColors[squares[squareIdBeingReplaced].dataset.color];
+            squares[squareIdBeingReplaced].style.backgroundImage = candyGradients[squares[squareIdBeingReplaced].dataset.color].backgroundImage;
+        }
     }
 
-    function dragEnd() {
-        // Define valid moves (adjacent squares: left, up, right, down)
-        let validMoves = [
-            squareIdBeingDragged - 1,
-            squareIdBeingDragged - width,
-            squareIdBeingDragged + 1,
-            squareIdBeingDragged + width
-        ];
-        let validMove = validMoves.includes(squareIdBeingReplaced);
+    function handleDragEnd(e) {
+        if (e.target.id) {
+            e.target.style.opacity = "1";
+            
+            // Define valid moves (adjacent squares: left, up, right, down)
+            let validMoves = [
+                squareIdBeingDragged - 1,
+                squareIdBeingDragged - width,
+                squareIdBeingDragged + 1,
+                squareIdBeingDragged + width
+            ];
+            let validMove = validMoves.includes(squareIdBeingReplaced);
 
-        if (squareIdBeingReplaced && validMove) {
-            squareIdBeingReplaced = null; // Move is valid, keep the swap
-        } else if (squareIdBeingReplaced && !validMove) {
-            // Invalid move, revert the swap
-            squares[squareIdBeingReplaced].style.backgroundImage = colorBeingReplaced;
-            squares[squareIdBeingDragged].style.backgroundImage = colorBeingDragged;
-        } else {
-            // No drop occurred, revert to original
-            squares[squareIdBeingDragged].style.backgroundImage = colorBeingDragged;
+            if (!validMove && squareIdBeingReplaced) {
+                // Invalid move, revert the swap
+                const temp = squares[squareIdBeingDragged].dataset.color;
+                squares[squareIdBeingDragged].dataset.color = squares[squareIdBeingReplaced].dataset.color;
+                squares[squareIdBeingReplaced].dataset.color = temp;
+                
+                squares[squareIdBeingDragged].style.backgroundColor = candyColors[squares[squareIdBeingDragged].dataset.color];
+                squares[squareIdBeingDragged].style.backgroundImage = candyGradients[squares[squareIdBeingDragged].dataset.color].backgroundImage;
+                
+                squares[squareIdBeingReplaced].style.backgroundColor = candyColors[squares[squareIdBeingReplaced].dataset.color];
+                squares[squareIdBeingReplaced].style.backgroundImage = candyGradients[squares[squareIdBeingReplaced].dataset.color].backgroundImage;
+            }
         }
     }
 
@@ -105,15 +143,22 @@ function candyCrushGame() {
     function moveIntoSquareBelow() {
         // Fill empty squares in the first row
         for (let i = 0; i < width; i++) {
-            if (squares[i].style.backgroundImage === "") {
+            if (squares[i].dataset.color === "") {
                 let randomColor = Math.floor(Math.random() * candyColors.length);
-                squares[i].style.backgroundImage = candyColors[randomColor];
+                squares[i].dataset.color = randomColor;
+                squares[i].style.backgroundColor = candyColors[randomColor];
+                squares[i].style.backgroundImage = candyGradients[randomColor].backgroundImage;
             }
         }
         // Move candies down to fill gaps
         for (let i = 0; i < width * (width - 1); i++) {
-            if (squares[i + width].style.backgroundImage === "") {
+            if (squares[i + width].dataset.color === "") {
+                squares[i + width].dataset.color = squares[i].dataset.color;
+                squares[i + width].style.backgroundColor = squares[i].style.backgroundColor;
                 squares[i + width].style.backgroundImage = squares[i].style.backgroundImage;
+                
+                squares[i].dataset.color = "";
+                squares[i].style.backgroundColor = "";
                 squares[i].style.backgroundImage = "";
             }
         }
@@ -124,12 +169,16 @@ function candyCrushGame() {
         for (let i = 0; i < 60; i++) {
             if (i % width >= width - 3) continue; // Skip if not enough columns left
             let rowOfFour = [i, i + 1, i + 2, i + 3];
-            let decidedColor = squares[i].style.backgroundImage;
-            const isBlank = squares[i].style.backgroundImage === "";
-            if (rowOfFour.every(index => squares[index].style.backgroundImage === decidedColor && !isBlank)) {
+            let decidedColor = squares[i].dataset.color;
+            const isBlank = squares[i].dataset.color === "";
+            if (rowOfFour.every(index => squares[index].dataset.color === decidedColor && !isBlank)) {
                 score += 4;
                 scoreDisplay.innerHTML = score;
-                rowOfFour.forEach(index => squares[index].style.backgroundImage = "");
+                rowOfFour.forEach(index => {
+                    squares[index].dataset.color = "";
+                    squares[index].style.backgroundColor = "";
+                    squares[index].style.backgroundImage = "";
+                });
             }
         }
     }
@@ -137,12 +186,16 @@ function candyCrushGame() {
     function checkColumnForFour() {
         for (let i = 0; i < 40; i++) {
             let columnOfFour = [i, i + width, i + 2 * width, i + 3 * width];
-            let decidedColor = squares[i].style.backgroundImage;
-            const isBlank = squares[i].style.backgroundImage === "";
-            if (columnOfFour.every(index => squares[index].style.backgroundImage === decidedColor && !isBlank)) {
+            let decidedColor = squares[i].dataset.color;
+            const isBlank = squares[i].dataset.color === "";
+            if (columnOfFour.every(index => squares[index].dataset.color === decidedColor && !isBlank)) {
                 score += 4;
                 scoreDisplay.innerHTML = score;
-                columnOfFour.forEach(index => squares[index].style.backgroundImage = "");
+                columnOfFour.forEach(index => {
+                    squares[index].dataset.color = "";
+                    squares[index].style.backgroundColor = "";
+                    squares[index].style.backgroundImage = "";
+                });
             }
         }
     }
@@ -151,12 +204,16 @@ function candyCrushGame() {
         for (let i = 0; i < 62; i++) {
             if (i % width >= width - 2) continue; // Skip if not enough columns left
             let rowOfThree = [i, i + 1, i + 2];
-            let decidedColor = squares[i].style.backgroundImage;
-            const isBlank = squares[i].style.backgroundImage === "";
-            if (rowOfThree.every(index => squares[index].style.backgroundImage === decidedColor && !isBlank)) {
+            let decidedColor = squares[i].dataset.color;
+            const isBlank = squares[i].dataset.color === "";
+            if (rowOfThree.every(index => squares[index].dataset.color === decidedColor && !isBlank)) {
                 score += 3;
                 scoreDisplay.innerHTML = score;
-                rowOfThree.forEach(index => squares[index].style.backgroundImage = "");
+                rowOfThree.forEach(index => {
+                    squares[index].dataset.color = "";
+                    squares[index].style.backgroundColor = "";
+                    squares[index].style.backgroundImage = "";
+                });
             }
         }
     }
@@ -164,12 +221,16 @@ function candyCrushGame() {
     function checkColumnForThree() {
         for (let i = 0; i < 48; i++) {
             let columnOfThree = [i, i + width, i + 2 * width];
-            let decidedColor = squares[i].style.backgroundImage;
-            const isBlank = squares[i].style.backgroundImage === "";
-            if (columnOfThree.every(index => squares[index].style.backgroundImage === decidedColor && !isBlank)) {
+            let decidedColor = squares[i].dataset.color;
+            const isBlank = squares[i].dataset.color === "";
+            if (columnOfThree.every(index => squares[index].dataset.color === decidedColor && !isBlank)) {
                 score += 3;
                 scoreDisplay.innerHTML = score;
-                columnOfThree.forEach(index => squares[index].style.backgroundImage = "");
+                columnOfThree.forEach(index => {
+                    squares[index].dataset.color = "";
+                    squares[index].style.backgroundColor = "";
+                    squares[index].style.backgroundImage = "";
+                });
             }
         }
     }

@@ -58,6 +58,17 @@
         gtag('config', 'G-FEKCEXRBE2');
     </script>
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    
+    <!-- Performance optimization: Preconnect to external domains -->
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://encrypted-tbn0.gstatic.com">
+    <link rel="dns-prefetch" href="https://encrypted-tbn0.gstatic.com">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://creative-idlesoccerquizizz-4170f5.netlify.app">
+    <link rel="dns-prefetch" href="https://stalwart-1v1lolquizizz-a4c901.netlify.app">
+    <link rel="dns-prefetch" href="https://cute-df7b43slopethreequizizz.netlify.app">
+    <link rel="dns-prefetch" href="https://rad-quizizzbasketballstars-a2ffe0.netlify.app">
+    
     <style>
         * {
             margin: 0;
@@ -1564,6 +1575,79 @@
 
         // Show notification when page loads
         window.addEventListener('load', showClassroomNotification);
+
+        // Register Service Worker for offline support and caching
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js', { scope: './' })
+                    .then(reg => {
+                        console.log('[App] Service Worker registered:', reg);
+                        // Check for updates periodically (every 30 minutes)
+                        setInterval(() => {
+                            reg.update();
+                        }, 1800000);
+                    })
+                    .catch(err => console.log('[App] Service Worker registration failed:', err));
+            });
+        }
+
+        // Add lazy loading for game thumbnail images using Intersection Observer
+        function setupLazyLoading() {
+            if ('IntersectionObserver' in window) {
+                const imageObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            if (img.dataset.src) {
+                                img.src = img.dataset.src;
+                                img.removeAttribute('data-src');
+                                observer.unobserve(img);
+                            }
+                        }
+                    });
+                }, {
+                    rootMargin: '50px'
+                });
+
+                // Re-observe images after they're rendered
+                setTimeout(() => {
+                    document.querySelectorAll('img[data-src]').forEach(img => {
+                        imageObserver.observe(img);
+                    });
+                }, 100);
+            }
+        }
+
+        // Modified renderGames to support lazy loading
+        const originalRenderGames = window.renderGames;
+        window.renderGames = function(games) {
+            const grid = document.getElementById('gamesGrid');
+            
+            if (games.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <h2>No games found</h2>
+                        <p>Try adjusting your filters or search.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = games.map(game => `
+                <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}')">
+                    <div class="game-thumbnail">
+                        ${game.image ? `<img data-src="${game.image}" alt="${game.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
+                        <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
+                    </div>
+                    <div class="game-info">
+                        <div class="game-title">${game.name}</div>
+                        <button class="game-button" onclick="event.stopPropagation(); playGame('${game.gameUrl}', '${game.name}')">Play Now</button>
+                    </div>
+                </div>
+            `).join('');
+
+            setupLazyLoading();
+        };
 
         // Generate and inject JSON-LD schema for games (SEO)
         fetch('games.json')
