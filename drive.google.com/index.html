@@ -1323,6 +1323,61 @@
             // Music stop handled by external soundboard
         }
 
+        // ============ GAME PLAY TRACKING ============
+        const GAME_STATS_KEY = 'classroom8x_game_stats';
+
+        // Track a game play
+        function trackGamePlay(gameId, gameName) {
+            try {
+                let stats = JSON.parse(localStorage.getItem(GAME_STATS_KEY)) || {};
+                
+                if (!stats[gameId]) {
+                    stats[gameId] = {
+                        id: gameId,
+                        name: gameName,
+                        playCount: 0,
+                        lastPlayed: null
+                    };
+                }
+                
+                stats[gameId].playCount += 1;
+                stats[gameId].lastPlayed = new Date().toISOString();
+                
+                localStorage.setItem(GAME_STATS_KEY, JSON.stringify(stats));
+                console.log(`[Tracking] ${gameName} played. Total plays: ${stats[gameId].playCount}`);
+            } catch (error) {
+                console.error('Error tracking game play:', error);
+            }
+        }
+
+        // Get top N most played games
+        function getTopGames(n = 4) {
+            try {
+                const stats = JSON.parse(localStorage.getItem(GAME_STATS_KEY)) || {};
+                const gameIds = Object.keys(stats);
+                
+                if (gameIds.length === 0) return [];
+                
+                // Sort by play count (descending), then by last played time
+                const sorted = gameIds
+                    .map(id => stats[id])
+                    .sort((a, b) => {
+                        if (b.playCount !== a.playCount) {
+                            return b.playCount - a.playCount;
+                        }
+                        return new Date(b.lastPlayed) - new Date(a.lastPlayed);
+                    })
+                    .slice(0, n);
+                
+                return sorted.map(stat => stat.id);
+            } catch (error) {
+                console.error('Error getting top games:', error);
+                return [];
+            }
+        }
+
+        // ============ END GAME PLAY TRACKING ============
+
         // Load games
         async function loadGames() {
             try {
@@ -1365,21 +1420,64 @@
                 return;
             }
 
-            grid.innerHTML = games.map(game => `
-                <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}')">
+            // Show frequently played section only on "all games" view without search
+            let htmlContent = '';
+            if (currentCategory === 'all' && currentSearch === '') {
+                const topGameIds = getTopGames(4);
+                if (topGameIds.length > 0) {
+                    const topGames = allGames.filter(game => topGameIds.includes(game.id));
+                    
+                    if (topGames.length > 0) {
+                        htmlContent += `
+                            <div style="grid-column: 1 / -1; margin-bottom: 20px;">
+                                <h3 style="color: #e94560; font-size: 1.3em; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                                    <span>🔥</span> Frequently Played
+                                </h3>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
+                                    ${topGames.map(game => `
+                                        <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
+                                            <div class="game-thumbnail">
+                                                ${game.image ? `<img data-src="${game.image}" alt="${game.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
+                                                <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
+                                            </div>
+                                            <div class="game-info">
+                                                <div class="game-title">${game.name}</div>
+                                                <button class="game-button" onclick="event.stopPropagation(); playGame('${game.gameUrl}', '${game.name}', '${game.id}')">Play Now</button>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            <hr style="grid-column: 1 / -1; border: none; border-top: 2px solid rgba(233, 69, 96, 0.3); margin: 20px 0;">
+                        `;
+                    }
+                }
+            }
+
+            htmlContent += games.map(game => `
+                <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                     <div class="game-thumbnail">
-                        ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
+                        ${game.image ? `<img data-src="${game.image}" alt="${game.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                         <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
                     </div>
                     <div class="game-info">
                         <div class="game-title">${game.name}</div>
-                        <button class="game-button" onclick="event.stopPropagation(); playGame('${game.gameUrl}', '${game.name}')">Play Now</button>
+                        <button class="game-button" onclick="event.stopPropagation(); playGame('${game.gameUrl}', '${game.name}', '${game.id}')">Play Now</button>
                     </div>
                 </div>
             `).join('');
+
+            grid.innerHTML = htmlContent;
+
+            setupLazyLoading();
         }
 
-        function playGame(gameUrl, gameName) {
+        function playGame(gameUrl, gameName, gameId) {
+            // Track the game play
+            if (gameId) {
+                trackGamePlay(gameId, gameName);
+            }
+            
             document.getElementById('gameFrame').src = '';
             document.getElementById('gameModal').classList.add('active');
             document.body.classList.add('game-open');
@@ -1617,37 +1715,6 @@
                 }, 100);
             }
         }
-
-        // Modified renderGames to support lazy loading
-        const originalRenderGames = window.renderGames;
-        window.renderGames = function(games) {
-            const grid = document.getElementById('gamesGrid');
-            
-            if (games.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state">
-                        <h2>No games found</h2>
-                        <p>Try adjusting your filters or search.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            grid.innerHTML = games.map(game => `
-                <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}')">
-                    <div class="game-thumbnail">
-                        ${game.image ? `<img data-src="${game.image}" alt="${game.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
-                        <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
-                    </div>
-                    <div class="game-info">
-                        <div class="game-title">${game.name}</div>
-                        <button class="game-button" onclick="event.stopPropagation(); playGame('${game.gameUrl}', '${game.name}')">Play Now</button>
-                    </div>
-                </div>
-            `).join('');
-
-            setupLazyLoading();
-        };
 
         // Generate and inject JSON-LD schema for games (SEO)
         fetch('games.json')
