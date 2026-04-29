@@ -981,6 +981,15 @@
                     <h2>Loading games...</h2>
                 </div>
             </div>
+
+            <!-- More Games Section -->
+            <div style="margin-top: 60px; padding-top: 40px; border-top: 2px solid rgba(233, 69, 96, 0.3);">
+                <h2 class="section-title" style="margin-bottom: 10px;">More Games</h2>
+                <p style="color: rgba(234, 234, 234, 0.7); font-size: 0.9em; margin-bottom: 20px;">📝 Please note these games currently only work if your Chromebook is unblocked</p>
+                <div class="games-grid" id="moreGamesGrid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+                    <!-- More games will be populated by JavaScript -->
+                </div>
+            </div>
         </main>
     </div>
 
@@ -1384,6 +1393,7 @@
                 const response = await fetch('games.json');
                 allGames = await response.json();
                 renderGames(allGames);
+                renderMoreGames(); // Add this line
             } catch (error) {
                 console.error('Error loading games:', error);
                 document.getElementById('gamesGrid').innerHTML = `
@@ -1469,6 +1479,35 @@
 
             grid.innerHTML = htmlContent;
 
+            setupLazyLoading();
+        }
+
+        // Render More Games section
+        function renderMoreGames() {
+            const moreGameIds = ['pac-man', 'stickman hook', 'volley random', 'tag', 'johnny trigger', 'vex 8', 'jetpack joyride', 'basket random', 'among us', 'motox3m', 'rooftop snipers', 'football bros', 'cookie clicker', 'getaway shootout'];
+            const moreGames = allGames.filter(game => {
+                const gameName = game.name.toLowerCase();
+                return moreGameIds.some(id => gameName.includes(id.toLowerCase()) || id.includes(gameName));
+            });
+            
+            const grid = document.getElementById('moreGamesGrid');
+            if (!grid) return;
+
+            const htmlContent = moreGames.map(game => `
+                <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
+                    <div class="game-thumbnail">
+                        ${game.image ? `<img data-src="${game.image}" alt="${game.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
+                        <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
+                    </div>
+                    <div class="game-info">
+                        <div class="game-title">${game.name}</div>
+                        <button class="game-button" onclick="event.stopPropagation(); playGame('${game.gameUrl}', '${game.name}', '${game.id}')">Play Now</button>
+                    </div>
+                </div>
+            `).join('');
+
+            grid.innerHTML = htmlContent || '<div style="grid-column: 1 / -1; text-align: center; color: #aaa; padding: 20px;">More games coming soon!</div>';
+            
             setupLazyLoading();
         }
 
