@@ -1016,7 +1016,7 @@
         let currentCategory = 'all';
         let currentSearch = '';
         let currentSoundSearch = '';
-        const moreGameIds = ['pac-man', 'stickman hook', 'volley random', 'tag', 'johnny trigger', 'vex 8', 'jetpack joyride', 'basket random', 'among us', 'motox3m', 'rooftop snipers', 'football bros', 'cookie clicker', 'getaway shootout'];
+        const moreGameIds = ['pac-man', 'hook-stickman', 'volley-random', 'tag', 'johnny-trigger', 'vex-8', 'jetpack-joyride', 'basket-random', 'among-us', 'motox-3m', 'rooftop-snipers', 'football-bros', 'cookie-clicker', 'getaway-shootout'];
 
         let activeAudioElements = [];
         let validSoundFiles = [];
@@ -1409,9 +1409,7 @@
         function filterGames() {
             filteredGames = allGames.filter(game => {
                 // Exclude more games from main grid
-                const gameName = game.name.toLowerCase();
-                const isMoreGame = moreGameIds.some(id => gameName.includes(id.toLowerCase()) || id.includes(gameName));
-                if (isMoreGame) return false;
+                if (moreGameIds.includes(game.id)) return false;
                 
                 const matchesCategory = currentCategory === 'all' || 
                     (game.categories && game.categories.includes(currentCategory));
@@ -1453,7 +1451,7 @@
                                     ${topGames.map(game => `
                                         <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                                             <div class="game-thumbnail">
-                                                ${game.image ? `<img data-src="${game.image}" alt="${game.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
+                                                ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                                                 <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
                                             </div>
                                             <div class="game-info">
@@ -1473,7 +1471,7 @@
             htmlContent += games.map(game => `
                 <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                     <div class="game-thumbnail">
-                        ${game.image ? `<img data-src="${game.image}" alt="${game.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
+                        ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                         <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
                     </div>
                     <div class="game-info">
@@ -1490,10 +1488,7 @@
 
         // Render More Games section
         function renderMoreGames() {
-            const moreGames = allGames.filter(game => {
-                const gameName = game.name.toLowerCase();
-                return moreGameIds.some(id => gameName.includes(id.toLowerCase()) || id.includes(gameName));
-            });
+            const moreGames = allGames.filter(game => moreGameIds.includes(game.id));
             
             const grid = document.getElementById('moreGamesGrid');
             if (!grid) return;
@@ -1501,7 +1496,7 @@
             const htmlContent = moreGames.map(game => `
                 <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                     <div class="game-thumbnail">
-                        ${game.image ? `<img data-src="${game.image}" alt="${game.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
+                        ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                         <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
                     </div>
                     <div class="game-info">
@@ -1735,29 +1730,11 @@
 
         // Add lazy loading for game thumbnail images using Intersection Observer
         function setupLazyLoading() {
-            if ('IntersectionObserver' in window) {
-                const imageObserver = new IntersectionObserver((entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const img = entry.target;
-                            if (img.dataset.src) {
-                                img.src = img.dataset.src;
-                                img.removeAttribute('data-src');
-                                observer.unobserve(img);
-                            }
-                        }
-                    });
-                }, {
-                    rootMargin: '50px'
-                });
-
-                // Re-observe images after they're rendered
-                setTimeout(() => {
-                    document.querySelectorAll('img[data-src]').forEach(img => {
-                        imageObserver.observe(img);
-                    });
-                }, 100);
-            }
+            // Load all images immediately
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+            });
         }
 
         // Generate and inject JSON-LD schema for games (SEO)
