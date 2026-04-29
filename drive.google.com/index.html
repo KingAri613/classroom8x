@@ -986,7 +986,7 @@
             <div style="margin-top: 60px; padding-top: 40px; border-top: 2px solid rgba(233, 69, 96, 0.3);">
                 <h2 class="section-title" style="margin-bottom: 10px;">More Games</h2>
                 <p style="color: rgba(234, 234, 234, 0.7); font-size: 0.9em; margin-bottom: 20px;">📝 Please note these games currently only work if your Chromebook is unblocked</p>
-                <div class="games-grid" id="moreGamesGrid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+                <div class="games-grid" id="moreGamesGrid" style="grid-template-columns: repeat(4, 1fr);">
                     <!-- More games will be populated by JavaScript -->
                 </div>
             </div>
@@ -1016,6 +1016,7 @@
         let currentCategory = 'all';
         let currentSearch = '';
         let currentSoundSearch = '';
+        const moreGameIds = ['pac-man', 'stickman hook', 'volley random', 'tag', 'johnny trigger', 'vex 8', 'jetpack joyride', 'basket random', 'among us', 'motox3m', 'rooftop snipers', 'football bros', 'cookie clicker', 'getaway shootout'];
 
         let activeAudioElements = [];
         let validSoundFiles = [];
@@ -1407,6 +1408,11 @@
 
         function filterGames() {
             filteredGames = allGames.filter(game => {
+                // Exclude more games from main grid
+                const gameName = game.name.toLowerCase();
+                const isMoreGame = moreGameIds.some(id => gameName.includes(id.toLowerCase()) || id.includes(gameName));
+                if (isMoreGame) return false;
+                
                 const matchesCategory = currentCategory === 'all' || 
                     (game.categories && game.categories.includes(currentCategory));
                 const matchesSearch = currentSearch === '' ||
@@ -1484,7 +1490,6 @@
 
         // Render More Games section
         function renderMoreGames() {
-            const moreGameIds = ['pac-man', 'stickman hook', 'volley random', 'tag', 'johnny trigger', 'vex 8', 'jetpack joyride', 'basket random', 'among us', 'motox3m', 'rooftop snipers', 'football bros', 'cookie clicker', 'getaway shootout'];
             const moreGames = allGames.filter(game => {
                 const gameName = game.name.toLowerCase();
                 return moreGameIds.some(id => gameName.includes(id.toLowerCase()) || id.includes(gameName));
