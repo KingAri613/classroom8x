@@ -1393,7 +1393,7 @@
             try {
                 const response = await fetch('games.json');
                 allGames = await response.json();
-                renderGames(allGames);
+                filterGames();
                 renderMoreGames(); // Add this line
             } catch (error) {
                 console.error('Error loading games:', error);
