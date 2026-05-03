@@ -100,7 +100,7 @@
       "simulation",
       "idle"
     ],
-    "gameUrl": "monkey mart/clmonkeymart.html",
+    "gameUrl": "https://monkeymartquizizz.netlify.app/",
     "rating": 4.6
   },
   {
@@ -113,7 +113,7 @@
       "arcade",
       "action"
     ],
-    "gameUrl": "paper.io/clpaperio.html",
+    "gameUrl": "https://magical-paperquizizz-492e95.netlify.app/",
     "rating": 4.4
   },
   {
@@ -621,6 +621,32 @@
       "2player"
     ],
     "gameUrl": "getaway shootout/clgetawayshootout (1).html",
+    "rating": 4.5
+  },
+  {
+    "id": "my-perfect-hotel",
+    "name": "My Perfect Hotel",
+    "description": "Manage and build your dream hotel.",
+    "icon": "🏨",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREa39l9ybnPdNESWeLWLNaZ4DN1cQaoWh08ZvVKs6WrFKgujeV7ju4FZX7030&s",
+    "categories": [
+      "simulation",
+      "management"
+    ],
+    "gameUrl": "My perfect Hotel/clperfecthotel.html",
+    "rating": 4.5
+  },
+  {
+    "id": "slope-2",
+    "name": "Slope 2",
+    "description": "Navigate the slope and avoid obstacles.",
+    "icon": "🎿",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBi6p-GISJqdj4QxWzq5oJH6WdgxLLnijDmbuMv5Jj2ivBpB59NkT82SLqRIU&s",
+    "categories": [
+      "arcade",
+      "action"
+    ],
+    "gameUrl": "slope 2/clslope2player.html",
     "rating": 4.5
   }
 ]
