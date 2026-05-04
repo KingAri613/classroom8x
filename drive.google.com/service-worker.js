@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v1.0.0';
+const CACHE_VERSION = 'v1.0.2';
 const CACHE_NAME = `classroom8x-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `classroom8x-runtime-${CACHE_VERSION}`;
 
@@ -126,7 +126,7 @@ self.addEventListener('fetch', (event) => {
         if (response && response.status === 200) {
           const responseClone = response.clone();
           caches.open(RUNTIME_CACHE).then((cache) => {
-            cache.put(request, responseClone);
+            cache.put(.request, responseClone);
           });
         }
         return response;
