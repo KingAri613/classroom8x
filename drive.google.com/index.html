@@ -854,43 +854,6 @@
             min-height: 100vh;
         }
 
-        .hacks-dropdown {
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);
-            border: 2px solid #e94560;
-            border-radius: 10px;
-            display: none;
-            flex-direction: column;
-            gap: 8px;
-            padding: 12px;
-            z-index: 2001;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        .hacks-dropdown.active {
-            display: flex;
-        }
-
-        .hack-option {
-            padding: 10px 16px;
-            background: rgba(233, 69, 96, 0.1);
-            color: #eaeaea;
-            border: 1px solid #e94560;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.95em;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .hack-option:hover {
-            background: #e94560;
-            transform: translateX(4px);
-        }
-
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -948,12 +911,7 @@
             <p>Play amazing games instantly</p>
         </div>
         <div class="topbar" style="position: relative;">
-            <button class="soundboard-button" id="hacksBtn" type="button" onclick="toggleHacks()">Hacks</button>
-            <div class="hacks-dropdown" id="hacksDropdown">
-                <button class="hack-option" onclick="openExtPrint3r()">ExtPrint3r</button>
-                <button class="hack-option" onclick="openSandstone()">Sandstone Browser</button>
-                <button class="hack-option" onclick="openHelios()">Helios Browser</button>
-            </div>
+            <button class="soundboard-button" id="aiBtn" type="button" onclick="openAI()">AI</button>
         </div>
     </div>
 
@@ -1585,16 +1543,6 @@
             if (e2.key === 'Escape') {
                 closeGame();
                 closeSoundboard();
-                closeHacks();
-            }
-        });
-
-        // Close hacks dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            const hacksBtn = document.getElementById('hacksBtn');
-            const hacksDropdown = document.getElementById('hacksDropdown');
-            if (hacksDropdown && !hacksBtn.contains(e.target) && !hacksDropdown.contains(e.target)) {
-                closeHacks();
             }
         });
 
@@ -1605,41 +1553,8 @@
             setupSoundboardSearch();
         });
 
-        // Hacks menu functions
-        function toggleHacks() {
-            const dropdown = document.getElementById('hacksDropdown');
-            dropdown.classList.toggle('active');
-        }
-
-        function openExtPrint3r() {
-            const path = window.location.pathname.includes('drive.google.com') ? 
-                './ExtPrint3r/index (3).html' : 
-                './drive.google.com/ExtPrint3r/index (3).html';
-            window.location.href = path;
-            closeHacks();
-        }
-
-        function openSandstone() {
-            const path = window.location.pathname.includes('drive.google.com') ? 
-                './sandstone/clsandstone.html' : 
-                './drive.google.com/sandstone/clsandstone.html';
-            window.location.href = path;
-            closeHacks();
-        }
-
-        function openHelios() {
-            const path = window.location.pathname.includes('drive.google.com') ? 
-                './helios/Helios-Offline (1).html' : 
-                './drive.google.com/helios/Helios-Offline (1).html';
-            window.location.href = path;
-            closeHacks();
-        }
-
-        function closeHacks() {
-            const dropdown = document.getElementById('hacksDropdown');
-            if (dropdown) {
-                dropdown.classList.remove('active');
-            }
+        function openAI() {
+            playGame('https://classroom8xai.pages.dev/drive.google.com/', 'AI', 'ai-tool');
         }
 
         // Show notification popup on page load
