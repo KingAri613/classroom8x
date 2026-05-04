@@ -648,5 +648,135 @@
     ],
     "gameUrl": "slope 2/clslope2player.html",
     "rating": 4.5
+  },
+  {
+    "id": "fireboy-and-watergirl-3",
+    "name": "Fireboy and Watergirl 3",
+    "description": "The third installment of the popular puzzle platformer series. Guide Fireboy and Watergirl through the Ice Temple.",
+    "icon": "🧊",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3B5J2s2x-h3xZQ2Fw8-n1yG_Z-f1Y4rM8bA&s",
+    "categories": [
+      "puzzle",
+      "2player"
+    ],
+    "gameUrl": "Fireboy and Watergirl 3/clfireboyandwatergirl3.html",
+    "rating": 4.6
+  },
+  {
+    "id": "death-chase",
+    "name": "Death Chase",
+    "description": "A high-octane racing game where you not only have to beat your opponents but also survive deadly traps.",
+    "icon": "💀",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9n6yX-3g3a7F9c5zX-y_x-dJ4v4cK-hJgQ&s",
+    "categories": [
+      "racing",
+      "action"
+    ],
+    "gameUrl": "death chase/cldeathchase.html",
+    "rating": 4.7
+  },
+  {
+    "id": "fireboy-and-watergirl-2",
+    "name": "Fireboy and Watergirl 2",
+    "description": "The second chapter in the series, this time in the Light Temple. Solve new puzzles and challenges.",
+    "icon": "💡",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3B5J2s2x-h3xZQ2Fw8-n1yG_Z-f1Y4rM8bA&s",
+    "categories": [
+      "puzzle",
+      "2player"
+    ],
+    "gameUrl": "fireboy and watergirl 2/clfireboyandwatergirl2.html",
+    "rating": 4.5
+  },
+    {
+    "id": "hole-io",
+    "name": "Hole.io",
+    "description": "Control a black hole and consume everything in your path to grow bigger.",
+    "icon": "⚫",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3B5J2s2x-h3xZQ2Fw8-n1yG_Z-f1Y4rM8bA&s",
+    "categories": [
+      "action",
+      "io"
+    ],
+    "gameUrl": "hole.io/clholeio.html",
+    "rating": 4.4
+  },
+  {
+    "id": "pixel-shooter",
+    "name": "Pixel Shooter",
+    "description": "A retro-style shooter with pixelated graphics and fast-paced action.",
+    "icon": "🔫",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3B5J2s2x-h3xZQ2Fw8-n1yG_Z-f1Y4rM8bA&s",
+    "categories": [
+      "shooter",
+      "action"
+    ],
+    "gameUrl": "pixel shooter/clpixelshooter.html",
+    "rating": 4.3
+  },
+  {
+    "id": "smash-karts",
+    "name": "Smash Karts",
+    "description": "A chaotic kart racing game with power-ups and explosive battles.",
+    "icon": "💥",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3B5J2s2x-h3xZQ2Fw8-n1yG_Z-f1Y4rM8bA&s",
+    "categories": [
+      "racing",
+      "action",
+      "io"
+    ],
+    "gameUrl": "smashykarts/clsmashkartsworking.html",
+    "rating": 4.6
+  },
+  {
+    "id": "my-perfect-hotel",
+    "name": "My Perfect Hotel",
+    "description": "Manage your own hotel, keep guests happy, and expand your business.",
+    "icon": "🏨",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3B5J2s2x-h3xZQ2Fw8-n1yG_Z-f1Y4rM8bA&s",
+    "categories": [
+      "simulation",
+      "management"
+    ],
+    "gameUrl": "My perfect Hotel/clperfecthotel.html",
+    "rating": 4.5
+  },
+  {
+    "id": "sandstone",
+    "name": "Sandstone",
+    "description": "A browser that lets you access more of the web.",
+    "icon": "🌐",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3B5J2s2x-h3xZQ2Fw8-n1yG_Z-f1Y4rM8bA&s",
+    "categories": [
+      "browser",
+      "utility"
+    ],
+    "gameUrl": "sandstone/clsandstone.html",
+    "rating": 4.8
+  },
+    {
+    "id": "helios",
+    "name": "Helios",
+    "description": "Another browser for exploring the web.",
+    "icon": "☀️",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3B5J2s2x-h3xZQ2Fw8-n1yG_Z-f1Y4rM8bA&s",
+    "categories": [
+      "browser",
+      "utility"
+    ],
+    "gameUrl": "helios/Helios-Offline (1).html",
+    "rating": 4.7
+  },
+  {
+    "id": "extprint3r",
+    "name": "ExtPrint3r",
+    "description": "A powerful tool for printing and other tasks.",
+    "icon": "🖨️",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3B5J2s2x-h3xZQ2Fw8-n1yG_Z-f1Y4rM8bA&s",
+    "categories": [
+      "utility"
+    ],
+    "gameUrl": "ExtPrint3r/index (3).html",
+    "rating": 4.9
   }
 ]
