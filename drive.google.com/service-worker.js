@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v1.0.1';
+const CACHE_VERSION = 'v1.0.2';
 const CACHE_NAME = `classroom8x-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `classroom8x-runtime-${CACHE_VERSION}`;
 
@@ -130,7 +130,6 @@ self.addEventListener('fetch', (event) => {
             return response;
           })
           .catch(() => {
-            // Return a fallback response for failed assets
             return new Response('Asset not available', { status: 404 });
           });
       })
@@ -142,7 +141,6 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(request).then((cachedResponse) => {
       const fetchPromise = fetch(request).then((response) => {
-        // Update cache with fresh response
         if (response && response.status === 200) {
           const responseClone = response.clone();
           caches.open(RUNTIME_CACHE).then((cache) => {
@@ -151,8 +149,6 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       });
-
-      // Return cached version immediately, or fetch if not cached
       return cachedResponse || fetchPromise;
     })
   );
