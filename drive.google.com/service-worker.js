@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v1.0.0';
+const CACHE_VERSION = 'v1.0.1';
 const CACHE_NAME = `classroom8x-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `classroom8x-runtime-${CACHE_VERSION}`;
 
@@ -68,12 +68,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Network-first strategy for HTML documents
-  if (request.mode === 'navigate') {
+  // Network-first strategy for games.json (always fetch fresh data)
+  if (url.pathname.endsWith('/games.json') || url.pathname.endsWith('games.json')) {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          // Cache successful responses
           if (response && response.status === 200) {
             const responseClone = response.clone();
             caches.open(RUNTIME_CACHE).then((cache) => {
@@ -83,7 +82,28 @@ self.addEventListener('fetch', (event) => {
           return response;
         })
         .catch(() => {
-          // Fall back to cached version on network error
+          return caches.match(request).then((cachedResponse) => {
+            return cachedResponse || Response.error();
+          });
+        })
+    );
+    return;
+  }
+
+  // Network-first strategy for HTML documents
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(RUNTIME_CACHE).then((cache) => {
+              cache.put(request, responseClone);
+            });
+          }
+          return response;
+        })
+        .catch(() => {
           return caches.match(request).then((cachedResponse) => {
             return cachedResponse || caches.match('./index.html');
           });
