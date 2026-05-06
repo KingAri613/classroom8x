@@ -648,5 +648,31 @@
     ],
     "gameUrl": "slope 2/clslope2player.html",
     "rating": 4.5
+  },
+  {
+    "id": "hill-climber-racing",
+    "name": "Hill Climber Racing",
+    "description": "Race up challenging hills and navigate treacherous terrain!",
+    "icon": "🏔️",
+    "image": "https://tse4.mm.bing.net/th/id/OIP.Iziq03tVTbNQqcIIqQ_tDAHaHa?r=0&pid=Api",
+    "categories": [
+      "racing",
+      "action"
+    ],
+    "gameUrl": "hill climber/clhillclimbracinglite.html",
+    "rating": 4.5
+  },
+  {
+    "id": "vex-7",
+    "name": "Vex 7",
+    "description": "Dash, jump, and avoid traps in this precision platformer.",
+    "icon": "🕹️",
+    "image": "https://tse1.mm.bing.net/th/id/OIP.tRbMgxaSOMGShPumPNV-ZwHaHa?pid=Api",
+    "categories": [
+      "platformer",
+      "action"
+    ],
+    "gameUrl": "vex7/clvex7.html",
+    "rating": 4.6
   }
 ]
