@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v1.0.2';
+const CACHE_VERSION = 'v1.0.3';
 const CACHE_NAME = `classroom8x-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `classroom8x-runtime-${CACHE_VERSION}`;
 
