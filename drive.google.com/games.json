@@ -674,5 +674,19 @@
     ],
     "gameUrl": "vex7/clvex7.html",
     "rating": 4.6
+  },
+  {
+    "id": "bitlife",
+    "name": "BitLife",
+    "description": "Live a full life from birth to death in this life simulation game!",
+    "icon": "🧬",
+    "image": "https://tse1.mm.bing.net/th/id/OIP.mqS-TbteCj7Z1T0G_1w7PwHaHa?pid=Api",
+    "categories": [
+      "simulation",
+      "casual"
+    ],
+    "gameUrl": "https://fastidious-quizizzpony-f24627.netlify.app/",
+    "rating": 4.5,
+    "warningPopup": true
   }
 ]

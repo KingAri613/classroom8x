@@ -974,7 +974,7 @@
         let currentCategory = 'all';
         let currentSearch = '';
         let currentSoundSearch = '';
-        const moreGameIds = ['pac-man', 'hook-stickman', 'volley-random', 'tag', 'johnny-trigger', 'vex-8', 'jetpack-joyride', 'basket-random', 'among-us', 'motox-3m', 'rooftop-snipers', 'football-bros', 'cookie-clicker', 'getaway-shootout'];
+        const moreGameIds = ['pac-man', 'hook-stickman', 'volley-random', 'tag', 'johnny-trigger', 'vex-8', 'jetpack-joyride', 'basket-random', 'among-us', 'motox-3m', 'rooftop-snipers', 'football-bros', 'cookie-clicker', 'getaway-shootout', 'bitlife'];
 
         let activeAudioElements = [];
         let validSoundFiles = [];
@@ -1470,6 +1470,13 @@
         }
 
         function playGame(gameUrl, gameName, gameId) {
+            // Check if game has warning popup (BitLife)
+            const game = allGames.find(g => g.id === gameId);
+            if (game && game.warningPopup) {
+                showBitLifeWarning(gameUrl, gameName, gameId);
+                return;
+            }
+            
             // Track the game play
             if (gameId) {
                 trackGamePlay(gameId, gameName);
@@ -1483,6 +1490,82 @@
             setTimeout(() => {
                 document.getElementById('gameFrame').src = gameUrl;
             }, 50);
+        }
+
+        function showBitLifeWarning(gameUrl, gameName, gameId) {
+            // Check if user already agreed
+            const agreed = localStorage.getItem('bitlife_warning_agreed');
+            if (agreed) {
+                // Track the game play
+                trackGamePlay(gameId, gameName);
+                document.getElementById('gameFrame').src = '';
+                document.getElementById('gameModal').classList.add('active');
+                document.body.classList.add('game-open');
+                setTimeout(() => {
+                    document.getElementById('gameFrame').src = gameUrl;
+                }, 50);
+                return;
+            }
+
+            // Create warning popup
+            const popup = document.createElement('div');
+            popup.id = 'bitlifeWarningPopup';
+            popup.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.9);
+                z-index: 3000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                backdrop-filter: blur(4px);
+            `;
+            popup.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+                    border: 2px solid #e94560;
+                    border-radius: 16px;
+                    padding: 40px;
+                    max-width: 500px;
+                    text-align: center;
+                    color: #eaeaea;
+                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+                ">
+                    <h2 style="color: #e94560; margin-bottom: 20px; font-size: 1.8em;">⚠️ Warning</h2>
+                    <p style="font-size: 1.1em; line-height: 1.6; margin-bottom: 30px;">
+                        Please note this game is bad for your neshomah and Classroom8x takes no responsibility for the gehenom you receive.
+                    </p>
+                    <button id="bitlifeAgreeBtn" style="
+                        background: linear-gradient(135deg, #e94560 0%, #ff5a75 100%);
+                        color: white;
+                        border: none;
+                        padding: 14px 32px;
+                        font-size: 1.1em;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        font-weight: 600;
+                        box-shadow: 0 4px 12px rgba(233, 69, 96, 0.4);
+                    ">I Agree</button>
+                </div>
+            `;
+            document.body.appendChild(popup);
+
+            // Add click handler for I Agree button
+            document.getElementById('bitlifeAgreeBtn').onclick = () => {
+                localStorage.setItem('bitlife_warning_agreed', 'true');
+                popup.remove();
+                // Now play the game
+                trackGamePlay(gameId, gameName);
+                document.getElementById('gameFrame').src = '';
+                document.getElementById('gameModal').classList.add('active');
+                document.body.classList.add('game-open');
+                setTimeout(() => {
+                    document.getElementById('gameFrame').src = gameUrl;
+                }, 50);
+            };
         }
 
         async function toggleGameFullscreen() {
