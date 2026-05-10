@@ -8,21 +8,104 @@
 <html lang="en">
 
 <head>
-<script>if (!window.location.pathname.startsWith("/drive.google.com/")) { window.location.href = window.location.origin + "/drive.google.com" + window.location.pathname + window.location.search + window.location.hash; }</script>
-    <base href="https://cdn.jsdelivr.net/gh/genizy/soundboard@main/">
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-"></script>
-    
     <meta charset="UTF-8">
     <title>Soundboard</title>
     <script src="sounds.js" type="module"></script>
     <script src="main.js" type="module"></script>
-    <link href="style.css" rel="stylesheet">
-    <script>
-        // Filter out sounds with "hub" in the name
-        window.filterSounds = function(sounds) {
-            return sounds.filter(sound => !sound.name.toLowerCase().includes('hub'));
-        };
-    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #1a1a2e;
+            color: white;
+        }
+        #controls {
+            margin-bottom: 20px;
+        }
+        .control-button {
+            background: #16213e;
+            color: white;
+            border: 1px solid #0f3460;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .control-button:hover {
+            background: #0f3460;
+        }
+        #searchInput {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #0f3460;
+            background: #16213e;
+            color: white;
+            width: 200px;
+        }
+        #soundboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        .sound-wrapper {
+            text-align: center;
+        }
+        .sound-button-img {
+            width: 100%;
+            padding-bottom: 100%;
+            position: relative;
+            background: var(--btn-color, #3498db);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .sound-button-img:active {
+            transform: scale(0.95);
+        }
+        .sound-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .sound-image.pressed {
+            opacity: 0.5;
+        }
+        .sound-label {
+            margin-top: 5px;
+            font-size: 12px;
+            word-break: break-word;
+        }
+        .right-click-panel {
+            background: #16213e;
+            border: 1px solid var(--btn-color, #3498db);
+            border-radius: 5px;
+            padding: 10px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .right-click-panel-button {
+            display: block;
+            width: 100%;
+            background: #0f3460;
+            color: white;
+            border: none;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .right-click-panel-button:hover {
+            background: #1a1a2e;
+        }
+    </style>
 </head>
 
 <body>
@@ -33,46 +116,6 @@
         <input id="searchInput" type="text" placeholder="Search sounds...">
     </div>
     <div id="soundboard"></div>
-    <style>
-        /* Hide sounds with "hub" in the name */
-        button[data-name*="hub"], button[data-name*="Hub"], 
-        button:has(:contains("hub")), button:has(:contains("Hub")) {
-            display: none !important;
-        }
-    </style>
-    <script>
-        // Aggressive filter for hub sounds
-        const observer = new MutationObserver(() => {
-            const buttons = document.querySelectorAll('button');
-            buttons.forEach(btn => {
-                const name = btn.textContent.toLowerCase() || btn.getAttribute('data-name')?.toLowerCase() || '';
-                if (name.includes('hub')) {
-                    btn.style.display = 'none';
-                    btn.style.pointerEvents = 'none';
-                }
-            });
-        });
-        
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true,
-            characterData: true
-        });
-        
-        // Run filter when page loads
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const buttons = document.querySelectorAll('button');
-                buttons.forEach(btn => {
-                    const name = btn.textContent.toLowerCase() || btn.getAttribute('data-name')?.toLowerCase() || '';
-                    if (name.includes('hub')) {
-                        btn.style.display = 'none !important';
-                        btn.style.pointerEvents = 'none';
-                    }
-                });
-            }, 500);
-        });
-    </script>
 </body>
 
 </html>

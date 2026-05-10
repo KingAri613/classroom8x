@@ -178,7 +178,7 @@
       "action",
       "arcade"
     ],
-    "gameUrl": "death run 3d/index.html",
+    "gameUrl": "death run3d/online_viewer_net.html",
     "rating": 4.6
   },
   {
@@ -659,7 +659,7 @@
       "racing",
       "action"
     ],
-    "gameUrl": "hill climber/clhillclimbracinglite.html",
+    "gameUrl": "hill climber racing lite/clhillclimbracinglite.html",
     "rating": 4.5
   },
   {
@@ -672,7 +672,7 @@
       "platformer",
       "action"
     ],
-    "gameUrl": "vex7/clvex7.html",
+    "gameUrl": "vex 7/clvex7.html",
     "rating": 4.6
   },
   {
