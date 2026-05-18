@@ -689,4 +689,18 @@
     "rating": 4.5,
     "warningPopup": true
   }
+ ,
+  {
+    "id": "level-devil",
+    "name": "Level Devil",
+    "description": "Conquer fiery levels in this challenging platformer.",
+    "icon": "👿",
+    "image": "https://tse1.mm.bing.net/th/id/OIP.Rh6DoICqCNgGtcXpwJjxhwHaHa?r=0&pid=Api",
+    "categories": [
+      "action",
+      "platformer"
+    ],
+    "gameUrl": "level devil/clleveldevil.html",
+    "rating": 4.3
+  }
 ]

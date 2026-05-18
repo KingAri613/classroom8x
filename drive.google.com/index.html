@@ -1769,8 +1769,26 @@
 
             modal.querySelector('.goBtn').addEventListener('click', () => {
                 localStorage.setItem(key, 'true');
-                // navigate to the embedded soundboard page
-                window.location.href = 'soundboard html/clsoundboard.html';
+                // open embedded soundboard modal without navigating away
+                try {
+                    if (typeof openSoundboard === 'function') {
+                        openSoundboard();
+                    } else {
+                        // fallback: set iframe src and show modal
+                        const modalEl = document.getElementById('soundboardModal');
+                        if (modalEl) {
+                            modalEl.classList.add('active');
+                            modalEl.removeAttribute('aria-hidden');
+                            document.body.classList.add('game-open');
+                            const frame = document.getElementById('soundboardFrame');
+                            if (frame && !frame.src) frame.src = 'soundboard html/clsoundboard.html';
+                        }
+                    }
+                } catch (e) {
+                    // last resort navigate in same tab
+                    window.location.href = 'soundboard html/clsoundboard.html';
+                }
+                modal.remove();
             });
 
             // close when clicking backdrop
