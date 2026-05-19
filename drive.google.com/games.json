@@ -676,20 +676,18 @@
     "rating": 4.6
   },
   {
-    "id": "bitlife",
-    "name": "BitLife",
-    "description": "Live a full life from birth to death in this life simulation game!",
-    "icon": "🧬",
-    "image": "https://tse1.mm.bing.net/th/id/OIP.mqS-TbteCj7Z1T0G_1w7PwHaHa?pid=Api",
+    "id": "bottle-flip-3d",
+    "name": "Bottle Flip 3D",
+    "description": "Flip bottles and land them upright in this 3D skill game.",
+    "icon": "🥤",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQapzOJm68w6tdE7djLB7rK5p3VJkIM3twE9Q&s",
     "categories": [
-      "simulation",
-      "casual"
+      "arcade",
+      "action"
     ],
-    "gameUrl": "https://fastidious-quizizzpony-f24627.netlify.app/",
-    "rating": 4.5,
-    "warningPopup": true
-  }
- ,
+    "gameUrl": "https://bottleflipquizizz.netlify.app/",
+    "rating": 4.4
+  },
   {
     "id": "level-devil",
     "name": "Level Devil",
@@ -702,5 +700,19 @@
     ],
     "gameUrl": "level devil/clleveldevil.html",
     "rating": 4.3
+  },
+  {
+    "id": "bitlife",
+    "name": "BitLife",
+    "description": "Live a full life from birth to death in this life simulation game!",
+    "icon": "🧬",
+    "image": "https://tse1.mm.bing.net/th/id/OIP.mqS-TbteCj7Z1T0G_1w7PwHaHa?pid=Api",
+    "categories": [
+      "simulation",
+      "casual"
+    ],
+    "gameUrl": "https://fastidious-quizizzpony-f24627.netlify.app/",
+    "rating": 4.5,
+    "warningPopup": true
   }
 ]
