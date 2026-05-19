@@ -39,13 +39,15 @@
             args[1] = /^http/.test(args[1]) ? "https://onebigstatic-tmm.tbt.mx/static/" + args[1] : args[1];
             origOpen.apply(this, args);
         };
-        var gameInstance = UnityLoader.instantiate("gameContainer", "death_run_wasm_v1.json", {
-            onProgress: UnityProgress,
-            Module: {
-                onRuntimeInitialized: function () {
-                    UnityProgress(gameInstance, "complete");
+        window.addEventListener('load', function () {
+            var gameInstance = UnityLoader.instantiate("gameContainer", "death_run_wasm_v1.json", {
+                onProgress: UnityProgress,
+                Module: {
+                    onRuntimeInitialized: function () {
+                        UnityProgress(gameInstance, "complete");
+                    },
                 },
-            },
+            });
         });
     </script>
 </head>
