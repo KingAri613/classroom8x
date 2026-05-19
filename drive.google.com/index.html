@@ -792,6 +792,22 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
 
+        .youtube-close{
+            position: fixed;
+            top: 18px;
+            right: 18px;
+            z-index: 2001;
+            padding: 10px 14px;
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+            color: #eaeaea;
+            border: 2px solid #e94560;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95em;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
         .modal-action {
             position: fixed;
             z-index: 2001;
@@ -910,6 +926,7 @@
     <div class="header">
         <div class="topbar">
             <button class="soundboard-button" type="button" onclick="openSoundboard()">Soundboard</button>
+            <button class="soundboard-button" id="aiBtn" type="button" onclick="openAI()">AI</button>
         </div>
         <div class="logo-container">
             <div class="logo-header-row">
@@ -919,7 +936,8 @@
             <p>Play amazing games instantly</p>
         </div>
         <div class="topbar" style="position: relative;">
-            <button class="soundboard-button" id="aiBtn" type="button" onclick="openAI()">AI</button>
+            <button class="soundboard-button" type="button" onclick="openYoutube()">YouTube</button>
+            <button class="soundboard-button" type="button" onclick="openAbout()">About</button>
         </div>
     </div>
 
@@ -974,6 +992,11 @@
     <div class="modal-overlay" id="soundboardModal" aria-hidden="true">
         <button class="soundboard-close" onclick="closeSoundboard()" style="display:none;">← Back</button>
         <iframe id="soundboardFrame" style="width:100%;height:100%;border:none;" allow="camera;microphone;geolocation"></iframe>
+    </div>
+
+    <div class="modal-overlay" id="youtubeModal" aria-hidden="true">
+        <button class="youtube-close" onclick="closeYoutube()" style="display:none; right: 20px; left: auto;">← Back</button>
+        <iframe id="youtubeFrame" style="width:100%;height:100%;border:none;" allow="autoplay; encrypted-media"></iframe>
     </div>
 
     <script>
@@ -1294,6 +1317,33 @@
             document.body.classList.remove('game-open');
             if (closeBtn) closeBtn.style.display = 'none';
         }
+
+        function openYoutube() {
+            const modal = document.getElementById('youtubeModal');
+            const closeBtn = document.querySelector('.youtube-close');
+            modal.classList.add('active');
+            modal.removeAttribute('aria-hidden');
+            document.body.classList.add('game-open');
+            if (closeBtn) closeBtn.style.display = 'block';
+            const frame = document.getElementById('youtubeFrame');
+            if (frame && !frame.src) {
+                frame.src = 'https://hilariousquizziz.netlify.app/';
+            }
+        }
+
+        function closeYoutube() {
+            const modal = document.getElementById('youtubeModal');
+            const closeBtn = document.querySelector('.youtube-close');
+            modal.classList.remove('active');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('game-open');
+            if (closeBtn) closeBtn.style.display = 'none';
+        }
+
+        function openAbout() {
+            alert('Classroom8x Unblocked Games\n\nYour favorite games unblocked and ready to play!\n\nVisit us at: classroom8x.pages.dev');
+        }
+
 
         function stopAllAudio() {
             // Music stop handled by external soundboard
@@ -1810,7 +1860,82 @@
 
         window.addEventListener('load', showSoundboardFixedPopup);
 
+        // Show 'New unblocked youtube' notification once using localStorage
+        function showYoutubeNotification() {
+            const key = 'youtube_new_seen_v1';
+            if (localStorage.getItem(key)) return;
+
+            // create styles for modal
+            const s = document.createElement('style');
+            s.textContent = `
+                #youtubeNotificationModal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 4000; }
+                #youtubeNotificationModal .backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.6); }
+                #youtubeNotificationModal .panel { position: relative; background: linear-gradient(135deg,#16213e 0%,#0f3460 100%); border: 2px solid #e94560; color: #eaeaea; padding: 22px; border-radius: 12px; width: 92%; max-width: 420px; box-shadow: 0 12px 40px rgba(0,0,0,0.6); text-align: center; }
+                #youtubeNotificationModal .panel h3 { margin: 0 0 8px 0; color: #e94560; font-size: 1.25rem; }
+                #youtubeNotificationModal .panel p { margin: 0 0 18px 0; color: #ddd; }
+                #youtubeNotificationModal .actions { display:flex; gap:10px; justify-content:center; }
+                #youtubeNotificationModal .actions button { padding:10px 14px; border-radius:8px; border:2px solid transparent; cursor:pointer; font-weight:600; }
+                #youtubeNotificationModal .closeBtn { background: transparent; color: #eaeaea; border-color: rgba(233,69,96,0.25); }
+                #youtubeNotificationModal .goBtn { background: linear-gradient(135deg,#e94560 0%,#ff5a75 100%); color: white; }
+            `;
+            document.head.appendChild(s);
+
+            const modal = document.createElement('div');
+            modal.id = 'youtubeNotificationModal';
+            modal.innerHTML = `
+                <div class="backdrop"></div>
+                <div class="panel" role="dialog" aria-modal="true" aria-label="New unblocked youtube">
+                    <h3>New unblocked YouTube</h3>
+                    <p>Watch videos freely with our new unblocked YouTube feature!</p>
+                    <div class="actions">
+                        <button class="closeBtn">Close</button>
+                        <button class="goBtn">Go to YouTube</button>
+                    </div>
+                </div>
+            `;
+
+            // handlers
+            modal.querySelector('.closeBtn').addEventListener('click', () => {
+                localStorage.setItem(key, 'true');
+                modal.remove();
+            });
+
+            modal.querySelector('.goBtn').addEventListener('click', () => {
+                localStorage.setItem(key, 'true');
+                // open YouTube modal
+                try {
+                    if (typeof openYoutube === 'function') {
+                        openYoutube();
+                    } else {
+                        // fallback
+                        const youtubeModal = document.getElementById('youtubeModal');
+                        if (youtubeModal) {
+                            youtubeModal.classList.add('active');
+                            youtubeModal.removeAttribute('aria--hidden');
+                            document.body.classList.add('game-open');
+                            const frame = document.getElementById('youtubeFrame');
+                            if (frame && !frame.src) frame.src = 'https://hilariousquizziz.netlify.app/';
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error opening YouTube:', e);
+                }
+                modal.remove();
+            });
+
+            // close when clicking backdrop
+            modal.querySelector('.backdrop').addEventListener('click', () => {
+                localStorage.setItem(key, 'true');
+                modal.remove();
+            });
+
+            document.body.appendChild(modal);
+        }
+
+        window.addEventListener('load', showYoutubeNotification);
+
         // Register Service Worker for offline support and caching
+
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./service-worker.js', { scope: './' })
