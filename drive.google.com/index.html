@@ -747,6 +747,26 @@
             overflow: hidden;
         }
 
+        #youtubeModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+            backdrop-filter: blur(0px);
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
         .soundboard-panel{
             width:100%;
             min-height:100%;
@@ -1336,7 +1356,11 @@
 
         function openYoutube() {
             const modal = document.getElementById('youtubeModal');
-            const closeBtn = document.querySelector('.youtube-close');
+            if (!modal) {
+                console.error('youtubeModal not found');
+                return;
+            }
+            const closeBtn = modal.querySelector('.youtube-close');
             modal.classList.add('active');
             modal.removeAttribute('aria-hidden');
             document.body.classList.add('game-open');
@@ -1349,7 +1373,8 @@
 
         function closeYoutube() {
             const modal = document.getElementById('youtubeModal');
-            const closeBtn = document.querySelector('.youtube-close');
+            if (!modal) return;
+            const closeBtn = modal.querySelector('.youtube-close');
             modal.classList.remove('active');
             modal.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('game-open');
