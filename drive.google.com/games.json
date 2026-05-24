@@ -702,6 +702,19 @@
     "rating": 4.3
   },
   {
+    "id": "pixel-shooter",
+    "name": "Pixel Shooter",
+    "description": "Blast through pixel enemies in this arcade shooter.",
+    "icon": "🔫",
+    "image": "https://tse4.mm.bing.net/th/id/OIP.PqIRQ_XUdPWJADWnD4_L_AAAAA?pid=Api",
+    "categories": [
+      "shooter",
+      "action"
+    ],
+    "gameUrl": "pixel shooter/clpixelshooter.html",
+    "rating": 4.5
+  },
+  {
     "id": "bitlife",
     "name": "BitLife",
     "description": "Live a full life from birth to death in this life simulation game!",
