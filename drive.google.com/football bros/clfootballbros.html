@@ -1095,6 +1095,14 @@
 	    element.addEventListener('blur', keepFocus);
 	    element.addEventListener('focusout', keepFocus);
 	  </script>
-	</body>
+	    <!-- PANIC BUTTON REDIRECT -->
+    <script>
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '-') {
+                window.location.replace('https://www.google.com');
+            }
+        }, true);
+    </script>
+</body>
 
 	</html>

@@ -34,5 +34,13 @@
         </style>
         <script defer src="https://cdn.jsdelivr.net/gh/genizy/google-class/temple-run-2/bundle.js"></script>
     </head>
-    <body></body>
+    <body>    <!-- PANIC BUTTON REDIRECT -->
+    <script>
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '-') {
+                window.location.replace('https://www.google.com');
+            }
+        }, true);
+    </script>
+</body>
 </html>

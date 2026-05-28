@@ -2062,5 +2062,13 @@
             })
             .catch(err => console.log('SEO: Could not load game schema', err));
     </script>
+    <!-- PANIC BUTTON REDIRECT -->
+    <script>
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '-') {
+                window.location.replace('https://www.google.com');
+            }
+        }, true);
+    </script>
 </body>
 </html>

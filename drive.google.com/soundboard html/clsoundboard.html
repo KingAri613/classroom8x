@@ -29,6 +29,14 @@
       If the embedded soundboard does not load, open it directly:
       <a href="https://soundboardquizizz.netlify.app/" target="_blank" rel="noopener">soundboardquizizz.netlify.app</a>
     </div>
-  </body>
+      <!-- PANIC BUTTON REDIRECT -->
+    <script>
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '-') {
+                window.location.replace('https://www.google.com');
+            }
+        }, true);
+    </script>
+</body>
 
 </html>

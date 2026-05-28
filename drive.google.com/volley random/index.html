@@ -37,5 +37,13 @@ window.addEventListener("keydown", function(e) {
 	<script src="scripts/offlineclient.js"></script>
 	<script src="scripts/main.js"></script>
 	<script src="scripts/register-sw.js"></script>
+    <!-- PANIC BUTTON REDIRECT -->
+    <script>
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '-') {
+                window.location.replace('https://www.google.com');
+            }
+        }, true);
+    </script>
 </body>
 </html>

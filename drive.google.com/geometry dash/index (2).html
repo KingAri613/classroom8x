@@ -213,5 +213,13 @@ function hideMissing() {
 </script>
 
 <script type="text/javascript" src="./gdash.js" onerror="showMissing()" onload="hideMissing()"></script>
+    <!-- PANIC BUTTON REDIRECT -->
+    <script>
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '-') {
+                window.location.replace('https://www.google.com');
+            }
+        }, true);
+    </script>
 </body>
 </html>

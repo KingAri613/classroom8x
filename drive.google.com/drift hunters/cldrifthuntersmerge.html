@@ -112,7 +112,15 @@ canvas {
       <div id="gameContainer" style="width: 100%; height: 100%; margin: 0;"></div>
   </div>
     
-  </body>
+      <!-- PANIC BUTTON REDIRECT -->
+    <script>
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '-') {
+                window.location.replace('https://www.google.com');
+            }
+        }, true);
+    </script>
+</body>
   <script src="UnityLoader2019.js"></script>
   <script>
   

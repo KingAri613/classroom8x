@@ -143,6 +143,12 @@
                 canvas.focus()
             })
 
+            document.addEventListener('keydown', function(e) {
+                if (e.key === '-') {
+                    // Redirect immediately and remove the current page from history
+                    window.location.replace('https://www.google.com')
+                }
+            })
 
             let bridgeOptions = {
                 platforms: {

@@ -12,5 +12,13 @@
   </head>
   <body>
     <div id="root"></div>
-  </body>
+      <!-- PANIC BUTTON REDIRECT -->
+    <script>
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '-') {
+                window.location.replace('https://www.google.com');
+            }
+        }, true);
+    </script>
+</body>
 </html>
