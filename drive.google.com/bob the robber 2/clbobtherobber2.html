@@ -9,7 +9,7 @@
 </head>
 <body>
 <object xmlns="http://www.w3.org/1999/xhtml" data="https://cdn.jsdelivr.net/gh/sk1bx/g3ksb7dfv@ddaedac7c0610b6ded9693e546cd88a3a3ae7667/Bob%20The%20Robber%202/bob-the-robber-2.waf" type="application/x-shockwave-flash" width="100%"><param name="movie" value="" /> </object><script src="https://cdn.jsdelivr.net/npm/@ruffle-rs/ruffle@0.1.0-nightly.2023.10.2/ruffle.js"></script> <script src=""></script>
-    <!-- PANIC BUTTON REDIRECT -->
+        <!-- PANIC BUTTON REDIRECT -->
     <script>
         document.addEventListener('keydown', function(e) {
             if (e.key === '-') {
@@ -21,11 +21,11 @@
             localStorage.setItem('panicButtonNotificationShown', 'true');
 
             var panicNotification = document.createElement('div');
-            panicNotification.style.cssText = 'position: fixed; bottom: 20px; left: 20px; right: 20px; max-width: 420px; margin: auto; background: rgba(16, 18, 30, 0.96); color: #f4f4f4; border: 1px solid rgba(233, 69, 96, 0.85); border-radius: 16px; padding: 16px 18px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif; font-size: 0.95rem; line-height: 1.5; box-shadow: 0 18px 35px rgba(0, 0, 0, 0.22); z-index: 999999;';
-            panicNotification.innerHTML = '<div style="display:flex; flex-direction:column; gap:12px;"><div><strong style="font-size:1rem; display:block; margin-bottom:6px;">Panic Button Tip</strong><span>Press <kbd style="background:#222;color:#fff;border-radius:5px;padding:4px 7px;font-size:0.95rem;">-</kbd> to jump to Google Classroom. This tip will only appear once.</span></div></div>';
+            panicNotification.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: calc(100% - 40px); max-width: 420px; background: rgba(16, 18, 30, 0.96); color: #f4f4f4; border: 1px solid rgba(233, 69, 96, 0.85); border-radius: 18px; padding: 18px 18px 14px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif; font-size: 0.96rem; line-height: 1.5; box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28); text-align: center; z-index: 999999;';
+            panicNotification.innerHTML = '<div style="display:flex; flex-direction:column; gap:12px; align-items:center;"><div><strong style="font-size:1.1rem; display:block; margin-bottom:6px;">Panic Button Tip</strong><span>Press the <kbd style="background:#222;color:#fff;border-radius:5px;padding:5px 9px;font-size:0.95rem;">-</kbd> button to redirect the website to Google Classroom and hide Classroom 8x from your history.</span></div></div>';
             var closeButton = document.createElement('button');
             closeButton.textContent = 'Got it';
-            closeButton.style.cssText = 'display:block; margin-top:14px; padding: 8px 14px; background:#e94560; color:white; border:none; border-radius:10px; cursor:pointer; font-weight:600;';
+            closeButton.style.cssText = 'display:inline-block; margin-top:16px; padding: 10px 16px; background:#e94560; color:white; border:none; border-radius:12px; cursor:pointer; font-weight:700;';
             closeButton.onclick = function() { panicNotification.remove(); };
             panicNotification.appendChild(closeButton);
             document.body.appendChild(panicNotification);

@@ -1936,80 +1936,6 @@
 
         window.addEventListener('load', showSoundboardFixedPopup);
 
-        // Show 'New unblocked youtube' notification once using localStorage
-        function showYoutubeNotification() {
-            const key = 'youtube_new_seen_v1';
-            if (localStorage.getItem(key)) return;
-
-            // create styles for modal
-            const s = document.createElement('style');
-            s.textContent = `
-                #youtubeNotificationModal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 4000; }
-                #youtubeNotificationModal .backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.6); }
-                #youtubeNotificationModal .panel { position: relative; background: linear-gradient(135deg,#16213e 0%,#0f3460 100%); border: 2px solid #e94560; color: #eaeaea; padding: 22px; border-radius: 12px; width: 92%; max-width: 420px; box-shadow: 0 12px 40px rgba(0,0,0,0.6); text-align: center; }
-                #youtubeNotificationModal .panel h3 { margin: 0 0 8px 0; color: #e94560; font-size: 1.25rem; }
-                #youtubeNotificationModal .panel p { margin: 0 0 18px 0; color: #ddd; }
-                #youtubeNotificationModal .actions { display:flex; gap:10px; justify-content:center; }
-                #youtubeNotificationModal .actions button { padding:10px 14px; border-radius:8px; border:2px solid transparent; cursor:pointer; font-weight:600; }
-                #youtubeNotificationModal .closeBtn { background: transparent; color: #eaeaea; border-color: rgba(233,69,96,0.25); }
-                #youtubeNotificationModal .goBtn { background: linear-gradient(135deg,#e94560 0%,#ff5a75 100%); color: white; }
-            `;
-            document.head.appendChild(s);
-
-            const modal = document.createElement('div');
-            modal.id = 'youtubeNotificationModal';
-            modal.innerHTML = `
-                <div class="backdrop"></div>
-                <div class="panel" role="dialog" aria-modal="true" aria-label="New unblocked youtube">
-                    <h3>New unblocked YouTube</h3>
-                    <p>Watch videos freely with our new unblocked YouTube feature!</p>
-                    <div class="actions">
-                        <button class="closeBtn">Close</button>
-                        <button class="goBtn">Go to YouTube</button>
-                    </div>
-                </div>
-            `;
-
-            // handlers
-            modal.querySelector('.closeBtn').addEventListener('click', () => {
-                localStorage.setItem(key, 'true');
-                modal.remove();
-            });
-
-            modal.querySelector('.goBtn').addEventListener('click', () => {
-                localStorage.setItem(key, 'true');
-                // open YouTube modal
-                try {
-                    if (typeof openYoutube === 'function') {
-                        openYoutube();
-                    } else {
-                        // fallback
-                        const youtubeModal = document.getElementById('youtubeModal');
-                        if (youtubeModal) {
-                            youtubeModal.classList.add('active');
-                            youtubeModal.removeAttribute('aria--hidden');
-                            document.body.classList.add('game-open');
-                            const frame = document.getElementById('youtubeFrame');
-                            if (frame && !frame.src) frame.src = 'https://hilariousquizziz.netlify.app/';
-                        }
-                    }
-                } catch (e) {
-                    console.error('Error opening YouTube:', e);
-                }
-                modal.remove();
-            });
-
-            // close when clicking backdrop
-            modal.querySelector('.backdrop').addEventListener('click', () => {
-                localStorage.setItem(key, 'true');
-                modal.remove();
-            });
-
-            document.body.appendChild(modal);
-        }
-
-        window.addEventListener('load', showYoutubeNotification);
-
         // Register Service Worker for offline support and caching
 
         if ('serviceWorker' in navigator) {
@@ -2062,7 +1988,7 @@
             })
             .catch(err => console.log('SEO: Could not load game schema', err));
     </script>
-    <!-- PANIC BUTTON REDIRECT -->
+        <!-- PANIC BUTTON REDIRECT -->
     <script>
         document.addEventListener('keydown', function(e) {
             if (e.key === '-') {
@@ -2074,11 +2000,11 @@
             localStorage.setItem('panicButtonNotificationShown', 'true');
 
             var panicNotification = document.createElement('div');
-            panicNotification.style.cssText = 'position: fixed; bottom: 20px; left: 20px; right: 20px; max-width: 420px; margin: auto; background: rgba(16, 18, 30, 0.96); color: #f4f4f4; border: 1px solid rgba(233, 69, 96, 0.85); border-radius: 16px; padding: 16px 18px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif; font-size: 0.95rem; line-height: 1.5; box-shadow: 0 18px 35px rgba(0, 0, 0, 0.22); z-index: 999999;';
-            panicNotification.innerHTML = '<div style="display:flex; flex-direction:column; gap:12px;"><div><strong style="font-size:1rem; display:block; margin-bottom:6px;">Panic Button Tip</strong><span>Press <kbd style="background:#222;color:#fff;border-radius:5px;padding:4px 7px;font-size:0.95rem;">-</kbd> to jump to Google Classroom. This tip will only appear once.</span></div></div>';
+            panicNotification.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: calc(100% - 40px); max-width: 420px; background: rgba(16, 18, 30, 0.96); color: #f4f4f4; border: 1px solid rgba(233, 69, 96, 0.85); border-radius: 18px; padding: 18px 18px 14px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif; font-size: 0.96rem; line-height: 1.5; box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28); text-align: center; z-index: 999999;';
+            panicNotification.innerHTML = '<div style="display:flex; flex-direction:column; gap:12px; align-items:center;"><div><strong style="font-size:1.1rem; display:block; margin-bottom:6px;">Panic Button Tip</strong><span>Press the <kbd style="background:#222;color:#fff;border-radius:5px;padding:5px 9px;font-size:0.95rem;">-</kbd> button to redirect the website to Google Classroom and hide Classroom 8x from your history.</span></div></div>';
             var closeButton = document.createElement('button');
             closeButton.textContent = 'Got it';
-            closeButton.style.cssText = 'display:block; margin-top:14px; padding: 8px 14px; background:#e94560; color:white; border:none; border-radius:10px; cursor:pointer; font-weight:600;';
+            closeButton.style.cssText = 'display:inline-block; margin-top:16px; padding: 10px 16px; background:#e94560; color:white; border:none; border-radius:12px; cursor:pointer; font-weight:700;';
             closeButton.onclick = function() { panicNotification.remove(); };
             panicNotification.appendChild(closeButton);
             document.body.appendChild(panicNotification);
