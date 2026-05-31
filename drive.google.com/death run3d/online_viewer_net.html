@@ -7,6 +7,19 @@
     <style>
         body { margin: 0; padding: 0; overflow: hidden; background: #000; }
         #gameContainer { width: 100vw; height: 100vh; }
+        div[style*="position:fixed"][style*="top:0"],
+        button[title="Close"],
+        button[title="Fullscreen"],
+        .close-button,
+        .fullscreen-button,
+        .close-btn,
+        .fullscreen-btn,
+        .closeBtn,
+        .fullscreenBtn,
+        #unity-close-button,
+        #unity-fullscreen-button {
+            top: 3vh !important;
+        }
     </style>
     <script src="UnityProgress.js"></script>
     <script src="UnityLoader.js"></script>
