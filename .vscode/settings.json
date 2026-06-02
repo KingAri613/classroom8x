@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^cd /workspaces/classroom8x && python3 - <<'PY'\nimport json\nfrom pathlib import Path\npath = Path\\('drive\\.google\\.com/games\\.json'\\)\ntext = path\\.read_text\\(\\)\ntry:\n    data = json\\.loads\\(text\\)\n    print\\('JSON valid, games count:', len\\(data\\)\\)\n    for g in data:\n        if g\\.get\\('id'\\) == 'soccer-random':\n            print\\('soccer-random OK', g\\['gameUrl'\\]\\)\n        if g\\.get\\('id'\\) == 'volley-random':\n            print\\('volley-random OK', g\\['gameUrl'\\]\\)\n        if g\\.get\\('id'\\) == 'basket-random':\n            print\\('basket-random OK', g\\['gameUrl'\\]\\)\n        if g\\.get\\('id'\\) == 'rooftop-snipers':\n            print\\('rooftop-snipers OK', g\\['gameUrl'\\]\\)\n        if g\\.get\\('id'\\) == 'hextris':\n            print\\('ERROR: hextris still present'\\)\nexcept Exception as e:\n    print\\('JSON parse failed:', e\\)\nPY$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

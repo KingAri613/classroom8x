@@ -191,8 +191,20 @@
       "sports",
       "arcade"
     ],
-    "gameUrl": "volley random/index.html",
+    "gameUrl": "https://volleyquizizz.netlify.app/",
     "rating": 4.6
+  },
+  {
+    "id": "soccer-random",
+    "name": "Soccer Random",
+    "description": "Play soccer challenges with a quiz twist and a live embedded field.",
+    "icon": "⚽",
+    "image": "https://tse4.mm.bing.net/th/id/OIP.09kY4K3Tx9CbrIsVLzm__AHaHa?cb=thfvnextfalcon&pid=Api",
+    "categories": [
+      "sports"
+    ],
+    "gameUrl": "https://quizizzsoccer.netlify.app/",
+    "rating": 4.5
   },
   {
     "id": "infinite-craft",
@@ -399,7 +411,7 @@
       "sports",
       "arcade"
     ],
-    "gameUrl": "basket random/clbasketrandom.html",
+    "gameUrl": "https://quizizzbasket.netlify.app/",
     "rating": 4.5
   },
   {
@@ -451,7 +463,7 @@
       "shooter",
       "2player"
     ],
-    "gameUrl": "rooftop snipers/clrooftopsnipers2.html",
+    "gameUrl": "https://quizizzroof.netlify.app/",
     "rating": 4.5
   },
   {
@@ -725,19 +737,6 @@
       "casual"
     ],
     "gameUrl": "cubes2048/index.html",
-    "rating": 4.6
-  },
-  {
-    "id": "hextris",
-    "name": "Hextris",
-    "description": "Rotate the hex and match the incoming colors before the stack reaches the top!",
-    "icon": "⬢",
-    "image": "https://tse3.mm.bing.net/th/id/OIP.aYudBq6eV9P_ur2RSFtgOwHaHa?pid=Api",
-    "categories": [
-      "arcade",
-      "puzzle"
-    ],
-    "gameUrl": "hextris/index.html",
     "rating": 4.6
   },
   {
