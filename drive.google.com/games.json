@@ -715,6 +715,19 @@
     "rating": 4.5
   },
   {
+    "id": "cubes-2048",
+    "name": "Cubes 2048",
+    "description": "Merge cubes to reach the 2048 tile in this addictive puzzle game!",
+    "icon": "🎲",
+    "image": "https://tse4.mm.bing.net/th/id/OIP.ibpQ4sXkhjzRe_zKcg1YqQAAAA?r=0&pid=Api",
+    "categories": [
+      "puzzle",
+      "casual"
+    ],
+    "gameUrl": "cubes2048/index.html",
+    "rating": 4.6
+  },
+  {
     "id": "bitlife",
     "name": "BitLife",
     "description": "Live a full life from birth to death in this life simulation game!",
