@@ -728,6 +728,19 @@
     "rating": 4.6
   },
   {
+    "id": "hextris",
+    "name": "Hextris",
+    "description": "Rotate the hex and match the incoming colors before the stack reaches the top!",
+    "icon": "⬢",
+    "image": "https://tse3.mm.bing.net/th/id/OIP.aYudBq6eV9P_ur2RSFtgOwHaHa?pid=Api",
+    "categories": [
+      "arcade",
+      "puzzle"
+    ],
+    "gameUrl": "hextris/index.html",
+    "rating": 4.6
+  },
+  {
     "id": "bitlife",
     "name": "BitLife",
     "description": "Live a full life from birth to death in this life simulation game!",
