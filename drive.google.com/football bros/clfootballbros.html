@@ -1095,28 +1095,59 @@
 	    element.addEventListener('blur', keepFocus);
 	    element.addEventListener('focusout', keepFocus);
 	  </script>
-            <!-- PANIC BUTTON REDIRECT -->
+                <!-- PANIC BUTTON REDIRECT -->
     <script>
-        document.addEventListener('keydown', function(e) {
-            if (e.key === '-') {
-                const redirectUrl = localStorage.getItem('panicKeyRedirectUrl') || 'https://classroom.google.com';
-                window.location.replace(redirectUrl);
+        (function() {
+            function getPanicRedirectUrl() {
+                return localStorage.getItem('panicKeyRedirectUrl') || 'https://classroom.google.com';
             }
-        }, true);
 
-        if (!localStorage.getItem('panicButtonNotificationShown')) {
-            localStorage.setItem('panicButtonNotificationShown', 'true');
+            function panicRedirect(event) {
+                if (event.key === '-') {
+                    window.location.replace(getPanicRedirectUrl());
+                }
+            }
 
-            var panicNotification = document.createElement('div');
-            panicNotification.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: calc(100% - 40px); max-width: 420px; background: rgba(16, 18, 30, 0.96); color: #f4f4f4; border: 1px solid rgba(233, 69, 96, 0.85); border-radius: 18px; padding: 18px 18px 14px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif; font-size: 0.96rem; line-height: 1.5; box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28); text-align: center; z-index: 999999;';
-            panicNotification.innerHTML = '<div style="display:flex; flex-direction:column; gap:12px; align-items:center;"><div><strong style="font-size:1.1rem; display:block; margin-bottom:6px;">Panic Button Tip</strong><span>Press the <kbd style="background:#222;color:#fff;border-radius:5px;padding:5px 9px;font-size:0.95rem;">-</kbd> button to redirect to your custom panic URL (default: Google Classroom) and hide Classroom 8x from your history.</span></div></div>';
-            var closeButton = document.createElement('button');
-            closeButton.textContent = 'Got it';
-            closeButton.style.cssText = 'display:inline-block; margin-top:16px; padding: 10px 16px; background:#e94560; color:white; border:none; border-radius:12px; cursor:pointer; font-weight:700;';
-            closeButton.onclick = function() { panicNotification.remove(); };
-            panicNotification.appendChild(closeButton);
-            document.body.appendChild(panicNotification);
-        }
+            function addPanicListeners(targetWindow) {
+                try {
+                    if (!targetWindow || !targetWindow.addEventListener) return;
+                    targetWindow.addEventListener('keydown', panicRedirect, true);
+                    targetWindow.addEventListener('keypress', panicRedirect, true);
+                } catch (err) {
+                    // ignore cross-origin or unavailable iframe windows
+                }
+            }
+
+            addPanicListeners(window);
+
+            function attachPanicToIframe(iframe) {
+                if (!iframe) return;
+                iframe.addEventListener('load', function() {
+                    addPanicListeners(iframe.contentWindow);
+                });
+                addPanicListeners(iframe.contentWindow);
+            }
+
+            if (typeof document !== 'undefined') {
+                window.addEventListener('load', function() {
+                    attachPanicToIframe(document.getElementById('gameFrame'));
+                    attachPanicToIframe(document.getElementById('soundboardFrame'));
+                    attachPanicToIframe(document.getElementById('youtubeFrame'));
+                });
+            }
+
+            if (!localStorage.getItem('panicButtonNotificationShown')) {
+                localStorage.setItem('panicButtonNotificationShown', 'true');
+
+                var toast = document.createElement('div');
+                toast.style.cssText = 'position: fixed; bottom: 18px; right: 18px; max-width: 360px; width: calc(100% - 32px); background: rgba(16, 18, 30, 0.94); color: #f4f4f4; border: 1px solid rgba(233, 69, 96, 0.85); border-radius: 14px; padding: 14px 16px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif; font-size: 0.95rem; line-height: 1.5; box-shadow: 0 18px 48px rgba(0, 0, 0, 0.35); z-index: 999999; backdrop-filter: blur(10px);';
+                toast.innerHTML = '<div style="display:flex; gap:12px; align-items:flex-start;"><div style="flex:1;"><strong style="display:block; font-size:1rem; margin-bottom:6px; color:#fff;">Panic Key Tip</strong><span style="color:#ddd;">Press the <kbd style="display:inline-block; padding:5px 9px; border-radius:6px; background:#111; color:#fff; font-size:0.9rem;">-</kbd> key to redirect to your saved panic URL. Default: Google Classroom.</span></div><button type="button" style="border:none; background:#e94560; color:#fff; border-radius:10px; padding:8px 12px; cursor:pointer; font-weight:700;">Close</button></div>';
+                var button = toast.querySelector('button');
+                button.addEventListener('click', function() { toast.remove(); });
+                document.body.appendChild(toast);
+                setTimeout(function() { if (toast.parentNode) toast.remove(); }, 10000);
+            }
+        })();
     </script>
 
 </body>
