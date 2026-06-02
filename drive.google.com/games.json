@@ -727,57 +727,5 @@
     "gameUrl": "https://fastidious-quizizzpony-f24627.netlify.app/",
     "rating": 4.5,
     "warningPopup": true
-  },
-  {
-    "id": "cubes-2048",
-    "name": "Cubes 2048",
-    "description": "Merge cubes and reach the ultimate 2048 cube!",
-    "icon": "🧩",
-    "image": "https://tse4.mm.bing.net/th/id/OIP.ibpQ4sXkhjzRe_zKcg1YqQAAAA?r=0&pid=Api",
-    "categories": [
-      "puzzle",
-      "casual"
-    ],
-    "gameUrl": "cubes2048/index.html",
-    "rating": 4.4
-  },
-  {
-    "id": "gswitch-3",
-    "name": "G-Switch 3",
-    "description": "Flip gravity and navigate through challenging platforms!",
-    "icon": "🎮",
-    "image": "https://tse2.mm.bing.net/th/id/OIP.tUIgIKo9WKFZKqHmAK_tSAHaHa?pid=Api",
-    "categories": [
-      "action",
-      "platformer"
-    ],
-    "gameUrl": "gswitch3/index.html",
-    "rating": 4.5
-  },
-  {
-    "id": "soccer-random",
-    "name": "Soccer Random",
-    "description": "Play random soccer matches with hilarious physics!",
-    "icon": "⚽",
-    "image": "https://tse4.mm.bing.net/th/id/OIP.09kY4K3Tx9CbrIsVLzm__AHaHa?cb=thfvnextfalcon&pid=Api",
-    "categories": [
-      "sports",
-      "arcade"
-    ],
-    "gameUrl": "soccer random/index.html",
-    "rating": 4.5
-  },
-  {
-    "id": "hextris",
-    "name": "Hextris",
-    "description": "Stack blocks on a hexagonal grid in this modern Tetris variant!",
-    "icon": "🔷",
-    "image": "https://tse3.mm.bing.net/th/id/OIP.aYudBq6eV9P_ur2RSFtgOwHaHa?pid=Api",
-    "categories": [
-      "puzzle",
-      "arcade"
-    ],
-    "gameUrl": "hextris/index.html",
-    "rating": 4.6
   }
 ]
