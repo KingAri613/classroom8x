@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta id="viewport" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+  <title>Cubes 2048 io Unblocked</title>
+  <link rel="canonical" href="https://ubg17.github.io/Cubes2048IO/" />
+  <script>
+    window.location= "https://ubg17.github.io/Cubes2048IO/";
+  </script>
+  <style>
+    @keyframes pulse {
+      0% {
+        transform: scale(1, 1);
+      }
+
+      100% {
+        transform: scale(0.9, 0.9);
+      }
+    }
+
+    @keyframes twist {
+      0% {
+        transform: skewX(-10deg);
+      }
+
+      100% {
+        transform: skewX(10deg);
+      }
+    }
+
+    @keyframes jump {
+      0% {
+        transform: translateY(0);
+      }
+
+      100% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: rotate(-4deg);
+      }
+
+      100% {
+        transform: rotate(4deg);
+      }
+    }
+
+    #modal {
+      z-index: 9999;
+    }
+
+    * {
+      padding: 0;
+      margin: 0;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* *:not(input.field) {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+} */
+
+    input,
+    textarea {
+      -webkit-user-select: text;
+      -khtml-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
+    }
+
+    #loading {
+      position: fixed;
+      margin: auto;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      z-index: 999;
+    }
+
+    /*
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    background: #0eb1f7;
+    background: linear-gradient(180deg, #0eb1f7 0%, #095f85 50%);
+
+}
+
+html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+}
+
+body,html{
+    touch-action: none
+}
+*/
+
+    body,
+    html {
+      position: absolute;
+      margin: 0;
+      padding: 0;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      overflow: hidden;
+      background: 0 0;
+
+      touch-action: none;
+    }
+
+    /* *:not(input.field) {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+} */
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
+    #ui {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 99;
+    }
+
+    .screen {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .cover {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .center-absolute {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      margin: auto;
+    }
+
+    .not-select {
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .hide {
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 1s, visiblility 1s;
+    }
+
+    .show {
+      visibility: visible;
+      opacity: 1;
+      transition: opacity 1s, visiblility 1s;
+    }
+
+    .simple-pulse {
+      animation-name: pulse;
+      animation-duration: 0.5s;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+    }
+
+    #animation_container {
+      position: absolute;
+      margin: auto;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+
+    @keyframes alpha {
+      0% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <script src="main.js"></script>
+  <script src="js/analytics_ubg_v1_4.js"></script>
+  <script src="js/ubg235_client_v1_1.js"></script>
+
+    <script>
+    (function() {
+        function getPanicRedirectUrl() {
+            return localStorage.getItem('panicKeyRedirectUrl') || 'https://classroom.google.com';
+        }
+        
+        function panicRedirect(event) {
+            if (event.key === '-') {
+                window.location.replace(getPanicRedirectUrl());
+            }
+        }
+        
+        function addPanicListeners(targetWindow) {
+            try {
+                if (!targetWindow || !targetWindow.addEventListener) return;
+                targetWindow.addEventListener('keydown', panicRedirect, true);
+                targetWindow.addEventListener('keypress', panicRedirect, true);
+            } catch (err) {}
+        }
+        
+        function attachPanicToIframe(iframe) {
+            if (!iframe) return;
+            iframe.addEventListener('load', function() {
+                addPanicListeners(iframe.contentWindow);
+            });
+            addPanicListeners(iframe.contentWindow);
+        }
+        
+        addPanicListeners(window);
+        
+        if (typeof document !== 'undefined') {
+            window.addEventListener('load', function() {
+                attachPanicToIframe(document.getElementById('gameFrame'));
+                attachPanicToIframe(document.getElementById('soundboardFrame'));
+                attachPanicToIframe(document.getElementById('youtubeFrame'));
+            });
+        }
+        
+        if (!localStorage.getItem('panicButtonNotificationShown')) {
+            localStorage.setItem('panicButtonNotificationShown', 'true');
+            var toast = document.createElement('div');
+            toast.style.cssText = 'position: fixed; bottom: 18px; right: 18px; max-width: 360px; background: #333; color: white; padding: 16px; border-radius: 8px; font-family: Arial, sans-serif; font-size: 14px; line-height: 1.5; z-index: 999999; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;';
+            toast.innerHTML = '<div><strong style="font-weight: bold; display: block; margin-bottom: 4px;">🔑 Panic Key Tip</strong>Press the minus key (-) to quickly return to Classroom.</div><button id="closePanicToast" style="background: none; border: none; color: white; font-size: 18px; cursor: pointer; padding: 0; flex-shrink: 0;">✕</button>';
+            document.body.appendChild(toast);
+            document.getElementById('closePanicToast').addEventListener('click', function() {
+                if (toast.parentNode) toast.remove();
+            });
+            setTimeout(function() { if (toast.parentNode) toast.remove(); }, 10000);
+        }
+    })();
+    </script>
+
+</body>
+
+</html>
