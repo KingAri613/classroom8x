@@ -78,12 +78,13 @@
     </div>
 
     <script>
-        // Add Ctrl+K keyboard shortcut for Google Classroom
+        // Add Ctrl+K keyboard shortcut with customizable URL
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                 e.preventDefault();
                 e.stopPropagation();
-                window.open('https://classroom.google.com', '_blank');
+                const ctrlKUrl = localStorage.getItem('ctrlKRedirectUrl') || 'https://classroom.google.com';
+                window.open(ctrlKUrl, '_blank', 'width=1000,height=800,left=100,top=100,resizable=yes,scrollbars=yes');
             }
         }, true);
 

@@ -1058,7 +1058,7 @@
         let currentCategory = 'all';
         let currentSearch = '';
         let currentSoundSearch = '';
-        const moreGameIds = ['hook-stickman', 'tag', 'johnny-trigger', 'vex-8', 'jetpack-joyride', 'among-us', 'motox-3m', 'football-bros', 'cookie-clicker', 'level-devil'];
+        const moreGameIds = ['getaway-shootout', 'volley-random', 'soccer-random', 'basket-random', 'hook-stickman', 'tag', 'johnny-trigger', 'vex-8', 'jetpack-joyride', 'among-us', 'motox-3m', 'football-bros', 'cookie-clicker', 'level-devil'];
 
         let activeAudioElements = [];
         let validSoundFiles = [];
@@ -1399,25 +1399,27 @@
         }
 
         function openSettings() {
-            const currentUrl = localStorage.getItem('panicKeyRedirectUrl') || 'https://classroom.google.com';
+            const panicUrl = localStorage.getItem('panicKeyRedirectUrl') || 'https://classroom.google.com';
+            const ctrlKUrl = localStorage.getItem('ctrlKRedirectUrl') || 'https://classroom.google.com';
             
             const s = document.createElement('style');
             s.textContent = `
                 #settingsModal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 5000; }
                 #settingsModal .backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.7); }
-                #settingsModal .panel { position: relative; background: linear-gradient(135deg,#16213e 0%,#0f3460 100%); border: 2px solid #e94560; color: #eaeaea; padding: 28px; border-radius: 14px; width: 92%; max-width: 450px; box-shadow: 0 12px 40px rgba(0,0,0,0.6); text-align: left; }
+                #settingsModal .panel { position: relative; background: linear-gradient(135deg,#16213e 0%,#0f3460 100%); border: 2px solid #e94560; color: #eaeaea; padding: 28px; border-radius: 14px; width: 92%; max-width: 480px; box-shadow: 0 12px 40px rgba(0,0,0,0.6); text-align: left; max-height: 80vh; overflow-y: auto; }
                 #settingsModal .panel h3 { margin: 0 0 18px 0; color: #e94560; font-size: 1.4rem; text-align: center; }
-                #settingsModal .form-group { margin-bottom: 16px; }
+                #settingsModal .form-group { margin-bottom: 18px; }
                 #settingsModal .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.95rem; color: #ddd; }
                 #settingsModal .form-group input { width: 100%; padding: 10px 12px; border: 1px solid rgba(233,69,96,0.5); border-radius: 8px; background: rgba(26,26,46,0.8); color: #eaeaea; font-size: 0.95rem; box-sizing: border-box; }
                 #settingsModal .form-group input:focus { outline: none; border-color: #e94560; background: rgba(26,26,46,0.95); }
                 #settingsModal .form-group p { margin: 6px 0 0 0; font-size: 0.85rem; color: #bbb; }
-                #settingsModal .actions { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
+                #settingsModal .actions { display: flex; gap: 12px; justify-content: center; margin-top: 24px; }
                 #settingsModal .actions button { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 0.95rem; }
                 #settingsModal .cancelBtn { background: rgba(100,100,120,0.6); color: #eaeaea; border: 1px solid rgba(233,69,96,0.3); }
                 #settingsModal .saveBtn { background: linear-gradient(135deg,#e94560 0%,#ff5a75 100%); color: white; }
                 #settingsModal .cancelBtn:hover { background: rgba(100,100,120,0.8); }
                 #settingsModal .saveBtn:hover { opacity: 0.9; }
+                #settingsModal .divider { height: 1px; background: rgba(233,69,96,0.2); margin: 20px 0; }
             `;
             document.head.appendChild(s);
 
@@ -1428,8 +1430,14 @@
                 <div class="panel" role="dialog" aria-modal="true" aria-label="Settings">
                     <h3>Settings</h3>
                     <div class="form-group">
+                        <label for="ctrlKUrlInput">Ctrl + K Redirect URL</label>
+                        <input type="url" id="ctrlKUrlInput" placeholder="https://classroom.google.com" value="${ctrlKUrl}">
+                        <p>Default: https://classroom.google.com</p>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="form-group">
                         <label for="panicUrlInput">Panic Key (-) Redirect URL</label>
-                        <input type="url" id="panicUrlInput" placeholder="https://classroom.google.com" value="${currentUrl}">
+                        <input type="url" id="panicUrlInput" placeholder="https://classroom.google.com" value="${panicUrl}">
                         <p>Default: https://classroom.google.com</p>
                     </div>
                     <div class="actions">
@@ -1445,9 +1453,12 @@
             });
 
             modal.querySelector('.saveBtn').addEventListener('click', () => {
-                const urlInput = modal.querySelector('#panicUrlInput').value.trim();
-                const urlToSave = urlInput || 'https://classroom.google.com';
-                localStorage.setItem('panicKeyRedirectUrl', urlToSave);
+                const ctrlKInput = modal.querySelector('#ctrlKUrlInput').value.trim();
+                const panicInput = modal.querySelector('#panicUrlInput').value.trim();
+                const ctrlKToSave = ctrlKInput || 'https://classroom.google.com';
+                const panicToSave = panicInput || 'https://classroom.google.com';
+                localStorage.setItem('ctrlKRedirectUrl', ctrlKToSave);
+                localStorage.setItem('panicKeyRedirectUrl', panicToSave);
                 modal.remove();
                 s.remove();
             });
@@ -1913,7 +1924,8 @@
             if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                 e.preventDefault();
                 e.stopPropagation();
-                window.open('https://classroom.google.com', '_blank');
+                const ctrlKUrl = localStorage.getItem('ctrlKRedirectUrl') || 'https://classroom.google.com';
+                window.open(ctrlKUrl, '_blank', 'width=1000,height=800,left=100,top=100,resizable=yes,scrollbars=yes');
             }
         }, true);
 
