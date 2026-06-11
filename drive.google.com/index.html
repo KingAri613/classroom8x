@@ -1442,8 +1442,27 @@
             document.body.classList.add('game-open');
             if (closeBtn) closeBtn.style.display = 'block';
             const frame = document.getElementById('liveSportFrame');
-            if (frame && !frame.src) {
-                frame.src = 'Live Sport/index.html';
+            if (frame) {
+                frame.srcdoc = `<!doctype html>
+                <html lang="en">
+                <head>
+                  <meta charset="UTF-8" />
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                  <title>Live Sport</title>
+                  <style>
+                    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: linear-gradient(135deg,#16213e 0%,#0f3460 100%); color: #fff; font-family: Arial, sans-serif; }
+                    .box { text-align: center; padding: 28px; border: 1px solid rgba(233,69,96,0.35); border-radius: 16px; background: rgba(10,18,36,0.65); box-shadow: 0 10px 30px rgba(0,0,0,0.35); }
+                    h1 { margin: 0 0 10px; font-size: 2rem; color: #ff7d95; }
+                    p { margin: 0; color: #ececec; font-size: 1rem; }
+                  </style>
+                </head>
+                <body>
+                  <div class="box">
+                    <h1>Coming Soon</h1>
+                    <p>Live Sport is being added to this page soon.</p>
+                  </div>
+                </body>
+                </html>`;
             }
         }
 
@@ -1451,10 +1470,12 @@
             const modal = document.getElementById('liveSportModal');
             if (!modal) return;
             const closeBtn = modal.querySelector('.livesport-close');
+            const frame = document.getElementById('liveSportFrame');
             modal.classList.remove('active');
             modal.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('game-open');
             if (closeBtn) closeBtn.style.display = 'none';
+            if (frame) frame.srcdoc = '';
         }
 
         function openMusicFrame() {
@@ -2095,6 +2116,59 @@
 
         // Show notification when page loads
         window.addEventListener('load', showClassroomNotification);
+
+        function showMusicAnnouncementPopup() {
+            const key = 'music_announcement_seen_v1';
+            if (localStorage.getItem(key)) return;
+
+            const popup = document.createElement('div');
+            popup.id = 'musicAnnouncementPopup';
+            popup.style.cssText = `
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.75);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 5000;
+                padding: 18px;
+            `;
+            popup.innerHTML = `
+                <div style="
+                    width: 100%;
+                    max-width: 460px;
+                    background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+                    border: 2px solid #e94560;
+                    border-radius: 16px;
+                    color: #eaeaea;
+                    box-shadow: 0 16px 42px rgba(0,0,0,0.45);
+                    padding: 24px;
+                    text-align: center;
+                ">
+                    <h3 style="margin: 0 0 10px; color: #ff7d95; font-size: 1.35rem;">New music is here!</h3>
+                    <p style="margin: 0 0 14px; line-height: 1.45; color: #f3f3f3;">Listen to music, enjoy the fresh sound, and explore the new music section.</p>
+                    <div style="display:flex; gap:10px; justify-content:center; margin-top: 12px;">
+                        <button id="musicAnnouncementCloseBtn" type="button" style="padding:10px 14px; border-radius:8px; border:1px solid rgba(233,69,96,0.45); background: rgba(255,255,255,0.06); color:#eaeaea; cursor:pointer; font-weight:600;">Close</button>
+                        <button id="musicAnnouncementGoBtn" type="button" style="padding:10px 14px; border-radius:8px; border:none; background: linear-gradient(135deg,#e94560 0%,#ff5a75 100%); color:white; cursor:pointer; font-weight:700;">Go to Music</button>
+                    </div>
+                </div>
+            `;
+
+            popup.querySelector('#musicAnnouncementCloseBtn').addEventListener('click', () => {
+                localStorage.setItem(key, 'true');
+                popup.remove();
+            });
+
+            popup.querySelector('#musicAnnouncementGoBtn').addEventListener('click', () => {
+                localStorage.setItem(key, 'true');
+                popup.remove();
+                openMusic();
+            });
+
+            document.body.appendChild(popup);
+        }
+
+        window.addEventListener('load', showMusicAnnouncementPopup);
 
         // Show 'Soundboard fixed' popup once using localStorage
         function showSoundboardFixedPopup() {
