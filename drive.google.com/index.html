@@ -816,68 +816,34 @@
             display: block;
         }
 
-        .soundboard-close{
+        .soundboard-close,
+        .youtube-close,
+        .livesport-close,
+        .music-close {
             position: fixed;
             top: 18px;
-            left: 18px;
             z-index: 2001;
-            padding: 10px 14px;
-            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
-            color: #eaeaea;
-            border: 2px solid #e94560;
-            border-radius: 8px;
+            padding: 6px 10px;
+            background: rgba(15, 52, 96, 0.18);
+            color: rgba(234, 234, 234, 0.92);
+            border: 1px solid rgba(233, 69, 96, 0.45);
+            border-radius: 999px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.95em;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            font-size: 0.9em;
+            box-shadow: none;
+            backdrop-filter: blur(6px);
+            opacity: 0.9;
         }
 
-        .youtube-close{
-            position: fixed;
-            top: 18px;
+        .soundboard-close,
+        .livesport-close,
+        .music-close {
+            left: 18px;
+        }
+
+        .youtube-close {
             right: 18px;
-            z-index: 2001;
-            padding: 10px 14px;
-            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
-            color: #eaeaea;
-            border: 2px solid #e94560;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.95em;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-        }
-
-        .livesport-close{
-            position: fixed;
-            top: 18px;
-            left: 18px;
-            z-index: 2001;
-            padding: 10px 14px;
-            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
-            color: #eaeaea;
-            border: 2px solid #e94560;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.95em;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-        }
-
-        .music-close{
-            position: fixed;
-            top: 18px;
-            left: 18px;
-            z-index: 2001;
-            padding: 10px 14px;
-            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
-            color: #eaeaea;
-            border: 2px solid #e94560;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.95em;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
 
         .modal-action {
