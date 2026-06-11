@@ -1485,7 +1485,7 @@
             if (closeBtn) closeBtn.style.display = 'none';
         }
 
-        function openMusic() {
+        function openMusicFrame() {
             const modal = document.getElementById('musicModal');
             if (!modal) {
                 console.error('musicModal not found');
@@ -1497,9 +1497,71 @@
             document.body.classList.add('game-open');
             if (closeBtn) closeBtn.style.display = 'block';
             const frame = document.getElementById('musicFrame');
-            if (frame && !frame.src) {
-                frame.src = 'Music/index.html';
+            if (frame) {
+                frame.src = 'https://quizizzmusic.netlify.app/';
             }
+        }
+
+        function showMusicTermsDialog() {
+            const existing = document.getElementById('musicTermsDialog');
+            if (existing) {
+                existing.remove();
+            }
+
+            const dialog = document.createElement('div');
+            dialog.id = 'musicTermsDialog';
+            dialog.style.cssText = `
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.78);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 5000;
+                padding: 18px;
+            `;
+            dialog.innerHTML = `
+                <div style="
+                    width: 100%;
+                    max-width: 460px;
+                    background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+                    border: 2px solid #e94560;
+                    border-radius: 14px;
+                    color: #eaeaea;
+                    box-shadow: 0 14px 38px rgba(0,0,0,0.45);
+                    padding: 22px;
+                    text-align: left;
+                ">
+                    <h3 style="margin: 0 0 10px; color: #e94560; font-size: 1.25rem;">Music Terms & Conditions</h3>
+                    <p style="margin: 0 0 10px; line-height: 1.45; color: #ececec;">You must accept the terms before using the music site.</p>
+                    <p style="margin: 0 0 14px; line-height: 1.5; color: #ffdede; font-weight: 600;">You are prohibited form listening to Kol Isho , and Non jewish music.</p>
+                    <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px;">
+                        <button id="musicDeclineBtn" type="button" style="padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(233,69,96,0.5); background: rgba(255,255,255,0.06); color: #eaeaea; cursor: pointer; font-weight: 600;">Decline</button>
+                        <button id="musicAcceptBtn" type="button" style="padding: 10px 14px; border-radius: 8px; border: none; background: linear-gradient(135deg, #e94560 0%, #ff5a75 100%); color: #fff; cursor: pointer; font-weight: 700;">Accept</button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(dialog);
+
+            dialog.querySelector('#musicDeclineBtn').addEventListener('click', () => {
+                dialog.remove();
+            });
+
+            dialog.querySelector('#musicAcceptBtn').addEventListener('click', () => {
+                localStorage.setItem('musicTermsAccepted', 'true');
+                dialog.remove();
+                openMusicFrame();
+            });
+        }
+
+        function openMusic() {
+            const accepted = localStorage.getItem('musicTermsAccepted') === 'true';
+            if (!accepted) {
+                showMusicTermsDialog();
+                return;
+            }
+            openMusicFrame();
         }
 
         function closeMusic() {
