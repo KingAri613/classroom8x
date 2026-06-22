@@ -1668,6 +1668,7 @@
                 localStorage.setItem('panicKeyRedirectUrl', panicToSave);
                 localStorage.setItem('ctrlKEnabled', ctrlKEnabledInput ? 'true' : 'false');
                 localStorage.setItem('panicKeyEnabled', panicEnabledInput ? 'true' : 'false');
+                window.dispatchEvent(new Event('hotkey-settings-updated'));
                 modal.remove();
                 s.remove();
             });
@@ -2136,11 +2137,14 @@
         document.addEventListener('keydown', (e) => {
             const ctrlKEnabled = localStorage.getItem('ctrlKEnabled') !== 'false';
             if (!ctrlKEnabled) return;
-            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
                 e.preventDefault();
                 e.stopPropagation();
                 const ctrlKUrl = localStorage.getItem('ctrlKRedirectUrl') || 'https://classroom.google.com';
-                window.location.replace(ctrlKUrl);
+                const newWindow = window.open(ctrlKUrl, '_blank', 'noopener');
+                if (!newWindow) {
+                    window.location.replace(ctrlKUrl);
+                }
             }
         }, true);
 
@@ -2355,6 +2359,7 @@
             }
 
             window.addEventListener('storage', refreshPanicSettings);
+            window.addEventListener('hotkey-settings-updated', refreshPanicSettings);
 
             function panicRedirect(event) {
                 if (!panicEnabledCache) return;
