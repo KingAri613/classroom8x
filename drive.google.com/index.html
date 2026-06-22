@@ -1593,6 +1593,8 @@
         function openSettings() {
             const panicUrl = localStorage.getItem('panicKeyRedirectUrl') || 'https://classroom.google.com';
             const ctrlKUrl = localStorage.getItem('ctrlKRedirectUrl') || 'https://classroom.google.com';
+            const ctrlKEnabled = localStorage.getItem('ctrlKEnabled') !== 'false';
+            const panicEnabled = localStorage.getItem('panicKeyEnabled') !== 'false';
             
             const s = document.createElement('style');
             s.textContent = `
@@ -1605,6 +1607,9 @@
                 #settingsModal .form-group input { width: 100%; padding: 10px 12px; border: 1px solid rgba(233,69,96,0.5); border-radius: 8px; background: rgba(26,26,46,0.8); color: #eaeaea; font-size: 0.95rem; box-sizing: border-box; }
                 #settingsModal .form-group input:focus { outline: none; border-color: #e94560; background: rgba(26,26,46,0.95); }
                 #settingsModal .form-group p { margin: 6px 0 0 0; font-size: 0.85rem; color: #bbb; }
+                #settingsModal .toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
+                #settingsModal .toggle-row span { font-size: 0.9rem; color: #ddd; font-weight: 600; }
+                #settingsModal .toggle-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: #e94560; }
                 #settingsModal .actions { display: flex; gap: 12px; justify-content: center; margin-top: 24px; }
                 #settingsModal .actions button { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 0.95rem; }
                 #settingsModal .cancelBtn { background: rgba(100,100,120,0.6); color: #eaeaea; border: 1px solid rgba(233,69,96,0.3); }
@@ -1625,12 +1630,20 @@
                         <label for="ctrlKUrlInput">Ctrl + K Redirect URL</label>
                         <input type="url" id="ctrlKUrlInput" placeholder="https://classroom.google.com" value="${ctrlKUrl}">
                         <p>Default: https://classroom.google.com</p>
+                        <div class="toggle-row">
+                            <span>Enable Ctrl + K</span>
+                            <input type="checkbox" id="ctrlKEnabledInput" ${ctrlKEnabled ? 'checked' : ''}>
+                        </div>
                     </div>
                     <div class="divider"></div>
                     <div class="form-group">
                         <label for="panicUrlInput">Panic Key (-) Redirect URL</label>
                         <input type="url" id="panicUrlInput" placeholder="https://classroom.google.com" value="${panicUrl}">
                         <p>Default: https://classroom.google.com</p>
+                        <div class="toggle-row">
+                            <span>Enable Panic Key (-)</span>
+                            <input type="checkbox" id="panicEnabledInput" ${panicEnabled ? 'checked' : ''}>
+                        </div>
                     </div>
                     <div class="actions">
                         <button class="cancelBtn">Cancel</button>
@@ -1647,10 +1660,14 @@
             modal.querySelector('.saveBtn').addEventListener('click', () => {
                 const ctrlKInput = modal.querySelector('#ctrlKUrlInput').value.trim();
                 const panicInput = modal.querySelector('#panicUrlInput').value.trim();
+                const ctrlKEnabledInput = modal.querySelector('#ctrlKEnabledInput').checked;
+                const panicEnabledInput = modal.querySelector('#panicEnabledInput').checked;
                 const ctrlKToSave = ctrlKInput || 'https://classroom.google.com';
                 const panicToSave = panicInput || 'https://classroom.google.com';
                 localStorage.setItem('ctrlKRedirectUrl', ctrlKToSave);
                 localStorage.setItem('panicKeyRedirectUrl', panicToSave);
+                localStorage.setItem('ctrlKEnabled', ctrlKEnabledInput ? 'true' : 'false');
+                localStorage.setItem('panicKeyEnabled', panicEnabledInput ? 'true' : 'false');
                 modal.remove();
                 s.remove();
             });
@@ -2117,11 +2134,13 @@
 
         // Add keyboard shortcut for Google Classroom (global with capture phase)
         document.addEventListener('keydown', (e) => {
+            const ctrlKEnabled = localStorage.getItem('ctrlKEnabled') !== 'false';
+            if (!ctrlKEnabled) return;
             if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                 e.preventDefault();
                 e.stopPropagation();
                 const ctrlKUrl = localStorage.getItem('ctrlKRedirectUrl') || 'https://classroom.google.com';
-                window.open(ctrlKUrl, '_blank', 'width=1000,height=800,left=100,top=100,resizable=yes,scrollbars=yes');
+                window.location.replace(ctrlKUrl);
             }
         }, true);
 
@@ -2272,14 +2291,6 @@
 
         window.addEventListener('load', showSoundboardFixedPopup);
 
-        // ============ PANIC KEY REDIRECT HANDLER ============
-        document.addEventListener('keydown', function(e) {
-            if (e.key === '-') {
-                const redirectUrl = localStorage.getItem('panicKeyRedirectUrl') || 'https://classroom.google.com';
-                window.location.replace(redirectUrl);
-            }
-        }, true);
-
         // Register Service Worker for offline support and caching
 
         if ('serviceWorker' in navigator) {
@@ -2335,13 +2346,22 @@
                 <!-- PANIC BUTTON REDIRECT -->
     <script>
         (function() {
-            function getPanicRedirectUrl() {
-                return localStorage.getItem('panicKeyRedirectUrl') || 'https://classroom.google.com';
+            let panicRedirectUrlCache = localStorage.getItem('panicKeyRedirectUrl') || 'https://classroom.google.com';
+            let panicEnabledCache = localStorage.getItem('panicKeyEnabled') !== 'false';
+
+            function refreshPanicSettings() {
+                panicRedirectUrlCache = localStorage.getItem('panicKeyRedirectUrl') || 'https://classroom.google.com';
+                panicEnabledCache = localStorage.getItem('panicKeyEnabled') !== 'false';
             }
 
+            window.addEventListener('storage', refreshPanicSettings);
+
             function panicRedirect(event) {
+                if (!panicEnabledCache) return;
                 if (event.key === '-') {
-                    window.location.replace(getPanicRedirectUrl());
+                    event.preventDefault();
+                    event.stopPropagation();
+                    window.location.replace(panicRedirectUrlCache);
                 }
             }
 
@@ -2349,7 +2369,6 @@
                 try {
                     if (!targetWindow || !targetWindow.addEventListener) return;
                     targetWindow.addEventListener('keydown', panicRedirect, true);
-                    targetWindow.addEventListener('keypress', panicRedirect, true);
                 } catch (err) {
                     // ignore cross-origin or unavailable iframe windows
                 }
