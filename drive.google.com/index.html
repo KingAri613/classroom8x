@@ -876,6 +876,15 @@
             right: 20px;
         }
 
+        #gameModal.ai-mode .close-button {
+            left: auto;
+            right: 20px;
+        }
+
+        #gameModal.ai-mode .fullscreen-button {
+            right: 72px;
+        }
+
         .modal-action:hover {
             background: rgba(233, 69, 96, 0.25);
             color: #e94560;
@@ -1887,8 +1896,10 @@
                 trackGamePlay(gameId, gameName);
             }
             
+            const gameModal = document.getElementById('gameModal');
+            gameModal.classList.toggle('ai-mode', gameId === 'ai-tool');
             document.getElementById('gameFrame').src = '';
-            document.getElementById('gameModal').classList.add('active');
+            gameModal.classList.add('active');
             document.body.classList.add('game-open');
             
             // Small delay to ensure modal is active before loading game
@@ -1997,7 +2008,9 @@
         }
 
         function closeGame() {
-            document.getElementById('gameModal').classList.remove('active');
+            const gameModal = document.getElementById('gameModal');
+            gameModal.classList.remove('active');
+            gameModal.classList.remove('ai-mode');
             document.getElementById('gameFrame').src = '';
             document.body.classList.remove('game-open');
             document.body.style.overflow = '';
