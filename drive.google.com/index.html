@@ -846,6 +846,11 @@
             right: 18px;
         }
 
+        .ai-game-close {
+            right: 18px;
+            left: auto;
+        }
+
         .modal-action {
             position: fixed;
             z-index: 2001;
@@ -883,6 +888,14 @@
 
         #gameModal.ai-mode .fullscreen-button {
             right: 72px;
+        }
+
+        #gameModal.ai-mode .modal-action {
+            display: none;
+        }
+
+        #gameModal.ai-mode .ai-game-close {
+            display: block !important;
         }
 
         .modal-action:hover {
@@ -1040,6 +1053,7 @@
     <div class="modal-overlay" id="gameModal">
         <button class="modal-action close-button" onclick="closeGame()" title="Close">✕</button>
         <button class="modal-action fullscreen-button" type="button" onclick="toggleGameFullscreen()" title="Fullscreen">⛶</button>
+        <button class="music-close ai-game-close" onclick="closeGame()" style="display:none;">← Back</button>
         <iframe id="gameFrame" 
             allowfullscreen 
             webkitallowfullscreen 
