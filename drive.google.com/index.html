@@ -102,6 +102,32 @@
             overflow: hidden;
         }
 
+        .site-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+
+        .site-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .site-loader img {
+            width: min(320px, 68vw);
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -994,6 +1020,10 @@
     </style>
 </head>
 <body>
+    <div class="site-loader" id="siteLoader" aria-hidden="true">
+        <img src="Gif/World%20Cup%20Football%20GIF.gif" alt="Loading">
+    </div>
+
     <div class="header">
         <div class="topbar">
             <button class="soundboard-button" id="aiBtn" type="button" onclick="openAI()">AI</button>
@@ -1114,10 +1144,19 @@
         let currentSearch = '';
         let currentSoundSearch = '';
         const moreGameIds = ['getaway-shootout', 'volley-random', 'soccer-random', 'basket-random', 'hook-stickman', 'tag', 'johnny-trigger', 'vex-8', 'jetpack-joyride', 'among-us', 'motox-3m', 'football-bros', 'cookie-clicker', 'level-devil'];
+        let pageShellLoaded = document.readyState === 'complete';
+        let gamesContentLoaded = false;
 
         let activeAudioElements = [];
         let validSoundFiles = [];
         let audioMap = new Map(); // Track audio elements by sound path
+
+        function revealSiteIfReady() {
+            if (!pageShellLoaded || !gamesContentLoaded) return;
+            const loader = document.getElementById('siteLoader');
+            if (!loader || loader.classList.contains('hidden')) return;
+            loader.classList.add('hidden');
+        }
 
         // Play an audio file by URL (for files placed in /soundboard)
         function playAudioFile(src, button) {
@@ -1756,6 +1795,11 @@
                         <p>Please check the console for more details.</p>
                     </div>
                 `;
+            } finally {
+                gamesContentLoaded = true;
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(revealSiteIfReady);
+                });
             }
         }
 
@@ -2084,6 +2128,10 @@
         // build soundboard when DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
             setupSoundboardSearch();
+        });
+        window.addEventListener('load', () => {
+            pageShellLoaded = true;
+            revealSiteIfReady();
         });
 
         function openAI() {
