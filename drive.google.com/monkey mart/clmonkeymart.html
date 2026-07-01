@@ -154,6 +154,61 @@
 		}
 	</style>
 	<script src="patch/js/poki-sdk.js"></script>
+	<script>
+		(function () {
+			var allowedHosts = new Set([
+				window.location.host,
+				'cdn.jsdelivr.net'
+			]);
+
+			function isAllowedUrl(url) {
+				try {
+					if (!url) return true;
+					var parsed = new URL(url, window.location.href);
+					if (parsed.protocol === 'about:' || parsed.protocol === 'data:' || parsed.protocol === 'blob:') {
+						return true;
+					}
+					if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+						return false;
+					}
+					return allowedHosts.has(parsed.host);
+				} catch (e) {
+					return false;
+				}
+			}
+
+			window.open = function (url) {
+				console.warn('Blocked popup/new-tab attempt:', url);
+				return null;
+			};
+
+			var nativeAssign = window.location.assign.bind(window.location);
+			window.location.assign = function (url) {
+				if (isAllowedUrl(url)) {
+					return nativeAssign(url);
+				}
+				console.warn('Blocked external location.assign redirect:', url);
+			};
+
+			var nativeReplace = window.location.replace.bind(window.location);
+			window.location.replace = function (url) {
+				if (isAllowedUrl(url)) {
+					return nativeReplace(url);
+				}
+				console.warn('Blocked external location.replace redirect:', url);
+			};
+
+			document.addEventListener('click', function (event) {
+				var link = event.target && event.target.closest ? event.target.closest('a[href]') : null;
+				if (!link) return;
+				if (!isAllowedUrl(link.href)) {
+					event.preventDefault();
+					event.stopPropagation();
+					console.warn('Blocked external link redirect:', link.href);
+				}
+			}, true);
+		})();
+	</script>
 </head>
 
 <body>
