@@ -688,6 +688,19 @@
     "rating": 4.6
   },
   {
+    "id": "g-switch-3",
+    "name": "G Switch3",
+    "description": "Flip gravity and race through the course in this fast platform challenge.",
+    "icon": "🌀",
+    "image": "https://tse2.mm.bing.net/th/id/OIP.2Uw8mBmi-rfgy6Nb9zNRGQHaHa?pid=Api",
+    "categories": [
+      "platformer",
+      "arcade"
+    ],
+    "gameUrl": "https://quizizzswitch.netlify.app/",
+    "rating": 4.5
+  },
+  {
     "id": "bottle-flip-3d",
     "name": "Bottle Flip 3D",
     "description": "Flip bottles and land them upright in this 3D skill game.",
