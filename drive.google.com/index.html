@@ -1256,7 +1256,6 @@
         const moreGameIds = ['getaway-shootout', 'volley-random', 'soccer-random', 'basket-random', 'hook-stickman', 'tag', 'johnny-trigger', 'vex-8', 'jetpack-joyride', 'among-us', 'motox-3m', 'football-bros', 'cookie-clicker', 'level-devil'];
         const newGameIds = ['g-switch-3', 'player-games-1234', 'plonky', 'fireboy-watergirl-2'];
         const defaultGameSandbox = 'allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-presentation allow-downloads';
-        const restrictedGameSandbox = 'allow-same-origin allow-scripts allow-forms allow-modals allow-presentation allow-downloads';
         let pageShellLoaded = document.readyState === 'complete';
         let gamesContentLoaded = false;
         let hydrationBreakTimeoutId = null;
@@ -1270,10 +1269,6 @@
             const loader = document.getElementById('siteLoader');
             if (!loader || loader.classList.contains('hidden')) return;
             loader.classList.add('hidden');
-        }
-
-        function getGameSandbox(gameId) {
-            return gameId === 'monkey-mart' ? restrictedGameSandbox : defaultGameSandbox;
         }
 
         // Play an audio file by URL (for files placed in /soundboard)
@@ -2166,7 +2161,7 @@
             const gameModal = document.getElementById('gameModal');
             const gameFrame = document.getElementById('gameFrame');
             gameModal.classList.toggle('ai-mode', gameId === 'ai-tool');
-            gameFrame.setAttribute('sandbox', getGameSandbox(gameId));
+            gameFrame.setAttribute('sandbox', defaultGameSandbox);
             gameFrame.src = '';
             gameModal.classList.add('active');
             document.body.classList.add('game-open');
@@ -2184,7 +2179,7 @@
                 // Track the game play
                 trackGamePlay(gameId, gameName);
                 const gameFrame = document.getElementById('gameFrame');
-                gameFrame.setAttribute('sandbox', getGameSandbox(gameId));
+                gameFrame.setAttribute('sandbox', defaultGameSandbox);
                 gameFrame.src = '';
                 document.getElementById('gameModal').classList.add('active');
                 document.body.classList.add('game-open');
@@ -2247,7 +2242,7 @@
                 // Now play the game
                 trackGamePlay(gameId, gameName);
                 const gameFrame = document.getElementById('gameFrame');
-                gameFrame.setAttribute('sandbox', getGameSandbox(gameId));
+                gameFrame.setAttribute('sandbox', defaultGameSandbox);
                 gameFrame.src = '';
                 document.getElementById('gameModal').classList.add('active');
                 document.body.classList.add('game-open');
