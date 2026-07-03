@@ -144,6 +144,73 @@
             pointer-events: none;
         }
 
+        .hydration-break-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 12000;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .hydration-break-screen {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .hydration-break-screen.hidden {
+            display: none;
+        }
+
+        .hydration-break-image {
+            width: auto;
+            max-width: min(1144px, 100%);
+            max-height: min(744px, 100%);
+            border-radius: 18px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+            object-fit: contain;
+        }
+
+        .hydration-break-caption {
+            margin-top: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .hydration-break-countdown {
+            color: #fff;
+            text-align: center;
+        }
+
+        .hydration-break-countdown h2 {
+            margin: 0 0 14px;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            color: #ff7d95;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .hydration-break-countdown-timer {
+            font-size: clamp(4rem, 15vw, 10rem);
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: 0.08em;
+        }
+
+        .hydration-break-countdown p {
+            margin: 18px 0 0;
+            color: rgba(255, 255, 255, 0.82);
+            font-size: 1rem;
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -2266,10 +2333,70 @@
             if (allGames.length > 0) {
                 setTimeout(showNewGamesPopup, 250);
             }
+            setTimeout(showHydrationBreak, 300000);
         });
 
         function openAI() {
             playGame('https://classroom8xai.pages.dev/drive.google.com/', 'AI', 'ai-tool');
+        }
+
+        function formatHydrationCountdown(totalSeconds) {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function startHydrationBreakCountdown(timerEl, overlay) {
+            const displaySeconds = 180;
+            const countdownDurationMs = 10000;
+            const startTime = performance.now();
+
+            timerEl.textContent = formatHydrationCountdown(displaySeconds);
+
+            const intervalId = setInterval(() => {
+                const elapsed = performance.now() - startTime;
+                const progress = Math.min(elapsed / countdownDurationMs, 1);
+                const remainingSeconds = Math.max(0, Math.ceil(displaySeconds * (1 - progress)));
+                timerEl.textContent = formatHydrationCountdown(remainingSeconds);
+
+                if (progress >= 1) {
+                    clearInterval(intervalId);
+                    overlay.remove();
+                }
+            }, 100);
+        }
+
+        function showHydrationBreak() {
+            if (document.getElementById('hydrationBreakOverlay')) return;
+
+            const overlay = document.createElement('div');
+            overlay.id = 'hydrationBreakOverlay';
+            overlay.className = 'hydration-break-overlay';
+            overlay.innerHTML = `
+                <div class="hydration-break-screen" id="hydrationBreakImageScreen">
+                    <img class="hydration-break-image" src="hydration break image/WBcCT.jpg" alt="Hydration break">
+                    <div class="hydration-break-caption">Hydration break</div>
+                </div>
+                <div class="hydration-break-screen hidden" id="hydrationBreakCountdownScreen">
+                    <div class="hydration-break-countdown">
+                        <h2>Hydration Break Countdown</h2>
+                        <div class="hydration-break-countdown-timer" id="hydrationBreakTimer">03:00</div>
+                        <p>Quick break in progress.</p>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(overlay);
+
+            const imageScreen = overlay.querySelector('#hydrationBreakImageScreen');
+            const countdownScreen = overlay.querySelector('#hydrationBreakCountdownScreen');
+            const timerEl = overlay.querySelector('#hydrationBreakTimer');
+
+            setTimeout(() => {
+                imageScreen.classList.add('hidden');
+                countdownScreen.classList.remove('hidden');
+                startHydrationBreakCountdown(timerEl, overlay);
+            }, 2200);
         }
 
         // Add keyboard shortcut for Google Classroom (global with capture phase)
