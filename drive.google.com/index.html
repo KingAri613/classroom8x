@@ -1259,6 +1259,7 @@
         const restrictedGameSandbox = 'allow-same-origin allow-scripts allow-forms allow-modals allow-presentation allow-downloads';
         let pageShellLoaded = document.readyState === 'complete';
         let gamesContentLoaded = false;
+        let hydrationBreakTimeoutId = null;
 
         let activeAudioElements = [];
         let validSoundFiles = [];
@@ -2333,7 +2334,7 @@
             if (allGames.length > 0) {
                 setTimeout(showNewGamesPopup, 250);
             }
-            setTimeout(showHydrationBreak, 300000);
+            scheduleHydrationBreak();
         });
 
         function openAI() {
@@ -2367,6 +2368,10 @@
         }
 
         function showHydrationBreak() {
+            if (hydrationBreakTimeoutId) {
+                clearTimeout(hydrationBreakTimeoutId);
+                hydrationBreakTimeoutId = null;
+            }
             if (document.getElementById('hydrationBreakOverlay')) return;
 
             const overlay = document.createElement('div');
@@ -2399,6 +2404,14 @@
             }, 2200);
         }
 
+        function scheduleHydrationBreak() {
+            if (hydrationBreakTimeoutId) return;
+            hydrationBreakTimeoutId = setTimeout(() => {
+                hydrationBreakTimeoutId = null;
+                showHydrationBreak();
+            }, 300000);
+        }
+
         // Add keyboard shortcut for Google Classroom (global with capture phase)
         document.addEventListener('keydown', (e) => {
             const ctrlKEnabled = localStorage.getItem('ctrlKEnabled') !== 'false';
@@ -2408,6 +2421,14 @@
                 e.stopPropagation();
                 const ctrlKUrl = localStorage.getItem('ctrlKRedirectUrl') || 'https://classroom.google.com';
                 window.open(ctrlKUrl, '_blank', 'noopener');
+            }
+        }, true);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '=') {
+                e.preventDefault();
+                e.stopPropagation();
+                showHydrationBreak();
             }
         }, true);
 
