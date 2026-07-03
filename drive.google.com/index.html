@@ -1187,7 +1187,7 @@
         let currentSearch = '';
         let currentSoundSearch = '';
         const moreGameIds = ['getaway-shootout', 'volley-random', 'soccer-random', 'basket-random', 'hook-stickman', 'tag', 'johnny-trigger', 'vex-8', 'jetpack-joyride', 'among-us', 'motox-3m', 'football-bros', 'cookie-clicker', 'level-devil'];
-        const newGameIds = ['g-switch-3', 'pixel-shooter', 'bottle-flip-3d', 'cubes-2048'];
+        const newGameIds = ['g-switch-3', 'player-games-1234', 'plonky', 'fireboy-watergirl-2'];
         const defaultGameSandbox = 'allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-presentation allow-downloads';
         const restrictedGameSandbox = 'allow-same-origin allow-scripts allow-forms allow-modals allow-presentation allow-downloads';
         let pageShellLoaded = document.readyState === 'complete';
@@ -1864,6 +1864,10 @@
             }
         }
 
+        function getGamesByIds(ids) {
+            return ids.map(id => allGames.find(game => game.id === id)).filter(Boolean);
+        }
+
         // ============ END GAME PLAY TRACKING ============
 
         // Load games
@@ -2259,6 +2263,9 @@
         window.addEventListener('load', () => {
             pageShellLoaded = true;
             revealSiteIfReady();
+            if (allGames.length > 0) {
+                setTimeout(showNewGamesPopup, 250);
+            }
         });
 
         function openAI() {
@@ -2360,6 +2367,99 @@
             });
         }
 
+        // Generate and inject JSON-LD schema for games (SEO)
+        fetch('games.json')
+            .then(res => res.json())
+            .then(games => {
+                const gameSchemas = games.slice(0, 10).map(game => ({
+                    "@type": "Thing",
+                    "name": game.name,
+                    "description": game.description,
+                    "image": game.image,
+                    "url": `https://classroom8x.netlify.app/?game=${game.id}`
+                }));
+
+                const collectionSchema = {
+                    "@context": "https://schema.org",
+                    "@type": "Collection",
+                    "name": "classroom 8x - Game Collection",
+                    "description": "Collection of unblocked games for classroom entertainment",
+                    "hasPart": gameSchemas
+                };
+
+                const script = document.createElement('script');
+                script.type = 'application/ld+json';
+                script.textContent = JSON.stringify(collectionSchema);
+                document.head.appendChild(script);
+            })
+            .catch(err => console.log('SEO: Could not load game schema', err));
+    </script>
+                <!-- PANIC BUTTON REDIRECT -->
+    <script>
+        (function() {
+            let panicRedirectUrlCache = localStorage.getItem('panicKeyRedirectUrl') || 'https://classroom.google.com';
+            let panicEnabledCache = localStorage.getItem('panicKeyEnabled') !== 'false';
+
+            function refreshPanicSettings() {
+                panicRedirectUrlCache = localStorage.getItem('panicKeyRedirectUrl') || 'https://classroom.google.com';
+                panicEnabledCache = localStorage.getItem('panicKeyEnabled') !== 'false';
+            }
+
+            window.addEventListener('storage', refreshPanicSettings);
+            window.addEventListener('hotkey-settings-updated', refreshPanicSettings);
+
+            function panicRedirect(event) {
+                if (!panicEnabledCache) return;
+                if (event.key === '-') {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    window.location.replace(panicRedirectUrlCache);
+                }
+            }
+
+            function addPanicListeners(targetWindow) {
+                try {
+                    if (!targetWindow || !targetWindow.addEventListener) return;
+                    targetWindow.addEventListener('keydown', panicRedirect, true);
+                } catch (err) {
+                    // ignore cross-origin or unavailable iframe windows
+                }
+            }
+
+            addPanicListeners(window);
+
+            function attachPanicToIframe(iframe) {
+                if (!iframe) return;
+                iframe.addEventListener('load', function() {
+                    addPanicListeners(iframe.contentWindow);
+                });
+                addPanicListeners(iframe.contentWindow);
+            }
+
+            if (typeof document !== 'undefined') {
+                window.addEventListener('load', function() {
+                    attachPanicToIframe(document.getElementById('gameFrame'));
+                    attachPanicToIframe(document.getElementById('soundboardFrame'));
+                    attachPanicToIframe(document.getElementById('youtubeFrame'));
+                });
+            }
+
+            if (!localStorage.getItem('panicShortcutsNotificationShown')) {
+                localStorage.setItem('panicShortcutsNotificationShown', 'true');
+
+                var toast = document.createElement('div');
+                toast.style.cssText = 'position: fixed; bottom: 18px; right: 18px; max-width: 360px; width: calc(100% - 32px); background: rgba(16, 18, 30, 0.94); color: #f4f4f4; border: 1px solid rgba(233, 69, 96, 0.85); border-radius: 14px; padding: 14px 16px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif; font-size: 0.95rem; line-height: 1.5; box-shadow: 0 18px 48px rgba(0, 0, 0, 0.35); z-index: 999999; backdrop-filter: blur(10px);';
+                toast.innerHTML = '<div style="display:flex; gap:12px; align-items:flex-start;"><div style="flex:1;"><strong style="display:block; font-size:1rem; margin-bottom:6px; color:#fff;">Shortcut Tips</strong><span style="color:#ddd;">Use <kbd style="display:inline-block; padding:5px 9px; border-radius:6px; background:#111; color:#fff; font-size:0.9rem;">Ctrl + K</kbd> for quick redirect, or <kbd style="display:inline-block; padding:5px 9px; border-radius:6px; background:#111; color:#fff; font-size:0.9rem;">-</kbd> as your panic key.</span></div><button type="button" style="border:none; background:#e94560; color:#fff; border-radius:10px; padding:8px 12px; cursor:pointer; font-weight:700;">Close</button></div>';
+                var button = toast.querySelector('button');
+                button.addEventListener('click', function() { toast.remove(); });
+                document.body.appendChild(toast);
+                setTimeout(function() { if (toast.parentNode) toast.remove(); }, 10000);
+            }
+        })();
+    </script>
+
+</body>
+</html>
         // Generate and inject JSON-LD schema for games (SEO)
         fetch('games.json')
             .then(res => res.json())
