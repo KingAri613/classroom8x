@@ -10,4 +10,5 @@ if(!(BrowserDetector.chrome&&BrowserDetector.version>=66)){return;}
 function buildSoundOverlay(){const overlay=document.createElement('div');overlay.classList.add('sound-overlay');overlay.setAttribute('id','sound-overlay');return overlay;}
 function buildSoundText(){const textNode=document.createTextNode('Click here to enable sound');const textSpan=document.createElement('span');textSpan.classList.add('sound-text');textSpan.appendChild(textNode);return textSpan;}
 const soundOverlay=buildSoundOverlay();soundOverlay.appendChild(buildSoundText());document.addEventListener('DOMContentLoaded',function(){var root=document.getElementsByClassName('webgl-content')[0];if(!root){root=document.getElementsByClassName('template-wrap')[0];}
-root.appendChild(soundOverlay);});'click removeSoundOverlay'.split(' ').forEach(e=>document.addEventListener(e,function(){soundOverlay.style.display='none';},false));}();
+if(!root){root=document.getElementById('gameContainer')||document.body;}
+if(root){root.appendChild(soundOverlay);}});'click removeSoundOverlay'.split(' ').forEach(e=>document.addEventListener(e,function(){soundOverlay.style.display='none';},false));}();
