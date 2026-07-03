@@ -459,6 +459,30 @@
             box-shadow: 0 4px 12px rgba(233, 69, 96, 0.5);
         }
 
+        .request-games-sidebar-btn {
+            width: 100%;
+            margin-top: 14px;
+            padding: 12px 14px;
+            border: 1px solid rgba(233, 69, 96, 0.45);
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.25) 0%, rgba(15, 52, 96, 0.5) 100%);
+            color: #eaeaea;
+            font-size: 0.95em;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            line-height: 1.35;
+        }
+
+        .request-games-sidebar-btn:hover {
+            background: linear-gradient(135deg, #e94560 0%, #ff5a75 100%);
+            border-color: #e94560;
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.35);
+        }
+
         .search-box {
             margin-bottom: 20px;
         }
@@ -1076,6 +1100,7 @@
                 <li><button class="category-btn" data-category="puzzle">Puzzle</button></li>
                 <li><button class="category-btn" data-category="2player">2 Player</button></li>
             </ul>
+            <button class="request-games-sidebar-btn" type="button" onclick="openGameRequestForm()">Request games to be added to the site</button>
         </aside>
 
         <main class="main-content">
@@ -2239,6 +2264,10 @@
         }, true);
 
 
+        function openGameRequestForm() {
+            playGame('https://forms.gle/eD3dZn2DX9FKQ99f9', 'Game Requests', 'game-request-form');
+        }
+
         function showGameRequestPopup() {
             const key = 'game_request_popup_seen_v1';
             if (localStorage.getItem(key)) return;
@@ -2284,7 +2313,7 @@
             popup.querySelector('#gameRequestGoBtn').addEventListener('click', () => {
                 localStorage.setItem(key, 'true');
                 popup.remove();
-                playGame('https://forms.gle/eD3dZn2DX9FKQ99f9', 'Game Requests', 'game-request-form');
+                openGameRequestForm();
             });
 
             document.body.appendChild(popup);
