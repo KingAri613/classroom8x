@@ -104,6 +104,45 @@
     "rating": 4.6
   },
   {
+    "id": "player-games-1234",
+    "name": "1,2,3,4 Player Games",
+    "description": "Play solo or with friends in this collection of fast multiplayer mini-games.",
+    "icon": "🎮",
+    "image": "https://tse4.mm.bing.net/th/id/OIP.nEuhHKcE1_n5SvxH7ZEujQHaHa?cb=thfvnextfalcon4&pid=Api",
+    "categories": [
+      "2player",
+      "action"
+    ],
+    "gameUrl": "1,2,3,4 player games/cl234playergame.html",
+    "rating": 4.5
+  },
+  {
+    "id": "plonky",
+    "name": "Plonky",
+    "description": "Take on a quirky arcade challenge and try to beat your best run.",
+    "icon": "🟠",
+    "image": "https://tse3.mm.bing.net/th/id/OIP._9ZWq1vf3xbyhkZo__zh4AHaHa?pid=Api",
+    "categories": [
+      "arcade",
+      "action"
+    ],
+    "gameUrl": "plonky/clplonky.html",
+    "rating": 4.4
+  },
+  {
+    "id": "fireboy-watergirl-2",
+    "name": "Fireboy and Watergirl 2",
+    "description": "Control both heroes and solve elemental platform puzzles together.",
+    "icon": "🔥",
+    "image": "https://tse1.mm.bing.net/th/id/OIP.z1paRGH-_GfJ2r1KtUxnjAHaHa?pid=Api",
+    "categories": [
+      "platformer",
+      "2player"
+    ],
+    "gameUrl": "fireboy and watergirl 2/clfireboyandwatergirl2.html",
+    "rating": 4.6
+  },
+  {
     "id": "paper-io",
     "name": "Paper.io",
     "description": "Claim territory and outmaneuver opponents.",

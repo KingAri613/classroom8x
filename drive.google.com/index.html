@@ -1188,6 +1188,8 @@
         let currentSoundSearch = '';
         const moreGameIds = ['getaway-shootout', 'volley-random', 'soccer-random', 'basket-random', 'hook-stickman', 'tag', 'johnny-trigger', 'vex-8', 'jetpack-joyride', 'among-us', 'motox-3m', 'football-bros', 'cookie-clicker', 'level-devil'];
         const newGameIds = ['g-switch-3', 'pixel-shooter', 'bottle-flip-3d', 'cubes-2048'];
+        const defaultGameSandbox = 'allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-presentation allow-downloads';
+        const restrictedGameSandbox = 'allow-same-origin allow-scripts allow-forms allow-modals allow-presentation allow-downloads';
         let pageShellLoaded = document.readyState === 'complete';
         let gamesContentLoaded = false;
 
@@ -1200,6 +1202,10 @@
             const loader = document.getElementById('siteLoader');
             if (!loader || loader.classList.contains('hidden')) return;
             loader.classList.add('hidden');
+        }
+
+        function getGameSandbox(gameId) {
+            return gameId === 'monkey-mart' ? restrictedGameSandbox : defaultGameSandbox;
         }
 
         // Play an audio file by URL (for files placed in /soundboard)
@@ -2086,14 +2092,16 @@
             }
             
             const gameModal = document.getElementById('gameModal');
+            const gameFrame = document.getElementById('gameFrame');
             gameModal.classList.toggle('ai-mode', gameId === 'ai-tool');
-            document.getElementById('gameFrame').src = '';
+            gameFrame.setAttribute('sandbox', getGameSandbox(gameId));
+            gameFrame.src = '';
             gameModal.classList.add('active');
             document.body.classList.add('game-open');
             
             // Small delay to ensure modal is active before loading game
             setTimeout(() => {
-                document.getElementById('gameFrame').src = gameUrl;
+                gameFrame.src = gameUrl;
             }, 50);
         }
 
@@ -2103,11 +2111,13 @@
             if (agreed) {
                 // Track the game play
                 trackGamePlay(gameId, gameName);
-                document.getElementById('gameFrame').src = '';
+                const gameFrame = document.getElementById('gameFrame');
+                gameFrame.setAttribute('sandbox', getGameSandbox(gameId));
+                gameFrame.src = '';
                 document.getElementById('gameModal').classList.add('active');
                 document.body.classList.add('game-open');
                 setTimeout(() => {
-                    document.getElementById('gameFrame').src = gameUrl;
+                    gameFrame.src = gameUrl;
                 }, 50);
                 return;
             }
@@ -2164,11 +2174,13 @@
                 popup.remove();
                 // Now play the game
                 trackGamePlay(gameId, gameName);
-                document.getElementById('gameFrame').src = '';
+                const gameFrame = document.getElementById('gameFrame');
+                gameFrame.setAttribute('sandbox', getGameSandbox(gameId));
+                gameFrame.src = '';
                 document.getElementById('gameModal').classList.add('active');
                 document.body.classList.add('game-open');
                 setTimeout(() => {
-                    document.getElementById('gameFrame').src = gameUrl;
+                    gameFrame.src = gameUrl;
                 }, 50);
             };
         }
@@ -2198,9 +2210,11 @@
 
         function closeGame() {
             const gameModal = document.getElementById('gameModal');
+            const gameFrame = document.getElementById('gameFrame');
             gameModal.classList.remove('active');
             gameModal.classList.remove('ai-mode');
-            document.getElementById('gameFrame').src = '';
+            gameFrame.setAttribute('sandbox', defaultGameSandbox);
+            gameFrame.src = '';
             document.body.classList.remove('game-open');
             document.body.style.overflow = '';
         }
