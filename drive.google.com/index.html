@@ -1641,212 +1641,6 @@
             if (closeBtn) closeBtn.style.display = 'none';
         }
 
-        // Cloudflare Variable Setup:
-        // 1. In Cloudflare Pages dashboard: Settings → Environment variables
-        // 2. Add: SPORTDB_API_KEY = your_api_key_from_https://dashboard.sportdb.dev/
-        // 3. Get your API key: https://dashboard.sportdb.dev/
-        // The Worker at /api/sports handles proxying with authentication
-        
-        async function fetchSportDBData(endpoint) {
-            try {
-                const workerUrl = `/api/sports?endpoint=${encodeURIComponent(endpoint)}`;
-                const controller = new AbortController();
-                const timeout = setTimeout(() => controller.abort(), 3000);
-                
-                const response = await fetch(workerUrl, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' },
-                    signal: controller.signal
-                });
-                clearTimeout(timeout);
-                
-                if (!response.ok) {
-                    console.warn(`Sports API error (${response.status}): ${endpoint}`);
-                    return null;
-                }
-                
-                return await response.json();
-            } catch (error) {
-                console.error(`API fetch error for ${endpoint}:`, error.message);
-                return null;
-            }
-        }
-
-        async function generateLiveSportHTML() {
-            const frame = document.getElementById('liveSportFrame');
-            if (!frame) return;
-
-            // Show dashboard immediately without waiting for API
-            const dashboardHTML = `<!doctype html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Live Sports Dashboard</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:linear-gradient(135deg,#16213e 0%,#0f3460 100%);color:#fff;font-family:Arial,sans-serif;padding:20px}
-.container{max-width:1600px;margin:0 auto}
-h1{font-size:2.5rem;margin:20px 0;text-align:center;color:#ff7d95;text-shadow:0 2px 10px rgba(0,0,0,0.5)}
-.tabs{display:flex;gap:10px;margin:20px 0;flex-wrap:wrap;border-bottom:2px solid rgba(233,69,96,0.3);overflow-x:auto}
-.tab-btn{padding:12px 20px;background:rgba(233,69,96,0.1);border:none;color:#fff;cursor:pointer;border-radius:8px 8px 0 0;transition:all 0.3s;font-size:1rem;white-space:nowrap}
-.tab-btn.active{background:#e94560;color:#fff}
-.tab-content{display:none;padding:20px;animation:fadeIn 0.3s}
-.tab-content.active{display:block}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.match-card{background:rgba(10,18,36,0.8);border:1px solid rgba(233,69,96,0.3);border-radius:12px;padding:15px;margin:10px 0;transition:all 0.3s}
-.match-card:hover{border-color:#e94560;box-shadow:0 0 20px rgba(233,69,96,0.3)}
-.match-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:10px}
-.league-name{color:#ff7d95;font-weight:bold;font-size:0.9rem}
-.match-status{color:#00d4ff;font-size:0.85rem;font-weight:bold;background:rgba(0,212,255,0.1);padding:3px 8px;border-radius:4px}
-.teams{display:flex;justify-content:space-between;align-items:center;margin:10px 0;font-size:1.1rem}
-.team{flex:1;text-align:center}
-.score{font-size:2rem;font-weight:bold;color:#e94560;margin:0 20px}
-.match-stats{display:flex;flex-direction:column;gap:5px;margin:10px 0;font-size:0.9rem}
-.match-stats span{color:#00d4ff;background:rgba(0,212,255,0.1);padding:5px 8px;border-radius:4px}
-.standing-row{display:grid;grid-template-columns:1fr 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;gap:10px;padding:10px;border-bottom:1px solid rgba(233,69,96,0.2);align-items:center;font-size:0.95rem}
-.standing-row.header{background:rgba(233,69,96,0.2);font-weight:bold;color:#ff7d95;position:sticky;top:0}
-.position{text-align:center;color:#00d4ff;font-weight:bold}
-.team-name{text-align:left}
-.stat{text-align:center;font-size:0.9rem}
-.transfer-card{background:rgba(233,69,96,0.1);border-left:4px solid #e94560;padding:15px;margin:10px 0;border-radius:8px}
-.error-msg{background:rgba(220,53,69,0.2);border-left:4px solid #dc3545;padding:15px;border-radius:8px;margin:20px 0;color:#ff9999}
-.loading-placeholder{background:rgba(10,18,36,0.8);border:1px solid rgba(233,69,96,0.3);border-radius:12px;padding:15px;margin:10px 0;color:#00d4ff;text-align:center;font-size:0.9rem}
-.setup-msg{background:rgba(233,69,96,0.2);border-left:4px solid #ff7d95;padding:20px;border-radius:8px;margin:20px 0;color:#ff9999;text-align:center}
-</style>
-</head>
-<body>
-<div class="container">
-<h1>⚽ Live Sports Dashboard</h1>
-<div class="tabs">
-<button class="tab-btn active" onclick="switchTab(event, 'live')">🔴 Live Matches</button>
-<button class="tab-btn" onclick="switchTab(event, 'standings')">📊 League Tables</button>
-<button class="tab-btn" onclick="switchTab(event, 'fixtures')">📅 Upcoming Fixtures</button>
-<button class="tab-btn" onclick="switchTab(event, 'transfers')">🔄 Transfer Market</button>
-</div>
-<div id="live" class="tab-content active">
-<div class="setup-msg">Loading sports data...</div>
-<div id="liveContent" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:15px"></div>
-</div>
-<div id="standings" class="tab-content">
-<div class="setup-msg">Loading league standings...</div>
-<div id="standingsContent" style="overflow-x:auto"></div>
-</div>
-<div id="fixtures" class="tab-content">
-<div class="setup-msg">Loading upcoming fixtures...</div>
-<div id="fixturesContent" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:15px"></div>
-</div>
-<div id="transfers" class="tab-content">
-<div class="setup-msg">Loading transfer market data...</div>
-<div id="transfersContent" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:15px"></div>
-</div>
-</div>
-<script>
-function switchTab(e, tabName) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-    document.getElementById(tabName).classList.add('active');
-    e.target.classList.add('active');
-}
-
-window.updateDashboard = function(liveMatches, transfers) {
-    // Update live matches
-    if (liveMatches && liveMatches.results?.length > 0) {
-        const matchesHTML = liveMatches.results.slice(0, 12).map(m => \`
-            <div class="match-card">
-                <div class="match-header">
-                    <span class="league-name">\${m.league || 'Football'}</span>
-                    <span class="match-status">\${m.status || 'LIVE'}</span>
-                </div>
-                <div class="teams">
-                    <div class="team"><strong>\${m.home_team || 'Team A'}</strong></div>
-                    <div class="score">\${m.home_score ?? '-'} : \${m.away_score ?? '-'}</div>
-                    <div class="team"><strong>\${m.away_team || 'Team B'}</strong></div>
-                </div>
-                <div class="match-stats">
-                    \${m.time_elapsed ? \`<span>⏱️ \${m.time_elapsed}'</span>\` : '<span>📅 Upcoming</span>'}
-                </div>
-            </div>
-        \`).join('');
-        document.getElementById('liveContent').innerHTML = matchesHTML;
-    } else {
-        document.getElementById('liveContent').innerHTML = '<div class="error-msg" style="grid-column:1/-1">No live matches available. API key may not be configured.</div>';
-    }
-
-    // Update standings
-    if (liveMatches && liveMatches.standings?.length > 0) {
-        const standingsHTML = '<div style="overflow-x:auto"><div class="standing-row header"><div class="position">Pos</div><div class="team-name">Team</div><div class="stat">P</div><div class="stat">W</div><div class="stat">D</div><div class="stat">L</div><div class="stat">Pts</div></div>' +
-            liveMatches.standings.slice(0, 20).map((team, idx) => \`
-                <div class="standing-row">
-                    <div class="position">\${idx + 1}</div>
-                    <div class="team-name"><strong>\${team.name || 'N/A'}</strong></div>
-                    <div class="stat">\${team.played || '-'}</div>
-                    <div class="stat" style="color:#00ff88">\${team.wins || '-'}</div>
-                    <div class="stat" style="color:#00d4ff">\${team.draws || '-'}</div>
-                    <div class="stat" style="color:#ff6b6b">\${team.losses || '-'}</div>
-                    <div class="stat" style="color:#e94560;font-weight:bold">\${team.points || '-'}</div>
-                </div>
-            \`).join('') + '</div>';
-        document.getElementById('standingsContent').innerHTML = standingsHTML;
-    } else {
-        document.getElementById('standingsContent').innerHTML = '<div class="error-msg" style="grid-column:1/-1">Standings data not available.</div>';
-    }
-
-    // Update fixtures
-    if (liveMatches && liveMatches.fixtures?.length > 0) {
-        const fixturesHTML = liveMatches.fixtures.slice(0, 10).map(f => \`
-            <div class="match-card">
-                <div class="match-header">
-                    <span class="league-name">\${f.league || 'Football'}</span>
-                    <span class="match-status">UPCOMING</span>
-                </div>
-                <div class="teams">
-                    <div class="team"><strong>\${f.home_team || 'Team A'}</strong></div>
-                    <div class="score">VS</div>
-                    <div class="team"><strong>\${f.away_team || 'Team B'}</strong></div>
-                </div>
-                <div class="match-stats">
-                    \${f.kickoff_time ? \`<span>🕐 \${f.kickoff_time}</span>\` : '<span>TBD</span>'}
-                </div>
-            </div>
-        \`).join('');
-        document.getElementById('fixturesContent').innerHTML = fixturesHTML;
-    } else {
-        document.getElementById('fixturesContent').innerHTML = '<div class="error-msg" style="grid-column:1/-1">Upcoming fixtures not available.</div>';
-    }
-
-    // Update transfers
-    if (transfers && transfers.countries?.length > 0) {
-        const transfersHTML = transfers.countries.slice(0, 15).map(c => \`
-            <div class="transfer-card">
-                <strong style="color:#ff7d95">\${c.name || 'Country'}</strong><br/>
-                <small style="color:#00d4ff">Transfer market activity</small>
-            </div>
-        \`).join('');
-        document.getElementById('transfersContent').innerHTML = transfersHTML;
-    } else {
-        document.getElementById('transfersContent').innerHTML = '<div class="error-msg" style="grid-column:1/-1">Transfer data not available.</div>';
-    }
-};
-</script>
-</body>
-</html>`;
-
-            // Show dashboard immediately (don't wait for API)
-            frame.srcdoc = dashboardHTML;
-
-            // Fetch API data in the background
-            setTimeout(async () => {
-                const liveMatches = await fetchSportDBData('flashscore/football');
-                const transfers = await fetchSportDBData('transfermarkt/countries');
-                
-                // Update dashboard with real data if available
-                if (frame.contentWindow?.updateDashboard) {
-                    frame.contentWindow.updateDashboard(liveMatches, transfers);
-                }
-            }, 500);
-        }
-
         function openLiveSport() {
             const modal = document.getElementById('liveSportModal');
             if (!modal) {
@@ -1858,7 +1652,29 @@ window.updateDashboard = function(liveMatches, transfers) {
             modal.removeAttribute('aria-hidden');
             document.body.classList.add('game-open');
             if (closeBtn) closeBtn.style.display = 'block';
-            generateLiveSportHTML();
+            const frame = document.getElementById('liveSportFrame');
+            if (frame) {
+                frame.srcdoc = `<!doctype html>
+                <html lang="en">
+                <head>
+                  <meta charset="UTF-8" />
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                  <title>Live Sport</title>
+                  <style>
+                    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: linear-gradient(135deg,#16213e 0%,#0f3460 100%); color: #fff; font-family: Arial, sans-serif; }
+                    .box { text-align: center; padding: 28px; border: 1px solid rgba(233,69,96,0.35); border-radius: 16px; background: rgba(10,18,36,0.65); box-shadow: 0 10px 30px rgba(0,0,0,0.35); }
+                    h1 { margin: 0 0 10px; font-size: 2rem; color: #ff7d95; }
+                    p { margin: 0; color: #ececec; font-size: 1rem; }
+                  </style>
+                </head>
+                <body>
+                  <div class="box">
+                    <h1>Coming Soon</h1>
+                    <p>Live Sport is being added to this page soon.</p>
+                  </div>
+                </body>
+                </html>`;
+            }
         }
 
         function closeLiveSport() {
