@@ -1669,26 +1669,269 @@
             }
         }
 
+        async function fetchSportDBData(endpoint) {
+            try {
+                // Use Cloudflare Worker to proxy API requests securely
+                const workerUrl = `/api/sports?endpoint=${encodeURIComponent(endpoint)}`;
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+                
+                const response = await fetch(workerUrl, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    signal: controller.signal
+                });
+                clearTimeout(timeout);
+                
+                if (!response.ok) {
+                    console.warn(`Sports API error (${response.status}): ${endpoint}`);
+                    return null;
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error(`API fetch error for ${endpoint}:`, error.message);
+                return null;
+            }
+        }
+
         async function generateLiveSportHTML() {
             const loadingHTML = `<html><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><style>body{margin:0;background:linear-gradient(135deg,#16213e 0%,#0f3460 100%);color:#fff;font-family:Arial,sans-serif;display:grid;place-items:center;min-height:100vh}.spinner{border:4px solid rgba(233,69,96,0.2);border-top:4px solid #e94560;border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style></head><body><div class="spinner"></div></body></html>`;
             
             const frame = document.getElementById('liveSportFrame');
             if (frame) frame.srcdoc = loadingHTML;
             
-            // Fetch comprehensive data from all available endpoints
-            const endpoints = [
-                'flashscore/football',
-                'flashscore/football/live',
-                'transfermarkt/countries',
-                'match/UP8BtSF/predicted-lineups',
-                'team/barcelona/5k0pqk2'
-            ];
+            // Set a timeout for the entire dashboard load (15 seconds)
+            const loadTimeout = setTimeout(() => {
+                if (frame) {
+                    frame.srcdoc = `<html><head><meta charset="UTF-8"/><style>body{margin:0;background:linear-gradient(135deg,#16213e 0%,#0f3460 100%);color:#fff;font-family:Arial,sans-serif;display:grid;place-items:center;min-height:100vh}.box{text-align:center;padding:28px;border:1px solid rgba(233,69,96,0.35);border-radius:16px;background:rgba(10,18,36,0.65)}.box h1{margin:0 0 10px;color:#ff7d95;font-size:1.5rem}.box p{margin:0;color:#ececec}</style></head><body><div class="box"><h1>⚠️ Setup Required</h1><p>Live Sports API key not configured.</p><p style="font-size:0.9rem;margin-top:10px;color:#00d4ff">Contact admin to set SPORTDB_API_KEY in Cloudflare Pages environment variables</p></div></body></html>`;
+                }
+            }, 15000);
+            
+            try {
+                // Fetch comprehensive data from all available endpoints with timeout
+                const endpoints = [
+                    'flashscore/football',
+                    'transfermarkt/countries'
+                ];
 
-            let allData = {};
-            for (const endpoint of endpoints) {
-                const data = await fetchSportDBData(endpoint).catch(() => null);
-                allData[endpoint] = data;
+                let allData = {};
+                for (const endpoint of endpoints) {
+                    const data = await fetchSportDBData(endpoint);
+                    allData[endpoint] = data;
+                }
+
+                clearTimeout(loadTimeout);
+
+                const liveMatches = allData['flashscore/football'];
+                const transfers = allData['transfermarkt/countries'];
+
+                // Build comprehensive match card with all available stats
+                let matchesHTML = '';
+                if (liveMatches && liveMatches.results?.length > 0) {
+                    matchesHTML = liveMatches.results.slice(0, 15).map(m => `
+                        <div class="match-card">
+                            <div class="match-header">
+                                <span class="league-name">${m.league || 'Football'}</span>
+                                <span class="match-status">${m.status || 'LIVE'}</span>
+                                ${m.country ? `<span class="country-flag">🌍 ${m.country}</span>` : ''}
+                            </div>
+                            <div class="teams">
+                                <div class="team">
+                                    <strong>${m.home_team || 'Team A'}</strong>
+                                    ${m.home_team_logo ? `<img src="${m.home_team_logo}" alt="home" style="width:40px;margin:5px 0">` : ''}
+                                </div>
+                                <div class="score">${m.home_score ?? '-'} : ${m.away_score ?? '-'}</div>
+                                <div class="team">
+                                    <strong>${m.away_team || 'Team B'}</strong>
+                                    ${m.away_team_logo ? `<img src="${m.away_team_logo}" alt="away" style="width:40px;margin:5px 0">` : ''}
+                                </div>
+                            </div>
+                            <div class="match-stats">
+                                ${m.time_elapsed ? `<span>⏱️ ${m.time_elapsed}'</span>` : '<span>📅 Upcoming</span>'}
+                                ${m.possession_home ? `<span>🔵 Possession: ${m.possession_home}% - ${m.possession_away}%</span>` : ''}
+                                ${m.shots_on_target_home ? `<span>🎯 Shots: ${m.shots_on_target_home} - ${m.shots_on_target_away}</span>` : ''}
+                                ${m.corners_home ? `<span>📐 Corners: ${m.corners_home} - ${m.corners_away}</span>` : ''}
+                            </div>
+                            ${m.goals_scorers ? `<div class="scorers"><strong>⚽ Scorers:</strong> ${m.goals_scorers}</div>` : ''}
+                        </div>
+                    `).join('');
+                } else if (liveMatches) {
+                    matchesHTML = '<div class="loading">No live matches at the moment. Check back soon!</div>';
+                } else {
+                    matchesHTML = '<div class="error-msg">⚠️ Unable to fetch live matches data. Ensure API key is configured in Cloudflare Pages.</div>';
+                }
+
+                // Build comprehensive standings with advanced stats
+                let standingsHTML = '';
+                if (liveMatches && liveMatches.standings?.length > 0) {
+                    standingsHTML = '<div style="overflow-x:auto"><div class="standing-row header"><div class="position">Pos</div><div class="team-name">Team</div><div class="stat">P</div><div class="stat">W</div><div class="stat">D</div><div class="stat">L</div><div class="stat">GF</div><div class="stat">GA</div><div class="stat">GD</div><div class="stat">Pts</div></div>' + 
+                        liveMatches.standings.slice(0, 25).map((team, idx) => `
+                            <div class="standing-row">
+                                <div class="position">${idx + 1}</div>
+                                <div class="team-name">
+                                    <strong>${team.name || 'N/A'}</strong>
+                                    ${team.logo ? `<img src="${team.logo}" alt="team" style="width:20px;margin-left:5px;vertical-align:middle">` : ''}
+                                </div>
+                                <div class="stat">${team.played || '-'}</div>
+                                <div class="stat" style="color:#00ff88">${team.wins || '-'}</div>
+                                <div class="stat" style="color:#00d4ff">${team.draws || '-'}</div>
+                                <div class="stat" style="color:#ff6b6b">${team.losses || '-'}</div>
+                                <div class="stat">${team.goals_for || team.goals_scored || '-'}</div>
+                                <div class="stat">${team.goals_against || team.goals_conceded || '-'}</div>
+                                <div class="stat" style="color:#ffaa00">${(team.goals_for || 0) - (team.goals_against || 0) || '-'}</div>
+                                <div class="stat" style="color:#e94560;font-weight:bold">${team.points || '-'}</div>
+                            </div>
+                        `).join('') + '</div>';
+                } else {
+                    standingsHTML = '<div class="error-msg">⚠️ Unable to fetch standings data.</div>';
+                }
+
+                // Build fixtures with detailed info
+                let fixturesHTML = '';
+                if (liveMatches && liveMatches.fixtures?.length > 0) {
+                    fixturesHTML = liveMatches.fixtures.slice(0, 15).map(f => `
+                        <div class="match-card">
+                            <div class="match-header">
+                                <span class="league-name">${f.league || 'Football'}</span>
+                                <span class="match-status">UPCOMING</span>
+                            </div>
+                            <div class="teams">
+                                <div class="team">
+                                    <strong>${f.home_team || 'Team A'}</strong>
+                                    ${f.home_team_logo ? `<img src="${f.home_team_logo}" alt="home" style="width:40px;margin:5px 0">` : ''}
+                                </div>
+                                <div class="score">VS</div>
+                                <div class="team">
+                                    <strong>${f.away_team || 'Team B'}</strong>
+                                    ${f.away_team_logo ? `<img src="${f.away_team_logo}" alt="away" style="width:40px;margin:5px 0">` : ''}
+                                </div>
+                            </div>
+                            <div class="match-stats">
+                                ${f.kickoff_time ? `<span>🕐 ${f.kickoff_time}</span>` : '<span>TBD</span>'}
+                                ${f.venue ? `<span>📍 ${f.venue}</span>` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    fixturesHTML = '<div class="error-msg">⚠️ Unable to fetch fixtures data.</div>';
+                }
+
+                // Build transfers data with countries
+                let transfersHTML = '';
+                if (transfers && transfers.countries?.length > 0) {
+                    transfersHTML = transfers.countries.slice(0, 20).map(c => `
+                        <div class="transfer-card">
+                            <div style="display:flex;align-items:center;gap:10px">
+                                ${c.logo ? `<img src="${c.logo}" alt="flag" style="width:30px;height:20px">` : '🌍'}
+                                <div>
+                                    <strong style="color:#ff7d95">${c.name || 'Country'}</strong><br/>
+                                    <small style="color:#00d4ff">Market activity in ${c.name}</small>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    transfersHTML = '<div class="error-msg">⚠️ Unable to fetch transfer data.</div>';
+                }
+
+                const dashboardHTML = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Comprehensive Sports Dashboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(135deg,#16213e 0%,#0f3460 100%);color:#fff;font-family:Arial,sans-serif;padding:20px}
+.container{max-width:1600px;margin:0 auto}
+h1{font-size:2.5rem;margin:20px 0;text-align:center;color:#ff7d95;text-shadow:0 2px 10px rgba(0,0,0,0.5)}
+h3{color:#ff7d95;margin:15px 0 10px}
+.tabs{display:flex;gap:10px;margin:20px 0;flex-wrap:wrap;border-bottom:2px solid rgba(233,69,96,0.3);overflow-x:auto}
+.tab-btn{padding:12px 20px;background:rgba(233,69,96,0.1);border:none;color:#fff;cursor:pointer;border-radius:8px 8px 0 0;transition:all 0.3s;font-size:1rem;white-space:nowrap}
+.tab-btn.active{background:#e94560;color:#fff}
+.tab-content{display:none;padding:20px;animation:fadeIn 0.3s}
+.tab-content.active{display:block}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.match-card{background:rgba(10,18,36,0.8);border:1px solid rgba(233,69,96,0.3);border-radius:12px;padding:15px;margin:10px 0;transition:all 0.3s}
+.match-card:hover{border-color:#e94560;box-shadow:0 0 20px rgba(233,69,96,0.3);transform:translateY(-2px)}
+.match-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:10px}
+.league-name{color:#ff7d95;font-weight:bold;font-size:0.9rem}
+.country-flag{color:#00d4ff;font-size:0.85rem}
+.match-status{color:#00d4ff;font-size:0.85rem;font-weight:bold;background:rgba(0,212,255,0.1);padding:3px 8px;border-radius:4px}
+.teams{display:flex;justify-content:space-between;align-items:center;margin:10px 0;font-size:1.1rem}
+.team{flex:1;text-align:center}
+.score{font-size:2rem;font-weight:bold;color:#e94560;margin:0 20px}
+.match-stats{display:flex;flex-direction:column;gap:5px;margin:10px 0;font-size:0.9rem}
+.match-stats span{color:#00d4ff;background:rgba(0,212,255,0.1);padding:5px 8px;border-radius:4px}
+.scorers{color:#00ff88;margin-top:10px;font-size:0.9rem}
+.standing-row{display:grid;grid-template-columns:1fr 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;gap:10px;padding:10px;border-bottom:1px solid rgba(233,69,96,0.2);align-items:center;font-size:0.95rem}
+.standing-row.header{background:rgba(233,69,96,0.2);font-weight:bold;color:#ff7d95;position:sticky;top:0}
+.position{text-align:center;color:#00d4ff;font-weight:bold}
+.team-name{text-align:left;display:flex;align-items:center}
+.stat{text-align:center;font-size:0.9rem}
+.transfer-card{background:rgba(233,69,96,0.1);border-left:4px solid #e94560;padding:15px;margin:10px 0;border-radius:8px;transition:all 0.3s}
+.transfer-card:hover{background:rgba(233,69,96,0.2)}
+.error-msg{background:rgba(220,53,69,0.2);border-left:4px solid #dc3545;padding:15px;border-radius:8px;margin:20px 0;color:#ff9999}
+.loading{text-align:center;padding:40px;color:#00d4ff}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>⚽ Comprehensive Live Sports Dashboard</h1>
+<div class="tabs">
+<button class="tab-btn active" onclick="switchTab(event, 'live')">🔴 Live Matches</button>
+<button class="tab-btn" onclick="switchTab(event, 'standings')">📊 League Tables</button>
+<button class="tab-btn" onclick="switchTab(event, 'fixtures')">📅 Upcoming Fixtures</button>
+<button class="tab-btn" onclick="switchTab(event, 'transfers')">🔄 Transfer Market</button>
+</div>
+
+<div id="live" class="tab-content active">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:15px">
+${matchesHTML}
+</div>
+</div>
+
+<div id="standings" class="tab-content">
+<div style="overflow-x:auto">
+${standingsHTML}
+</div>
+</div>
+
+<div id="fixtures" class="tab-content">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:15px">
+${fixturesHTML}
+</div>
+</div>
+
+<div id="transfers" class="tab-content">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:15px">
+${transfersHTML}
+</div>
+</div>
+
+</div>
+<script>
+function switchTab(e, tabName) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(tabName).classList.add('active');
+    e.target.classList.add('active');
+}
+</script>
+</body>
+</html>`;
+                
+                if (frame) frame.srcdoc = dashboardHTML;
+                
+            } catch (error) {
+                clearTimeout(loadTimeout);
+                console.error('Dashboard generation error:', error);
+                if (frame) {
+                    frame.srcdoc = `<html><head><meta charset="UTF-8"/><style>body{margin:0;background:linear-gradient(135deg,#16213e 0%,#0f3460 100%);color:#fff;font-family:Arial,sans-serif;display:grid;place-items:center;min-height:100vh}.box{text-align:center;padding:28px;border:1px solid rgba(233,69,96,0.35);border-radius:16px;background:rgba(10,18,36,0.65)}.box h1{margin:0 0 10px;color:#ff7d95;font-size:1.5rem}.box p{margin:0;color:#ececec}</style></head><body><div class="box"><h1>❌ Error Loading</h1><p>Check browser console for details.</p></div></body></html>`;
+                }
             }
+        }
 
             const liveMatches = allData['flashscore/football'];
             const liveOnly = allData['flashscore/football/live'];
