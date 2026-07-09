@@ -221,17 +221,21 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+            background: rgba(10, 14, 25, 0.94);
             color: #eaeaea;
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            padding: 14px 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.38);
             animation: slideDown 0.6s ease-out;
-            position: relative;
+            position: sticky;
+            top: 0;
+            z-index: 1600;
             overflow: visible;
-            display: flex;
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr) auto;
             align-items: center;
-            justify-content: space-between;
-            gap: 20px;
+            gap: 18px;
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(233, 69, 96, 0.18);
         }
 
         .header::after {
@@ -268,23 +272,22 @@
         .logo-container {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 15px;
+            justify-content: flex-start;
+            gap: 8px;
             position: relative;
-            flex: 1;
-            flex-direction: column;
+            min-width: 170px;
         }
 
         .logo-header-row {
             display: flex;
             align-items: center;
             gap: 12px;
-            justify-content: center;
+            justify-content: flex-start;
         }
 
         .logo-header-row h1 {
             margin: 0;
-            font-size: 2.5em;
+            font-size: 2.05em;
             font-weight: 700;
             background: linear-gradient(135deg, #ffffff 0%, #e94560 100%);
             -webkit-background-clip: text;
@@ -294,9 +297,132 @@
 
         .topbar {
             display: flex;
-            gap: 20px;
+            gap: 10px;
             align-items: center;
             z-index: 1999;
+            min-width: 0;
+        }
+
+        .topbar-nav {
+            min-width: 0;
+            overflow-x: auto;
+            padding: 4px 0;
+            scrollbar-width: none;
+        }
+
+        .topbar-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .shell-nav-btn {
+            padding: 11px 16px;
+            font-size: 0.95rem;
+            background: transparent;
+            color: rgba(234, 234, 234, 0.78);
+            border: 1px solid transparent;
+            border-radius: 999px;
+            cursor: pointer;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .shell-nav-btn:hover,
+        .shell-nav-btn.active {
+            color: #ffffff;
+            background: rgba(233, 69, 96, 0.16);
+            border-color: rgba(233, 69, 96, 0.38);
+            box-shadow: 0 10px 24px rgba(233, 69, 96, 0.12);
+        }
+
+        .shell-nav-btn.shell-nav-accent {
+            background: transparent;
+            border-color: transparent;
+            color: rgba(234, 234, 234, 0.78);
+            box-shadow: none;
+        }
+
+        .header-collapse-toggle {
+            width: 28px;
+            height: 28px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(233, 69, 96, 0.35);
+            border-radius: 999px;
+            background: rgba(10, 18, 36, 0.7);
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.9rem;
+            justify-self: end;
+            z-index: 3;
+        }
+
+        .topbar-search {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            min-width: 46px;
+            position: relative;
+        }
+
+        .topbar-search input {
+            width: 0;
+            padding: 12px 16px;
+            border: 1px solid rgba(233, 69, 96, 0.18);
+            border-radius: 14px;
+            font-size: 0.98rem;
+            background: rgba(20, 29, 47, 0.95);
+            color: #eaeaea;
+            transition: width 0.28s ease, padding 0.28s ease, opacity 0.2s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+            opacity: 0;
+            pointer-events: none;
+            overflow: hidden;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .topbar-search input::placeholder {
+            color: rgba(234, 234, 234, 0.45);
+        }
+
+        .topbar-search::before {
+            content: "⌕";
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(234, 234, 234, 0.78);
+            font-size: 1.05rem;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .topbar-search:hover,
+        .topbar-search:focus-within {
+            min-width: min(340px, 100%);
+        }
+
+        .topbar-search:hover::before,
+        .topbar-search:focus-within::before {
+            opacity: 0;
+        }
+
+        .topbar-search:hover input,
+        .topbar-search:focus-within input {
+            width: min(340px, 100%);
+            opacity: 1;
+            pointer-events: auto;
+            padding-left: 16px;
+            padding-right: 42px;
+        }
+
+        .topbar-search input:focus {
+            outline: none;
+            border-color: #e94560;
+            box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.18);
+            transform: translateY(-1px);
         }
 
         .soundboard-button {
@@ -410,15 +536,8 @@
             }
         }
 
-        .header h1 {
-            display: none;
-        }
-
         .header p {
-            opacity: 0.9;
-            font-size: 1.1em;
-            margin: 8px 0 0 0;
-            animation: slideUp 0.6s ease-out 0.4s backwards;
+            display: none;
         }
 
         @keyframes slideUp {
@@ -438,6 +557,12 @@
             width: 100%;
             margin: 0;
             overflow: hidden;
+            min-height: calc(100vh - 86px);
+            margin-top: -1px;
+        }
+
+        body.workspace-shell-view .container {
+            min-height: calc(100vh - 86px);
         }
 
         .sidebar {
@@ -445,12 +570,94 @@
             background: linear-gradient(180deg, #16213e 0%, #0f3460 100%);
             border-right: 1px solid rgba(233, 69, 96, 0.2);
             padding: 20px;
-            min-height: calc(100vh - 120px);
+            min-height: calc(100vh - 86px);
             position: sticky;
-            top: 0;
-            max-height: 100vh;
+            top: 86px;
+            max-height: calc(100vh - 86px);
             overflow-y: auto;
+            overflow-x: hidden;
             animation: slideInLeft 0.6s ease-out;
+            transition: width 0.28s ease, padding 0.28s ease;
+            flex: 0 0 220px;
+            border-top: 1px solid rgba(233, 69, 96, 0.18);
+        }
+
+        .sidebar-toggle {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(233, 69, 96, 0.35);
+            border-radius: 999px;
+            background: rgba(10, 18, 36, 0.55);
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.9rem;
+            z-index: 2;
+        }
+
+        body.home-shell-view .sidebar-toggle {
+            display: none;
+        }
+
+        body.home-shell-view .sidebar {
+            padding-top: 0;
+            border-top: none;
+        }
+
+        body.home-shell-view .sidebar h3 {
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        body.workspace-shell-view .sidebar {
+            display: none;
+        }
+
+        body.workspace-shell-view .header-collapse-toggle {
+            display: inline-flex;
+        }
+
+        body.workspace-shell-view .main-content {
+            padding: 12px;
+        }
+
+        .header.header-collapsed {
+            grid-template-columns: 1fr;
+            padding: 6px 14px;
+            gap: 0;
+            justify-items: end;
+        }
+
+        .header.header-collapsed::after {
+            display: none;
+        }
+
+        .header.header-collapsed .logo-container,
+        .header.header-collapsed .topbar-nav,
+        .header.header-collapsed .topbar-search {
+            display: none;
+        }
+
+        .sidebar.collapsed {
+            width: 40px;
+            flex-basis: 40px;
+            padding-left: 6px;
+            padding-right: 6px;
+        }
+
+        .sidebar.collapsed .sidebar-body {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-10px);
+        }
+
+        .sidebar-body {
+            transition: opacity 0.22s ease, transform 0.22s ease;
         }
 
         @keyframes slideInLeft {
@@ -550,40 +757,42 @@
             box-shadow: 0 8px 20px rgba(233, 69, 96, 0.35);
         }
 
-        .search-box {
-            margin-bottom: 20px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid #0f3460;
-            border-radius: 8px;
-            font-size: 1em;
-            transition: all 0.3s ease;
-            background: rgba(15, 52, 96, 0.5);
-            color: #eaeaea;
-        }
-
-        .search-box input::placeholder {
-            color: rgba(234, 234, 234, 0.5);
-            transition: color 0.3s ease;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: #e94560;
-            background: rgba(15, 52, 96, 0.8);
-            box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.2);
-            transform: translateY(-2px);
-        }
-
         .main-content {
             flex: 1;
-            padding: 40px;
+            padding: 28px;
             animation: slideInRight 0.6s ease-out;
             overflow-x: hidden;
             overflow-y: auto;
+        }
+
+        .page-view[hidden] {
+            display: none !important;
+        }
+
+        .workspace-view {
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 110px);
+        }
+
+        .workspace-frame-wrap {
+            position: relative;
+            flex: 1;
+            min-height: calc(100vh - 110px);
+            border: 1px solid rgba(233, 69, 96, 0.18);
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(12, 18, 32, 0.96) 0%, rgba(15, 52, 96, 0.92) 100%);
+            box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+            overflow: hidden;
+        }
+
+        #workspaceFrame {
+            width: 100%;
+            height: 100%;
+            min-height: calc(100vh - 110px);
+            border: none;
+            display: block;
+            background: #0d1526;
         }
 
         @keyframes slideInRight {
@@ -1076,6 +1285,15 @@
                 flex-direction: column;
             }
 
+            .header {
+                grid-template-columns: 1fr;
+                justify-items: stretch;
+            }
+
+            .logo-container {
+                min-width: 0;
+            }
+
             .sidebar {
                 width: 100%;
                 border-right: none;
@@ -1083,18 +1301,21 @@
                 min-height: auto;
                 max-height: none;
                 position: static;
-                padding: 15px;
+                top: auto;
+                padding: 50px 15px 15px;
+                flex-basis: auto;
+            }
+
+            .sidebar.collapsed {
+                width: 100%;
+                flex-basis: auto;
+                padding-bottom: 10px;
             }
 
             .topbar {
                 flex-wrap: wrap;
-                gap: 12px;
-                justify-content: center;
-            }
-
-            .soundboard-button {
-                min-width: 110px;
-                flex: 1 1 auto;
+                gap: 8px;
+                justify-content: flex-start;
             }
 
             .games-grid {
@@ -1104,6 +1325,33 @@
 
             .main-content {
                 padding: 20px;
+            }
+
+            .topbar-search {
+                min-width: 0;
+            }
+
+            .topbar-search input {
+                width: 0;
+            }
+
+            .topbar-search:hover,
+            .topbar-search:focus-within {
+                min-width: 100%;
+            }
+
+            .topbar-search:hover input,
+            .topbar-search:focus-within input {
+                width: 100%;
+            }
+
+            .workspace-frame-wrap,
+            #workspaceFrame {
+                min-height: 62vh;
+            }
+
+            .header.header-collapsed {
+                padding: 6px 10px;
             }
 
             .header h1 {
@@ -1133,59 +1381,74 @@
     </div>
 
     <div class="header">
-        <div class="topbar">
-            <button class="soundboard-button" id="aiBtn" type="button" onclick="openAI()">AI</button>
-            <button class="soundboard-button" type="button" onclick="openLiveSport()">Live Sport</button>
-            <button class="soundboard-button" type="button" onclick="openMusic()">Music</button>
-        </div>
         <div class="logo-container">
             <div class="logo-header-row">
                 <div class="gc-logo" aria-hidden="true"></div>
-                <h1>Classroom</h1>
+                <h1>Classroom8x</h1>
             </div>
-            <p>Play amazing games instantly</p>
         </div>
-        <div class="topbar" style="position: relative;">
-            <button class="soundboard-button" type="button" onclick="openSoundboard()">Soundboard</button>
-            <button class="soundboard-button" type="button" onclick="openYoutube()">YouTube</button>
-            <button class="soundboard-button" type="button" onclick="openSettings()">Settings</button>
+        <nav class="topbar topbar-nav" aria-label="Site sections">
+            <button class="shell-nav-btn active" type="button" data-shell-target="home">Home</button>
+            <button class="shell-nav-btn" type="button" data-shell-app="ai">AI</button>
+            <button class="shell-nav-btn" type="button" data-shell-app="liveSport">Live Sport</button>
+            <button class="shell-nav-btn" type="button" data-shell-app="music">Music</button>
+            <button class="shell-nav-btn" type="button" data-shell-app="soundboard">Soundboard</button>
+            <button class="shell-nav-btn" type="button" data-shell-app="youtube">YouTube</button>
+            <button class="shell-nav-btn" type="button" data-shell-app="feedback">Feedback</button>
+            <button class="shell-nav-btn" id="settingsTopBtn" type="button">Settings</button>
+        </nav>
+        <div class="topbar-search" id="topbarSearchBox">
+            <input type="text" id="searchInput" placeholder="Search games...">
         </div>
+        <button class="header-collapse-toggle" id="headerCollapseToggle" type="button" aria-expanded="true" aria-label="Collapse topbar">▴</button>
     </div>
 
     <div class="container">
-        <aside class="sidebar">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search games...">
+        <aside class="sidebar" id="pageSidebar">
+            <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-expanded="true" aria-label="Collapse sidebar">▴</button>
+            <div class="sidebar-body">
+                <h3>Categories</h3>
+                <ul class="sidebar-list">
+                    <li><button class="category-btn active" data-category="all">All Games</button></li>
+                    <li><button class="category-btn" data-category="action">Action</button></li>
+                    <li><button class="category-btn" data-category="platformer">Platformer</button></li>
+                    <li><button class="category-btn" data-category="racing">Racing</button></li>
+                    <li><button class="category-btn" data-category="puzzle">Puzzle</button></li>
+                    <li><button class="category-btn" data-category="2player">2 Player</button></li>
+                </ul>
+                <button class="request-games-sidebar-btn" type="button" onclick="openGameRequestForm()">Request games to be added to the site</button>
             </div>
-
-            <h3>Categories</h3>
-            <ul class="sidebar-list">
-                <li><button class="category-btn active" data-category="all">All Games</button></li>
-                <li><button class="category-btn" data-category="action">Action</button></li>
-                <li><button class="category-btn" data-category="platformer">Platformer</button></li>
-                <li><button class="category-btn" data-category="racing">Racing</button></li>
-                <li><button class="category-btn" data-category="puzzle">Puzzle</button></li>
-                <li><button class="category-btn" data-category="2player">2 Player</button></li>
-            </ul>
-            <button class="request-games-sidebar-btn" type="button" onclick="openGameRequestForm()">Request games to be added to the site</button>
         </aside>
 
         <main class="main-content">
-            <h2 class="section-title" id="sectionTitle">All Games</h2>
-            <div class="games-grid" id="gamesGrid">
-                <div class="empty-state">
-                    <h2>Loading games...</h2>
+            <section class="page-view" id="homeView">
+                <h2 class="section-title" id="sectionTitle">All Games</h2>
+                <div class="games-grid" id="gamesGrid">
+                    <div class="empty-state">
+                        <h2>Loading games...</h2>
+                    </div>
                 </div>
-            </div>
 
-            <!-- More Games Section -->
-            <div style="margin-top: 60px; padding-top: 40px; border-top: 2px solid rgba(233, 69, 96, 0.3);">
-                <h2 class="section-title" style="margin-bottom: 10px;">More Games</h2>
-                <p style="color: rgba(234, 234, 234, 0.7); font-size: 0.9em; margin-bottom: 20px;">📝 Please note these games currently only work if your Chromebook is unblocked</p>
-                <div class="games-grid" id="moreGamesGrid" style="grid-template-columns: repeat(4, 1fr);">
-                    <!-- More games will be populated by JavaScript -->
+                <div style="margin-top: 60px; padding-top: 40px; border-top: 2px solid rgba(233, 69, 96, 0.3);">
+                    <h2 class="section-title" style="margin-bottom: 10px;">More Games</h2>
+                    <p style="color: rgba(234, 234, 234, 0.7); font-size: 0.9em; margin-bottom: 20px;">📝 Please note these games currently only work if your Chromebook is unblocked</p>
+                    <div class="games-grid" id="moreGamesGrid" style="grid-template-columns: repeat(4, 1fr);">
+                        <!-- More games will be populated by JavaScript -->
+                    </div>
                 </div>
-            </div>
+            </section>
+
+            <section class="page-view workspace-view" id="workspaceView" hidden>
+                <div class="workspace-frame-wrap">
+                    <iframe id="workspaceFrame"
+                        allowfullscreen
+                        webkitallowfullscreen
+                        mozallowfullscreen
+                        sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-presentation allow-downloads"
+                        allow="autoplay; encrypted-media; camera; microphone; clipboard-read; clipboard-write; fullscreen"
+                        referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -1259,10 +1522,104 @@
         let pageShellLoaded = document.readyState === 'complete';
         let gamesContentLoaded = false;
         let hydrationBreakTimeoutId = null;
+        let currentShellView = 'home';
 
         let activeAudioElements = [];
         let validSoundFiles = [];
         let audioMap = new Map(); // Track audio elements by sound path
+
+        const workspaceApps = {
+            ai: {
+                title: 'AI',
+                caption: 'The Classroom8x AI tool now opens below the topbar instead of taking over the whole page.',
+                url: 'https://classroom8xai.pages.dev/drive.google.com/'
+            },
+            liveSport: {
+                title: 'Live Sport',
+                caption: 'Live Sport is wired into the new workspace panel and can be expanded later without changing the layout again.',
+                srcdoc: '<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Live Sport</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#16213e 0%,#0f3460 100%);color:#fff;font-family:Arial,sans-serif}.box{text-align:center;padding:32px;border:1px solid rgba(233,69,96,0.35);border-radius:16px;background:rgba(10,18,36,0.7);box-shadow:0 14px 32px rgba(0,0,0,0.35)}h1{margin:0 0 10px;color:#ff7d95}p{margin:0;color:#ececec;line-height:1.55}</style></head><body><div class="box"><h1>Coming Soon</h1><p>Live Sport will appear here in the new panel below the topbar.</p></div></body></html>'
+            },
+            music: {
+                title: 'Music',
+                caption: 'Music stays inside the page shell so the new header always remains visible.',
+                url: 'https://quizizzmusic.netlify.app/'
+            },
+            soundboard: {
+                title: 'Soundboard',
+                caption: 'The sidebar can now be collapsed while Soundboard is open, and the collapse arrow stays visible.',
+                srcdoc: '<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Soundboard</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#16213e 0%,#0f3460 100%);color:#fff;font-family:Arial,sans-serif}.box{text-align:center;padding:36px;border:1px solid rgba(233,69,96,0.35);border-radius:16px;background:rgba(10,18,36,0.7);box-shadow:0 14px 32px rgba(0,0,0,0.35);max-width:520px;width:min(92vw,520px)}h1{margin:0 0 10px;color:#ff7d95}p{margin:0;color:#ececec;line-height:1.55}</style></head><body><div class="box"><h1>Under Maintenance</h1><p>The Soundboard is currently unavailable, but the new layout keeps its workspace ready here.</p></div></body></html>'
+            },
+            youtube: {
+                title: 'YouTube',
+                caption: 'YouTube now opens inside the workspace area below the topbar.',
+                url: 'https://hilariousquizizz.netlify.app/'
+            },
+            feedback: {
+                title: 'Feedback',
+                caption: 'Use the feedback form without leaving the page layout.',
+                url: 'https://forms.gle/eD3dZn2DX9FKQ99f9'
+            }
+        };
+
+        function updateTopbarState(activeKey) {
+            document.querySelectorAll('.shell-nav-btn[data-shell-target], .shell-nav-btn[data-shell-app]').forEach((btn) => {
+                const target = btn.dataset.shellTarget || btn.dataset.shellApp;
+                btn.classList.toggle('active', target === activeKey);
+            });
+        }
+
+        function setShellView(view) {
+            currentShellView = view;
+            const isHome = view === 'home';
+            const header = document.querySelector('.header');
+            document.getElementById('homeView').hidden = !isHome;
+            document.getElementById('workspaceView').hidden = isHome;
+            document.getElementById('topbarSearchBox').style.display = isHome ? 'flex' : 'none';
+            document.body.classList.toggle('home-shell-view', isHome);
+            document.body.classList.toggle('workspace-shell-view', !isHome);
+            if (isHome) {
+                header.classList.remove('header-collapsed');
+                updateHeaderCollapseButton(false);
+            }
+            updateTopbarState(view);
+        }
+
+        function showHomeView() {
+            setShellView('home');
+        }
+
+        function openWorkspaceApp(appKey) {
+            const app = workspaceApps[appKey];
+            if (!app) return;
+
+            const frame = document.getElementById('workspaceFrame');
+
+            if (app.srcdoc) {
+                frame.removeAttribute('src');
+                frame.srcdoc = app.srcdoc;
+            } else if (app.url) {
+                frame.removeAttribute('srcdoc');
+                if (frame.src !== app.url) {
+                    frame.src = app.url;
+                }
+            }
+
+            setShellView(appKey);
+        }
+
+        function updateHeaderCollapseButton(collapsed) {
+            const toggle = document.getElementById('headerCollapseToggle');
+            toggle.textContent = collapsed ? '▾' : '▴';
+            toggle.setAttribute('aria-expanded', String(!collapsed));
+            toggle.setAttribute('aria-label', collapsed ? 'Expand topbar' : 'Collapse topbar');
+        }
+
+        function toggleHeaderCollapsed() {
+            if (currentShellView === 'home') return;
+            const header = document.querySelector('.header');
+            const collapsed = header.classList.toggle('header-collapsed');
+            updateHeaderCollapseButton(collapsed);
+        }
 
         function revealSiteIfReady() {
             if (!pageShellLoaded || !gamesContentLoaded) return;
@@ -1557,52 +1914,7 @@
         }
 
         function openSoundboard() {
-            const existing = document.getElementById('soundboardMaintenanceBanner');
-            if (!existing) {
-                const banner = document.createElement('div');
-                banner.id = 'soundboardMaintenanceBanner';
-                banner.style.cssText = `
-                    position: fixed;
-                    top: 0; left: 0; right: 0; bottom: 0;
-                    z-index: 6000;
-                    background: rgba(0,0,0,0.85);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    backdrop-filter: blur(6px);
-                `;
-                banner.innerHTML = `
-                    <div style="
-                        background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
-                        border: 2px solid #e94560;
-                        border-radius: 16px;
-                        padding: 36px 40px;
-                        max-width: 420px;
-                        width: 92%;
-                        text-align: center;
-                        color: #eaeaea;
-                        box-shadow: 0 16px 48px rgba(0,0,0,0.5);
-                    ">
-                        <div style="font-size: 2.8em; margin-bottom: 14px;">🔧</div>
-                        <h2 style="margin: 0 0 10px; color: #e94560; font-size: 1.5rem;">Under Maintenance</h2>
-                        <p style="margin: 0 0 22px; color: #ccc; line-height: 1.55;">The Soundboard is currently under maintenance. Please check back soon.</p>
-                        <button id="soundboardMaintenanceCloseBtn" type="button" style="
-                            padding: 10px 28px;
-                            border-radius: 8px;
-                            border: none;
-                            background: linear-gradient(135deg, #e94560 0%, #ff5a75 100%);
-                            color: white;
-                            cursor: pointer;
-                            font-weight: 700;
-                            font-size: 0.95rem;
-                        ">Close</button>
-                    </div>
-                `;
-                banner.querySelector('#soundboardMaintenanceCloseBtn').addEventListener('click', () => {
-                    banner.remove();
-                });
-                document.body.appendChild(banner);
-            }
+            openWorkspaceApp('soundboard');
         }
 
         function closeSoundboard() {
@@ -1615,20 +1927,7 @@
         }
 
         function openYoutube() {
-            const modal = document.getElementById('youtubeModal');
-            if (!modal) {
-                console.error('youtubeModal not found');
-                return;
-            }
-            const closeBtn = modal.querySelector('.youtube-close');
-            modal.classList.add('active');
-            modal.removeAttribute('aria-hidden');
-            document.body.classList.add('game-open');
-            if (closeBtn) closeBtn.style.display = 'block';
-            const frame = document.getElementById('youtubeFrame');
-            if (frame && !frame.src) {
-                frame.src = 'https://hilariousquizizz.netlify.app/';
-            }
+            openWorkspaceApp('youtube');
         }
 
         function closeYoutube() {
@@ -1641,41 +1940,9 @@
             if (closeBtn) closeBtn.style.display = 'none';
         }
 
-        function openLiveSport() {
-            const modal = document.getElementById('liveSportModal');
-            if (!modal) {
-                console.error('liveSportModal not found');
-                return;
-            }
-            const closeBtn = modal.querySelector('.livesport-close');
-            modal.classList.add('active');
-            modal.removeAttribute('aria-hidden');
-            document.body.classList.add('game-open');
-            if (closeBtn) closeBtn.style.display = 'block';
-            const frame = document.getElementById('liveSportFrame');
-            if (frame) {
-                frame.srcdoc = `<!doctype html>
-                <html lang="en">
-                <head>
-                  <meta charset="UTF-8" />
-                  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                  <title>Live Sport</title>
-                  <style>
-                    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: linear-gradient(135deg,#16213e 0%,#0f3460 100%); color: #fff; font-family: Arial, sans-serif; }
-                    .box { text-align: center; padding: 28px; border: 1px solid rgba(233,69,96,0.35); border-radius: 16px; background: rgba(10,18,36,0.65); box-shadow: 0 10px 30px rgba(0,0,0,0.35); }
-                    h1 { margin: 0 0 10px; font-size: 2rem; color: #ff7d95; }
-                    p { margin: 0; color: #ececec; font-size: 1rem; }
-                  </style>
-                </head>
-                <body>
-                  <div class="box">
-                    <h1>Coming Soon</h1>
-                    <p>Live Sport is being added to this page soon.</p>
-                  </div>
-                </body>
-                </html>`;
-            }
-        }
+                function openLiveSport() {
+                        openWorkspaceApp('liveSport');
+                }
 
         function closeLiveSport() {
             const modal = document.getElementById('liveSportModal');
@@ -1690,20 +1957,7 @@
         }
 
         function openMusicFrame() {
-            const modal = document.getElementById('musicModal');
-            if (!modal) {
-                console.error('musicModal not found');
-                return;
-            }
-            const closeBtn = modal.querySelector('.music-close');
-            modal.classList.add('active');
-            modal.removeAttribute('aria-hidden');
-            document.body.classList.add('game-open');
-            if (closeBtn) closeBtn.style.display = 'block';
-            const frame = document.getElementById('musicFrame');
-            if (frame) {
-                frame.src = 'https://quizizzmusic.netlify.app/';
-            }
+            openWorkspaceApp('music');
         }
 
         function showMusicTermsDialog() {
@@ -2287,12 +2541,14 @@
         }
 
         document.getElementById('searchInput').addEventListener('input', (e) => {
+            showHomeView();
             currentSearch = e.target.value;
             filterGames();
         });
 
         document.querySelectorAll('.category-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
+                showHomeView();
                 document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
                 e.target.classList.add('active');
                 currentCategory = e.target.dataset.category;
@@ -2312,6 +2568,9 @@
         // Close modals on escape
         document.addEventListener('keydown', (e2) => {
             if (e2.key === 'Escape') {
+                if (currentShellView !== 'home' && !document.body.classList.contains('game-open')) {
+                    showHomeView();
+                }
                 closeGame();
                 closeSoundboard();
             }
@@ -2333,8 +2592,26 @@
         });
 
         function openAI() {
-            playGame('https://classroom8xai.pages.dev/drive.google.com/', 'AI', 'ai-tool');
+            openWorkspaceApp('ai');
         }
+
+        document.querySelectorAll('.shell-nav-btn[data-shell-target]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                if (btn.dataset.shellTarget === 'home') {
+                    showHomeView();
+                }
+            });
+        });
+
+        document.querySelectorAll('.shell-nav-btn[data-shell-app]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                openWorkspaceApp(btn.dataset.shellApp);
+            });
+        });
+
+        document.getElementById('settingsTopBtn').addEventListener('click', openSettings);
+        document.getElementById('headerCollapseToggle').addEventListener('click', toggleHeaderCollapsed);
+        setShellView('home');
 
         function formatHydrationCountdown(totalSeconds) {
             const minutes = Math.floor(totalSeconds / 60);
@@ -2429,7 +2706,7 @@
 
 
         function openGameRequestForm() {
-            playGame('https://forms.gle/eD3dZn2DX9FKQ99f9', 'Game Requests', 'game-request-form');
+            openWorkspaceApp('feedback');
         }
 
         function showGameRequestPopup() {
