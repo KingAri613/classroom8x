@@ -133,15 +133,21 @@
         .site-loader-text {
             position: fixed;
             left: 50%;
-            bottom: 16px;
+            top: 14px;
             transform: translateX(-50%);
-            font-size: 12px;
-            letter-spacing: 0.08em;
-            color: rgba(255, 255, 255, 0.85);
-            font-weight: 500;
-            text-transform: lowercase;
+            font-size: clamp(1rem, 2.2vw, 1.4rem);
+            letter-spacing: 0.04em;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 700;
+            text-transform: none;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             pointer-events: none;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.65);
+            z-index: 10001;
+        }
+
+        .site-loader-text.hidden {
+            display: none;
         }
 
         .hydration-break-overlay {
@@ -363,7 +369,7 @@
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            min-width: 46px;
+            min-width: 52px;
             position: relative;
         }
 
@@ -394,7 +400,8 @@
             top: 50%;
             transform: translateY(-50%);
             color: rgba(234, 234, 234, 0.78);
-            font-size: 1.05rem;
+            font-size: 1.3rem;
+            font-weight: 700;
             pointer-events: none;
             transition: opacity 0.2s ease;
         }
@@ -643,6 +650,23 @@
             display: none;
         }
 
+        .header.header-collapsed + .container {
+            min-height: calc(100vh - 40px);
+        }
+
+        .header.header-collapsed + .container .main-content {
+            padding: 4px;
+        }
+
+        .header.header-collapsed + .container .workspace-frame-wrap {
+            min-height: calc(100vh - 24px);
+            border-radius: 12px;
+        }
+
+        .header.header-collapsed + .container #workspaceFrame {
+            min-height: calc(100vh - 24px);
+        }
+
         .sidebar.collapsed {
             width: 40px;
             flex-basis: 40px;
@@ -763,6 +787,43 @@
             animation: slideInRight 0.6s ease-out;
             overflow-x: hidden;
             overflow-y: auto;
+        }
+
+        .home-ad-banner {
+            position: relative;
+            margin: 0 0 24px 0;
+            border: 1px solid rgba(233, 69, 96, 0.28);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+            background: rgba(10, 18, 36, 0.55);
+        }
+
+        .home-ad-banner[hidden] {
+            display: none !important;
+        }
+
+        .home-ad-banner img {
+            width: 100%;
+            display: block;
+            height: auto;
+            object-fit: contain;
+            max-height: none;
+        }
+
+        .home-ad-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            background: rgba(0, 0, 0, 0.46);
+            color: #fff;
+            font-size: 1.05rem;
+            line-height: 1;
+            cursor: pointer;
         }
 
         .page-view[hidden] {
@@ -1376,8 +1437,8 @@
 </head>
 <body>
     <div class="site-loader" id="siteLoader" aria-hidden="true">
-        <img src="Gif/World%20Cup%20Football%20GIF.gif" alt="Loading">
-        <div class="site-loader-text">loading ....</div>
+        <img src="Gif/2026-07-09.gif" alt="Loading">
+        <div class="site-loader-text">Classroom8x Loading</div>
     </div>
 
     <div class="header">
@@ -1422,6 +1483,10 @@
 
         <main class="main-content">
             <section class="page-view" id="homeView">
+                <div class="home-ad-banner" id="homeAdBanner" hidden>
+                    <button class="home-ad-close" id="homeAdCloseBtn" type="button" aria-label="Close advertisement">✕</button>
+                    <img src="lucozade%20ad/eYR3V.jpg" alt="Lucozade advertisement">
+                </div>
                 <h2 class="section-title" id="sectionTitle">All Games</h2>
                 <div class="games-grid" id="gamesGrid">
                     <div class="empty-state">
@@ -1524,9 +1589,67 @@
         let hydrationBreakTimeoutId = null;
         let currentShellView = 'home';
 
+        const loaderGifPaths = [
+            'Gif/Dvd%20Screensaver%20Loading%20Error%20GIF.gif',
+            'Gif/Lights%20Glow%20GIF%20by%20Erica%20Anderson.gif',
+            'Gif/Loading%20Hp%20GIF%20by%20OMEN.gif',
+            'Gif/World%20Cup%20Football%20GIF.gif'
+        ];
+        const worldCupLoaderGif = 'Gif/World%20Cup%20Football%20GIF.gif';
+
         let activeAudioElements = [];
         let validSoundFiles = [];
         let audioMap = new Map(); // Track audio elements by sound path
+
+        function initializeLoaderGifRotation() {
+            const loader = document.getElementById('siteLoader');
+            if (!loader) return;
+
+            const loaderImage = loader.querySelector('img');
+            const loaderText = loader.querySelector('.site-loader-text');
+            if (!loaderImage || !loaderText || loaderGifPaths.length === 0) return;
+
+            let selectedIndex = 0;
+            try {
+                const previousIndex = Number(localStorage.getItem('classroom8x_loader_last_index'));
+                if (loaderGifPaths.length > 1) {
+                    do {
+                        selectedIndex = Math.floor(Math.random() * loaderGifPaths.length);
+                    } while (selectedIndex === previousIndex);
+                } else {
+                    selectedIndex = 0;
+                }
+                localStorage.setItem('classroom8x_loader_last_index', String(selectedIndex));
+            } catch (error) {
+                selectedIndex = Math.floor(Math.random() * loaderGifPaths.length);
+            }
+
+            const selectedGif = loaderGifPaths[selectedIndex];
+            loaderImage.src = selectedGif;
+            const showLoaderTitle = selectedGif !== worldCupLoaderGif;
+            loaderText.classList.toggle('hidden', !showLoaderTitle);
+            loaderText.textContent = 'Classroom8x Loading';
+        }
+
+        initializeLoaderGifRotation();
+
+        function initializeHomeAdBanner() {
+            const banner = document.getElementById('homeAdBanner');
+            const closeBtn = document.getElementById('homeAdCloseBtn');
+            if (!banner || !closeBtn) return;
+
+            const dismissed = localStorage.getItem('classroom8x_home_ad_dismissed_v1') === 'true';
+            if (!dismissed) {
+                banner.hidden = false;
+            }
+
+            closeBtn.addEventListener('click', () => {
+                banner.hidden = true;
+                localStorage.setItem('classroom8x_home_ad_dismissed_v1', 'true');
+            });
+        }
+
+        initializeHomeAdBanner();
 
         const workspaceApps = {
             ai: {
