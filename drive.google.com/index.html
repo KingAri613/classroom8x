@@ -1584,6 +1584,7 @@
         const moreGameIds = ['getaway-shootout', 'volley-random', 'soccer-random', 'basket-random', 'hook-stickman', 'tag', 'johnny-trigger', 'vex-8', 'jetpack-joyride', 'among-us', 'motox-3m', 'football-bros', 'cookie-clicker', 'level-devil'];
         const newGameIds = ['g-switch-3', 'player-games-1234', 'plonky', 'fireboy-watergirl-2'];
         const defaultGameSandbox = 'allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-presentation allow-downloads';
+        const liveSportUrl = 'https://quizizzcubesports.vercel.app/Cubesports';
         let pageShellLoaded = document.readyState === 'complete';
         let gamesContentLoaded = false;
         let hydrationBreakTimeoutId = null;
@@ -1660,7 +1661,7 @@
             liveSport: {
                 title: 'Live Sport',
                 caption: 'Live Sport is wired into the new workspace panel and can be expanded later without changing the layout again.',
-                srcdoc: '<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Live Sport</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#16213e 0%,#0f3460 100%);color:#fff;font-family:Arial,sans-serif}.box{text-align:center;padding:32px;border:1px solid rgba(233,69,96,0.35);border-radius:16px;background:rgba(10,18,36,0.7);box-shadow:0 14px 32px rgba(0,0,0,0.35)}h1{margin:0 0 10px;color:#ff7d95}p{margin:0;color:#ececec;line-height:1.55}</style></head><body><div class="box"><h1>Coming Soon</h1><p>Live Sport will appear here in the new panel below the topbar.</p></div></body></html>'
+                url: liveSportUrl
             },
             music: {
                 title: 'Music',
@@ -1716,18 +1717,15 @@
             if (!app) return;
 
             const frame = document.getElementById('workspaceFrame');
+            setShellView(appKey);
 
             if (app.srcdoc) {
                 frame.removeAttribute('src');
                 frame.srcdoc = app.srcdoc;
             } else if (app.url) {
                 frame.removeAttribute('srcdoc');
-                if (frame.src !== app.url) {
-                    frame.src = app.url;
-                }
+                frame.src = app.url;
             }
-
-            setShellView(appKey);
         }
 
         function updateHeaderCollapseButton(collapsed) {
