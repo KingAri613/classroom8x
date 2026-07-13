@@ -301,6 +301,49 @@
             background-clip: text;
         }
 
+        .announcement-banner {
+            width: 100%;
+            padding: 12px 18px;
+            background: linear-gradient(135deg, #ff5a75 0%, #e94560 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-align: center;
+            border-radius: 0 0 18px 18px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+            margin-bottom: 10px;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            position: relative;
+        }
+
+        .announcement-banner-close {
+            border: none;
+            background: rgba(255, 255, 255, 0.18);
+            color: #fff;
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            font-size: 1.25rem;
+            line-height: 1;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .announcement-banner-close:hover {
+            background: rgba(255, 255, 255, 0.32);
+        }
+
         .topbar {
             display: flex;
             gap: 10px;
@@ -1442,6 +1485,26 @@
     </div>
 
     <div class="header">
+        <div class="announcement-banner" id="announcementBanner">
+            <span>Soundboard is fixed and updated with Du Bist git genug. Live Sport is finally here — check out the Live Sport tab on the topbar.</span>
+            <button class="announcement-banner-close" type="button" aria-label="Dismiss announcement">×</button>
+        </div>
+        <script>
+            (function() {
+                const banner = document.getElementById('announcementBanner');
+                if (!banner) return;
+                if (localStorage.getItem('announcementBannerHidden') === 'true') {
+                    banner.style.display = 'none';
+                    return;
+                }
+                const closeBtn = banner.querySelector('.announcement-banner-close');
+                if (!closeBtn) return;
+                closeBtn.addEventListener('click', () => {
+                    banner.style.display = 'none';
+                    localStorage.setItem('announcementBannerHidden', 'true');
+                });
+            })();
+        </script>
         <div class="logo-container">
             <div class="logo-header-row">
                 <div class="gc-logo" aria-hidden="true"></div>
@@ -1670,8 +1733,8 @@
             },
             soundboard: {
                 title: 'Soundboard',
-                caption: 'The sidebar can now be collapsed while Soundboard is open, and the collapse arrow stays visible.',
-                srcdoc: '<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Soundboard</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#16213e 0%,#0f3460 100%);color:#fff;font-family:Arial,sans-serif}.box{text-align:center;padding:36px;border:1px solid rgba(233,69,96,0.35);border-radius:16px;background:rgba(10,18,36,0.7);box-shadow:0 14px 32px rgba(0,0,0,0.35);max-width:520px;width:min(92vw,520px)}h1{margin:0 0 10px;color:#ff7d95}p{margin:0;color:#ececec;line-height:1.55}</style></head><body><div class="box"><h1>Under Maintenance</h1><p>The Soundboard is currently unavailable, but the new layout keeps its workspace ready here.</p></div></body></html>'
+                caption: 'The Soundboard is fixed and opens the working quizizz soundboard iframe directly.',
+                url: 'https://soundboardquizizz.netlify.app/'
             },
             youtube: {
                 title: 'YouTube',
