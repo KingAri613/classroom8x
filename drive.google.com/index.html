@@ -1749,44 +1749,6 @@
             }
         };
 
-        // Track original page identity so we can temporarily disguise the tab
-        let __originalDocumentTitle = document.title;
-        let __originalFaviconHref = (function() {
-            const el = document.querySelector('link[rel="icon"]');
-            return el ? el.getAttribute('href') : null;
-        })();
-        // Use the user-supplied classroom logo file for disguise.
-        const __disguiseFavicon = encodeURI('classroom logo/images (2).jpeg');
-
-        function setDisguiseIdentity() {
-            try {
-                // Set title as requested
-                document.title = 'Home - Classroom';
-                // Use pattern provided by user to ensure favicon is attached
-                var l = document.querySelector("link[rel*='icon']") || document.createElement('link');
-                l.type = 'image/x-icon';
-                l.rel = 'shortcut icon';
-                l.href = __disguiseFavicon;
-                document.getElementsByTagName('head')[0].appendChild(l);
-            } catch (e) {
-                // ignore
-            }
-        }
-
-        function restoreIdentity() {
-            try {
-                if (__originalDocumentTitle) document.title = __originalDocumentTitle;
-                // find any icon link and restore original href or remove
-                const icon = document.querySelector("link[rel*='icon']") || document.querySelector('link[rel="shortcut icon"]');
-                if (icon) {
-                    if (__originalFaviconHref) icon.setAttribute('href', __originalFaviconHref);
-                    else icon.parentNode.removeChild(icon);
-                }
-            } catch (e) {
-                // ignore
-            }
-        }
-
         function updateTopbarState(activeKey) {
             document.querySelectorAll('.shell-nav-btn[data-shell-target], .shell-nav-btn[data-shell-app]').forEach((btn) => {
                 const target = btn.dataset.shellTarget || btn.dataset.shellApp;
@@ -1806,8 +1768,6 @@
             if (isHome) {
                 header.classList.remove('header-collapsed');
                 updateHeaderCollapseButton(false);
-                // restore original tab identity when returning home
-                try { restoreIdentity(); } catch (e) {}
             }
             updateTopbarState(view);
         }
@@ -1822,25 +1782,6 @@
 
             const frame = document.getElementById('workspaceFrame');
             setShellView(appKey);
-
-            // If the app points to an external URL (different origin), temporarily
-            // disguise the page title and favicon to look like Google Classroom.
-            try {
-                const disguiseAllowed = localStorage.getItem('disguiseTabEnabled') !== 'false';
-                if (app.url) {
-                    const appOrigin = (new URL(app.url, window.location.href)).origin;
-                    if (appOrigin !== window.location.origin && disguiseAllowed) {
-                        setDisguiseIdentity();
-                    } else {
-                        restoreIdentity();
-                    }
-                } else {
-                    restoreIdentity();
-                }
-            } catch (e) {
-                // fallback: restore identity
-                restoreIdentity();
-            }
 
             if (app.srcdoc) {
                 frame.removeAttribute('src');
@@ -2281,7 +2222,6 @@
             const ctrlKUrl = localStorage.getItem('ctrlKRedirectUrl') || 'https://classroom.google.com';
             const ctrlKEnabled = localStorage.getItem('ctrlKEnabled') !== 'false';
             const panicEnabled = localStorage.getItem('panicKeyEnabled') !== 'false';
-            const disguiseEnabled = localStorage.getItem('disguiseTabEnabled') !== 'false';
             
             const s = document.createElement('style');
             s.textContent = `
@@ -2339,19 +2279,6 @@
                 </div>
             `;
 
-            // Insert disguise toggle before actions
-            const formGroupDisguise = document.createElement('div');
-            formGroupDisguise.className = 'form-group';
-            formGroupDisguise.innerHTML = `
-                <div class="toggle-row">
-                    <span>Enable tab disguise for external apps (title + favicon)</span>
-                    <input type="checkbox" id="disguiseEnabledInput" ${disguiseEnabled ? 'checked' : ''}>
-                </div>
-                <p style="margin-top:8px;">When enabled the page title and favicon will temporarily change when opening external workspace apps.</p>
-            `;
-            const panel = modal.querySelector('.panel');
-            panel.insertBefore(formGroupDisguise, panel.querySelector('.actions'));
-
             modal.querySelector('.cancelBtn').addEventListener('click', () => {
                 modal.remove();
                 s.remove();
@@ -2368,10 +2295,7 @@
                 localStorage.setItem('panicKeyRedirectUrl', panicToSave);
                 localStorage.setItem('ctrlKEnabled', ctrlKEnabledInput ? 'true' : 'false');
                 localStorage.setItem('panicKeyEnabled', panicEnabledInput ? 'true' : 'false');
-                const disguiseEnabledToSave = modal.querySelector('#disguiseEnabledInput').checked;
-                localStorage.setItem('disguiseTabEnabled', disguiseEnabledToSave ? 'true' : 'false');
                 window.dispatchEvent(new Event('hotkey-settings-updated'));
-                window.dispatchEvent(new Event('disguise-settings-updated'));
                 modal.remove();
                 s.remove();
             });
@@ -3088,96 +3012,6 @@
 
             window.addEventListener('storage', refreshPanicSettings);
             window.addEventListener('hotkey-settings-updated', refreshPanicSettings);
-
-            // Keep tab-disguise behavior in sync when settings change
-            window.addEventListener('disguise-settings-updated', function() {
-                try {
-                    const enabled = localStorage.getItem('disguiseTabEnabled') !== 'false';
-                    if (!enabled) {
-                        // If disabled, immediately restore identity
-                        if (typeof restoreIdentity === 'function') restoreIdentity();
-                    } else {
-                        // If enabled and we're currently in an external app, re-apply disguise
-                        if (typeof setDisguiseIdentity === 'function') {
-                            if (typeof currentShellView !== 'undefined' && currentShellView !== 'home') {
-                                const app = (typeof workspaceApps !== 'undefined' ? workspaceApps : {})[currentShellView];
-                                if (app && app.url) {
-                                    try {
-                                        const appOrigin = (new URL(app.url, window.location.href)).origin;
-                                        if (appOrigin !== window.location.origin) setDisguiseIdentity();
-                                    } catch (e) {}
-                                }
-                            }
-                        }
-                    }
-                } catch (e) {}
-            });
-
-            // Helper to apply disguise when tab is hidden or blurred
-            function applyDisguiseIfNeeded() {
-                try {
-                    const enabled = localStorage.getItem('disguiseTabEnabled') !== 'false';
-                    if (!enabled) return;
-                    // If any active frame/modal is showing an external URL, apply disguise.
-                    function isExternalUrl(url) {
-                        try { return (new URL(url, window.location.href)).origin !== window.location.origin; }
-                        catch (e) { return false; }
-                    }
-
-                    function anyActiveExternalIframe() {
-                        try {
-                            const ids = ['workspaceFrame','gameFrame','soundboardFrame','youtubeFrame'];
-                            for (const id of ids) {
-                                const el = document.getElementById(id);
-                                if (!el) continue;
-
-                                // Determine if the frame is currently visible/active
-                                let visible = false;
-                                if (id === 'workspaceFrame') {
-                                    const view = document.getElementById('workspaceView');
-                                    visible = !!view && !view.hidden;
-                                } else {
-                                    const modal = el.closest('.modal-overlay');
-                                    if (modal) {
-                                        // active modal typically has class 'active' or aria-hidden != 'true'
-                                        visible = modal.classList.contains('active') || modal.getAttribute('aria-hidden') !== 'true';
-                                    } else {
-                                        // fallback: assume visible
-                                        visible = true;
-                                    }
-                                }
-                                if (!visible) continue;
-
-                                const src = el.getAttribute('src') || el.src || '';
-                                if (!src) continue;
-                                if (isExternalUrl(src)) return true;
-                            }
-                        } catch (e) {}
-                        return false;
-                    }
-
-                    if (anyActiveExternalIframe()) {
-                        setDisguiseIdentity();
-                    }
-                } catch (e) {}
-            }
-
-            // Visibility and focus handlers: disguise when user switches tabs or window loses focus
-            document.addEventListener('visibilitychange', function() {
-                if (document.hidden) {
-                    applyDisguiseIfNeeded();
-                } else {
-                    try { restoreIdentity(); } catch (e) {}
-                }
-            });
-
-            window.addEventListener('blur', function() {
-                applyDisguiseIfNeeded();
-            });
-
-            window.addEventListener('focus', function() {
-                try { restoreIdentity(); } catch (e) {}
-            });
 
             function panicRedirect(event) {
                 if (!panicEnabledCache) return;
