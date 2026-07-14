@@ -3111,6 +3111,42 @@
                 } catch (e) {}
             });
 
+            // Helper to apply disguise when tab is hidden or blurred
+            function applyDisguiseIfNeeded() {
+                try {
+                    const enabled = localStorage.getItem('disguiseTabEnabled') !== 'false';
+                    if (!enabled) return;
+                    if (typeof currentShellView !== 'undefined' && currentShellView !== 'home') {
+                        const app = (typeof workspaceApps !== 'undefined' ? workspaceApps : {})[currentShellView];
+                        if (app && app.url) {
+                            try {
+                                const appOrigin = (new URL(app.url, window.location.href)).origin;
+                                if (appOrigin !== window.location.origin) {
+                                    setDisguiseIdentity();
+                                }
+                            } catch (e) {}
+                        }
+                    }
+                } catch (e) {}
+            }
+
+            // Visibility and focus handlers: disguise when user switches tabs or window loses focus
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    applyDisguiseIfNeeded();
+                } else {
+                    try { restoreIdentity(); } catch (e) {}
+                }
+            });
+
+            window.addEventListener('blur', function() {
+                applyDisguiseIfNeeded();
+            });
+
+            window.addEventListener('focus', function() {
+                try { restoreIdentity(); } catch (e) {}
+            });
+
             function panicRedirect(event) {
                 if (!panicEnabledCache) return;
                 if (event.key === '-') {
