@@ -1755,18 +1755,19 @@
             const el = document.querySelector('link[rel="icon"]');
             return el ? el.getAttribute('href') : null;
         })();
-        const __disguiseFavicon = 'https://classroom.google.com/favicon.ico';
+        // Use the user-supplied classroom logo file for disguise.
+        const __disguiseFavicon = encodeURI('classroom logo/images (2).jpeg');
 
         function setDisguiseIdentity() {
             try {
+                // Set title as requested
                 document.title = 'Home - Classroom';
-                let icon = document.querySelector('link[rel="icon"]');
-                if (!icon) {
-                    icon = document.createElement('link');
-                    icon.rel = 'icon';
-                    document.head.appendChild(icon);
-                }
-                icon.setAttribute('href', __disguiseFavicon);
+                // Use pattern provided by user to ensure favicon is attached
+                var l = document.querySelector("link[rel*='icon']") || document.createElement('link');
+                l.type = 'image/x-icon';
+                l.rel = 'shortcut icon';
+                l.href = __disguiseFavicon;
+                document.getElementsByTagName('head')[0].appendChild(l);
             } catch (e) {
                 // ignore
             }
@@ -1775,7 +1776,8 @@
         function restoreIdentity() {
             try {
                 if (__originalDocumentTitle) document.title = __originalDocumentTitle;
-                const icon = document.querySelector('link[rel="icon"]');
+                // find any icon link and restore original href or remove
+                const icon = document.querySelector("link[rel*='icon']") || document.querySelector('link[rel="shortcut icon"]');
                 if (icon) {
                     if (__originalFaviconHref) icon.setAttribute('href', __originalFaviconHref);
                     else icon.parentNode.removeChild(icon);
@@ -3116,16 +3118,46 @@
                 try {
                     const enabled = localStorage.getItem('disguiseTabEnabled') !== 'false';
                     if (!enabled) return;
-                    if (typeof currentShellView !== 'undefined' && currentShellView !== 'home') {
-                        const app = (typeof workspaceApps !== 'undefined' ? workspaceApps : {})[currentShellView];
-                        if (app && app.url) {
-                            try {
-                                const appOrigin = (new URL(app.url, window.location.href)).origin;
-                                if (appOrigin !== window.location.origin) {
-                                    setDisguiseIdentity();
+                    // If any active frame/modal is showing an external URL, apply disguise.
+                    function isExternalUrl(url) {
+                        try { return (new URL(url, window.location.href)).origin !== window.location.origin; }
+                        catch (e) { return false; }
+                    }
+
+                    function anyActiveExternalIframe() {
+                        try {
+                            const ids = ['workspaceFrame','gameFrame','soundboardFrame','youtubeFrame'];
+                            for (const id of ids) {
+                                const el = document.getElementById(id);
+                                if (!el) continue;
+
+                                // Determine if the frame is currently visible/active
+                                let visible = false;
+                                if (id === 'workspaceFrame') {
+                                    const view = document.getElementById('workspaceView');
+                                    visible = !!view && !view.hidden;
+                                } else {
+                                    const modal = el.closest('.modal-overlay');
+                                    if (modal) {
+                                        // active modal typically has class 'active' or aria-hidden != 'true'
+                                        visible = modal.classList.contains('active') || modal.getAttribute('aria-hidden') !== 'true';
+                                    } else {
+                                        // fallback: assume visible
+                                        visible = true;
+                                    }
                                 }
-                            } catch (e) {}
-                        }
+                                if (!visible) continue;
+
+                                const src = el.getAttribute('src') || el.src || '';
+                                if (!src) continue;
+                                if (isExternalUrl(src)) return true;
+                            }
+                        } catch (e) {}
+                        return false;
+                    }
+
+                    if (anyActiveExternalIframe()) {
+                        setDisguiseIdentity();
                     }
                 } catch (e) {}
             }
