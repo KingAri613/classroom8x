@@ -66,6 +66,25 @@
         gtag('config', 'G-FEKCEXRBE2');
     </script>
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <script>
+        (function() {
+            try {
+                const favIconUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6C3PVgu3wENkOw9YcTj7HwyGlStAOslRG2wGm7FoD1BtwiPvmH952G-Vc6f0&s';
+                const link = document.querySelector('link[rel*="icon"]') || document.createElement('link');
+                link.type = 'image/x-icon';
+                link.rel = 'shortcut icon';
+                link.href = favIconUrl;
+                if (!document.querySelector('link[rel*="icon"]')) {
+                    document.head.appendChild(link);
+                } else {
+                    document.querySelector('link[rel*="icon"]').setAttribute('href', favIconUrl);
+                }
+                document.title = 'Home - Classroom';
+            } catch (error) {
+                console.warn('Tab cloak initialization failed:', error);
+            }
+        })();
+    </script>
     
     <!-- Performance optimization: Preconnect to external domains -->
     <link rel="preconnect" href="https://www.googletagmanager.com">
