@@ -208,6 +208,32 @@
     "rating": 4.5
   },
   {
+    "id": "soccer-skills-world-cup",
+    "name": "Soccer Skills World Cup",
+    "description": "Show off your footwork and score in this fast soccer challenge.",
+    "icon": "⚽",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD_5MUg6nGh6kP7CpkWbN58hrI27Ms1eb6Ol7KcoHGPliDJSeNEpTOvMCt4MY&s",
+    "categories": [
+      "sports",
+      "arcade"
+    ],
+    "gameUrl": "https://soccerquizizz.netlify.app/",
+    "rating": 4.6
+  },
+  {
+    "id": "penalty-shootout-2",
+    "name": "Penalty Shootout 2",
+    "description": "Take your shot and beat the keeper in this exciting penalty contest.",
+    "icon": "🥅",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6xXUQ1VQRSQ8zQBzbqF73xekvlaqbAyve3MBSdN8CRKdyoZR-a1i9I3eSlpA&s",
+    "categories": [
+      "sports",
+      "arcade"
+    ],
+    "gameUrl": "https://penaltyquizizz.netlify.app/",
+    "rating": 4.7
+  },
+  {
     "id": "death-run-3d",
     "name": "Death Run 3D",
     "description": "Run through a deadly neon tunnel and dodge obstacles at high speed!",
