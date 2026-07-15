@@ -70,16 +70,42 @@
         (function() {
             try {
                 const favIconUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6C3PVgu3wENkOw9YcTj7HwyGlStAOslRG2wGm7FoD1BtwiPvmH952G-Vc6f0&s';
-                const link = document.querySelector('link[rel*="icon"]') || document.createElement('link');
-                link.type = 'image/x-icon';
-                link.rel = 'shortcut icon';
-                link.href = favIconUrl;
-                if (!document.querySelector('link[rel*="icon"]')) {
-                    document.head.appendChild(link);
-                } else {
-                    document.querySelector('link[rel*="icon"]').setAttribute('href', favIconUrl);
+                const originalTitle = document.title;
+                const originalFavicon = document.querySelector('link[rel*="icon"]')?.getAttribute('href') || '';
+                let isHidden = false;
+
+                function applyTabCloak() {
+                    if (isHidden) return;
+                    isHidden = true;
+
+                    const link = document.querySelector('link[rel*="icon"]') || document.createElement('link');
+                    link.type = 'image/x-icon';
+                    link.rel = 'shortcut icon';
+                    link.href = favIconUrl;
+                    if (!document.querySelector('link[rel*="icon"]')) {
+                        document.head.appendChild(link);
+                    } else {
+                        document.querySelector('link[rel*="icon"]').setAttribute('href', favIconUrl);
+                    }
+                    document.title = 'Home - Classroom';
                 }
-                document.title = 'Home - Classroom';
+
+                function restoreTabIdentity() {
+                    isHidden = false;
+                    const existingLink = document.querySelector('link[rel*="icon"]');
+                    if (existingLink && originalFavicon) {
+                        existingLink.setAttribute('href', originalFavicon);
+                    }
+                    document.title = originalTitle;
+                }
+
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'hidden') {
+                        applyTabCloak();
+                    } else {
+                        restoreTabIdentity();
+                    }
+                });
             } catch (error) {
                 console.warn('Tab cloak initialization failed:', error);
             }
