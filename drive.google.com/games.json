@@ -247,6 +247,19 @@
     "rating": 4.6
   },
   {
+    "id": "house-of-hazards",
+    "name": "House of Hazards",
+    "description": "Navigate chaotic rooms and survive the hazards in this action-packed challenge.",
+    "icon": "🏚️",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD_W-1WhvapvDT9twoj6L4hDIL7DOjsjgkpiEQx1YNJU1qoI_MJQE7Fr8mKjU&s",
+    "categories": [
+      "action",
+      "arcade"
+    ],
+    "gameUrl": "https://quizizzbob.netlify.app/",
+    "rating": 4.7
+  },
+  {
     "id": "volley-random",
     "name": "Volley Random",
     "description": "Spike, block, and smash your way to victory in this fun volleyball game!",
