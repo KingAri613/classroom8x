@@ -260,6 +260,58 @@
     "rating": 4.7
   },
   {
+    "id": "block-blast",
+    "name": "Block Blast",
+    "description": "Clear the board with quick thinking and satisfying block matches.",
+    "icon": "🧱",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSo3gVKcGKIIwRHZFVd4cpI-6wuH4AtOtqwp8GVuM6CX17iV9rNO2TYRqRqdw&s",
+    "categories": [
+      "puzzle",
+      "arcade"
+    ],
+    "gameUrl": "block blast/clblockblastv2.html",
+    "rating": 4.5
+  },
+  {
+    "id": "motox3m-spooky-land",
+    "name": "MotoX3M Spooky Land",
+    "description": "Race through spooky tracks and pull off daring stunts.",
+    "icon": "🎃",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYFQtIYyhInUFjknWGqHyWfZpfzEBuia-R0w2dEFblpkS31mKyRdOmtKMOnw&s",
+    "categories": [
+      "racing",
+      "arcade"
+    ],
+    "gameUrl": "motox3m spooky land/clmotox3mspookyland.html",
+    "rating": 4.6
+  },
+  {
+    "id": "hextris",
+    "name": "Hextris",
+    "description": "Stack and rotate blocks in this fast geometric puzzle challenge.",
+    "icon": "⬡",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQE6vzFWObGSny4vZ-7pAm_robtkBhTlGnb6GfIVxzezIlQ8_ok74tRcMrMmlk&s",
+    "categories": [
+      "puzzle",
+      "arcade"
+    ],
+    "gameUrl": "hextris/clhextris.html",
+    "rating": 4.4
+  },
+  {
+    "id": "funny-shooter-2",
+    "name": "Funny Shooter 2",
+    "description": "Jump into goofy action with fast reflexes and wild shooting fun.",
+    "icon": "🔫",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-tHa_PInJmTXdCNEK_f3El8J_iXmZJ8GKCFhCqvmXpHp06DcpY_tHMsHvD9w&s",
+    "categories": [
+      "action",
+      "arcade"
+    ],
+    "gameUrl": "funny shooter 2/clfunnyshooter2.html",
+    "rating": 4.5
+  },
+  {
     "id": "volley-random",
     "name": "Volley Random",
     "description": "Spike, block, and smash your way to victory in this fun volleyball game!",
