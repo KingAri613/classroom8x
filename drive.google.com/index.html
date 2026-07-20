@@ -1691,7 +1691,8 @@
         let currentSearch = '';
         let currentSoundSearch = '';
         const moreGameIds = ['getaway-shootout', 'volley-random', 'soccer-random', 'basket-random', 'hook-stickman', 'tag', 'johnny-trigger', 'vex-8', 'jetpack-joyride', 'among-us', 'motox-3m', 'football-bros', 'cookie-clicker', 'level-devil'];
-        const newGameIds = ['player-games-1234', 'soccer-skills-world-cup', 'penalty-shootout-2', 'house-of-hazards', 'block-blast', 'motox3m-spooky-land', 'hextris', 'funny-shooter-2', 'tanks-2'];
+        const hiddenGameIds = ['tanks-2'];
+        const newGameIds = ['player-games-1234', 'soccer-skills-world-cup', 'penalty-shootout-2', 'house-of-hazards', 'block-blast', 'motox3m-spooky-land', 'hextris', 'funny-shooter-2'];
         const defaultGameSandbox = 'allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-presentation allow-downloads';
         const liveSportUrl = 'https://cube-trove-api.lovable.app/';
         let pageShellLoaded = document.readyState === 'complete';
@@ -1748,14 +1749,24 @@
             const closeBtn = document.getElementById('homeAdCloseBtn');
             if (!banner || !closeBtn) return;
 
-            const dismissed = localStorage.getItem('classroom8x_home_ad_dismissed_v1') === 'true';
-            if (!dismissed) {
+            const dismissKey = 'classroom8x_home_ad_dismissed_v1';
+            const showOnceKey = 'classroom8x_home_ad_show_once_v1';
+            const dismissed = localStorage.getItem(dismissKey) === 'true';
+            const showOnce = localStorage.getItem(showOnceKey) === 'true';
+
+            if (showOnce) {
                 banner.hidden = false;
+                localStorage.removeItem(showOnceKey);
+            } else if (!dismissed) {
+                banner.hidden = false;
+            } else if (dismissed && !localStorage.getItem(showOnceKey)) {
+                localStorage.setItem(showOnceKey, 'true');
             }
 
             closeBtn.addEventListener('click', () => {
                 banner.hidden = true;
-                localStorage.setItem('classroom8x_home_ad_dismissed_v1', 'true');
+                localStorage.setItem(dismissKey, 'true');
+                localStorage.removeItem(showOnceKey);
             });
         }
 
@@ -2542,7 +2553,7 @@
                     `;
                 }
 
-                const newGames = allGames.filter(game => newGameIds.includes(game.id));
+                const newGames = allGames.filter(game => newGameIds.includes(game.id) && !hiddenGameIds.includes(game.id));
 
                 if (newGames.length > 0) {
                     htmlContent += `
@@ -2576,7 +2587,9 @@
                 }
             }
 
-            htmlContent += games.map(game => {
+            htmlContent += games
+                .filter(game => !hiddenGameIds.includes(game.id))
+                .map(game => {
                 const fixedBadge = (game.id === 'vex-7' || game.id === 'hill-climber-racing' || game.id === 'death-run-3d') 
                     ? '<div style="position: absolute; top: 6px; right: 6px; background: #2ecc71; color: white; font-size: 0.6em; padding: 1px 4px; border-radius: 50%; font-weight: bold; z-index: 2; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;">✓</div>' 
                     : '';
@@ -2601,7 +2614,7 @@
 
         // Render More Games section
         function renderMoreGames() {
-            const moreGames = allGames.filter(game => moreGameIds.includes(game.id));
+            const moreGames = allGames.filter(game => moreGameIds.includes(game.id) && !hiddenGameIds.includes(game.id));
             
             const grid = document.getElementById('moreGamesGrid');
             if (!grid) return;
