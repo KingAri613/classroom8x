@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <base href="." target="_parent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  <link rel="stylesheet" type="text/css" href="./itanks_files/tanks.css">
+  <style>
+    html {
+      overflow: hidden;
+      background-color: rgba(0,0,0,0);
+    }
+
+    /* Modern Glassmorphism UI */
+    .screen {
+      background: rgba(15, 23, 42, 0.88) !important;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-panel {
+      background: rgba(30, 41, 59, 0.85) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      border-radius: 16px !important;
+      padding: 28px !important;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.6) !important;
+      color: #ffffff;
+    }
+
+    .menu-heading {
+      font-size: 32px !important;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      text-align: center;
+      background: linear-gradient(90deg, #ff7b00, #ffc800);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+    }
+
+    .togglebtn, .ui-button, select, input[type="radio"] {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      color: #fff !important;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .togglebtn:hover, .ui-button:hover, select:hover {
+      background: rgba(255, 255, 255, 0.25) !important;
+      border-color: rgba(255, 255, 255, 0.5) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    /* Shop UI Styling */
+    .menu-section-title {
+      border-radius: 8px;
+      padding: 6px 12px !important;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-top: 15px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+
+    .item-list {
+      display: grid !important;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      padding: 12px 0 !important;
+      list-style: none;
+    }
+
+    .item-list li {
+      margin: 0 !important;
+    }
+
+    .item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0, 0, 0, 0.25) !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      border-radius: 10px !important;
+      padding: 10px !important;
+      height: 105px;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .item:hover {
+      background: rgba(255, 255, 255, 0.15) !important;
+      border-color: rgba(74, 222, 128, 0.6) !important;
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(74, 222, 128, 0.25) !important;
+    }
+
+    .item-img {
+      max-height: 34px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 4px rgba(0,0,0,0.5));
+    }
+
+    .item-text {
+      font-size: 11px;
+      text-align: center;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .item-cost {
+      color: #4ade80 !important;
+      font-weight: 800;
+      font-size: 12px;
+      background: rgba(0,0,0,0.4);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    #player-selection {
+      display: flex;
+      gap: 10px;
+      padding: 0;
+      justify-content: center;
+      list-style: none;
+    }
+
+    .player-select-box {
+      border-radius: 8px;
+      padding: 6px !important;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    .player-select-box select {
+      background: rgba(0, 0, 0, 0.4) !important;
+      border: none !important;
+      padding: 4px;
+    }
+
+    /* Force hide removed items without causing JS crashes */
+    #fullscreen-button, 
+    .togglebtn[onclick*="window.open"], 
+    #show-grid-button, 
+    #grid-info-panel, 
+    #grid-canvas {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+ 
+  <div id="load-screen" style="display: none !important;">
+    <h1>OK!</h1>
+  </div>
+
+  <div style="visibility:hidden;opacity:0;position:absolute; top:-5000; left:-5000;">
+    <div id="audio-assets">
+      <audio id="sfx-aim" src="./audio/aim.mp3"></audio>
+      <audio id="sfx-move" src="./audio/move.mp3"></audio>
+      <audio id="sfx-fire" src="./audio/fire.mp3"></audio>
+      <audio id="sfx-bang" src="./audio/bang.mp3"></audio>
+      <audio id="sfx-explode" src="./audio/explode.mp3"></audio>
+      <audio id="sfx-cash" src="./audio/cash.mp3"></audio>
+      <audio id="sfx-click" src="./audio/click.mp3"></audio>
+      <audio id="sfx-rollover" src="./audio/rollover.mp3"></audio>
+      <audio id="sfx-emptyclip" src="./audio/emptyclip.mp3"></audio>
+    </div>
+
+    <div id="image-assets">
+      <img src="./itanks_files/help.jpg">
+      <img src="./itanks_files/grass.jpg" id="grass-texture">
+      <img src="./itanks_files/snow.jpg" id="snow-texture">
+      <img src="./itanks_files/desert.jpg" id="desert-texture">
+      <img src="./itanks_files/forest.jpg" id="forest-texture">
+      <img src="./itanks_files/hills.jpg" id="hills-texture">
+      <img src="./itanks_files/moon.jpg" id="moon-texture">
+      <img src="./itanks_files/blueTank.svg" id="blue-tank-1-img">
+      <img src="./itanks_files/redTank.svg" id="red-tank-1-img">
+      <img src="./itanks_files/orangeTank.svg" id="orange-tank-1-img">
+      <img src="./itanks_files/purpleTank.svg" id="purple-tank-1-img">
+      <img src="./itanks_files/dead.svg" id="dead-tank-1-img">
+      <img src="./itanks_files/chopper.gif" id="chopper-img">
+      <img src="./itanks_files/plane.png" id="plane-img">
+      <img src="./itanks_files/bomb.png" id="bomb-img">
+      <img src="./itanks_files/empty.png">
+      <img src="./itanks_files/explode.gif">
+      <img src="./itanks_files/nuke.gif">
+      <img src="./itanks_files/basic.svg">
+      <img src="./itanks_files/desert.svg">
+      <img src="./itanks_files/snow.svg">
+      <img src="./itanks_files/forest.svg">
+      <img src="./itanks_files/hills.svg">
+      <img src="./itanks_files/moon.svg">
+      <img src="./itanks_files/city.svg">
+      <img src="./itanks_files/city-night.svg">
+    </div>
+  </div>   
+
+  <div id="game" style="display: none; width: 1093px; height: 479px;">
+    <div id="bg" style="background-image: url(&quot;images/bg/snow.svg&quot;);"></div>
+
+     <div id="canvas-container">
+       <canvas id="terrain-canvas" width="1093" height="479"></canvas>
+       <canvas id="particle-canvas" width="1093" height="479"></canvas>
+       <canvas id="grid-canvas" width="1093" height="479" style="display: none !important;"></canvas>
+       <canvas id="tank-0-ui-canvas" width="1093" height="479"></canvas>
+       <canvas id="tank-0-sprite-canvas" width="1093" height="479"></canvas>
+       <canvas id="tank-0-effect-canvas" width="1093" height="479"></canvas>
+       <canvas id="tank-1-ui-canvas" width="1093" height="479"></canvas>
+       <canvas id="tank-1-sprite-canvas" width="1093" height="479"></canvas>
+       <canvas id="tank-1-effect-canvas" width="1093" height="479"></canvas>
+       <canvas id="tank-2-ui-canvas" width="1093" height="479"></canvas>
+       <canvas id="tank-2-sprite-canvas" width="1093" height="479"></canvas>
+       <canvas id="tank-2-effect-canvas" width="1093" height="479"></canvas>
+       <canvas id="tank-3-ui-canvas" width="1093" height="479"></canvas>
+       <canvas id="tank-3-sprite-canvas" width="1093" height="479"></canvas>
+       <canvas id="tank-3-effect-canvas" width="1093" height="479"></canvas>
+     </div>
+
+     <img src="./itanks_files/empty.png" id="explosion">
+     <img src="./itanks_files/empty.png" id="explosion-nuke">
+
+     <div id="flash-message" style="opacity: 0; padding-bottom: 149.925px; color: lime;">$199</div>
+     <div id="copyright">© 2016 MathsIsFun.com v<span class="version-number">0.72</span></div>
+
+     <div id="grid-info-panel" onclick="toggleGridInfo()" style="display: none !important;"></div>
+
+      <div id="hud" style="opacity: 0;">
+        <div id="player-name" class="ui-label" style="text-align: center; color: rgb(145, 85, 255);">Purple</div>
+
+        <div id="store-button" class="row togglebtn" onclick="showStoreMenu(true);">
+          <img src="./itanks_files/money.png" class="ui-label">
+          <div id="player-money">100</div>
+        </div>
+      
+        <div id="health-container" class="ui-number">
+          <img id="health-icon" src="./itanks_files/health.png" class="ui-label">
+          <span id="player-health">56</span>
+        </div>
+
+        <div id="player-controls">
+          <div id="angle-controls" class="row">
+            <div id="angle-down-big-button" style="background-image:url(./images/ui/left-big.png);" class="hidden ui-button"></div>
+            <div id="angle-down-button" style="background-image:url(./images/ui/left.png);" class="ui-button"></div>
+            <input id="angle-range-control" value="45" min="-20" max="200" step=".1" type="range" oninput="updateAngleSlider();" onchange="updateAngleSlider()">
+            <div id="player-angle" class="hidden ui-number">78°</div>
+            <div id="angle-up-button" style="background-image:url(./images/ui/right.png);" class="ui-button"></div>
+            <div id="angle-up-big-button" style="background-image:url(./images/ui/right-big.png);" class="hidden ui-button"></div>
+          </div>
+
+          <div id="force-controls" class="row">
+            <div id="force-down-button" style="background-image:url(./images/ui/left.png);" class="ui-button"></div>
+            <input id="force-range-control" value="10" min="1" max="20" step=".1" type="range" oninput="updateForceSlider();" onchange="updateForceSlider()">
+            <div id="player-force" class="hidden ui-number">14</div>
+            <div id="force-up-button" style="background-image:url(./images/ui/right.png);" class="ui-button"></div>
+          </div>
+
+          <div id="move-controls" class="row">
+            <div id="move-left-button" class="ui-button" style="background-image:url(./images/ui/left.png)"></div>
+            <div id="player-position" class="hidden ui-number">809</div>
+            <div class="ui-number">
+              <img src="./itanks_files/gas.png" class="ui-label">
+              <span id="player-gas">10</span>
+            </div>
+            <div id="move-right-button" class="ui-button" style="background-image:url(./images/ui/right.png)"></div>
+          </div>    
+
+          <div id="fire-button" class="ui-button" onclick="fire();"></div>
+
+          <div id="weapon-select" class="column">
+            <div class="ui-label">Active Weapon</div>
+            <select id="player-weapon" onchange="changeWeapon();">
+              <option value="Small Shell">Small Shell</option>
+              <option value="Medium Shell" disabled="">Medium Shell</option>
+              <option value="Large Shell" disabled="">Large Shell</option>
+              <option value="Atomic Shell" disabled="">Atomic Shell</option>
+              <option value="Cannon Ball" disabled="">Cannon Ball</option>
+              <option value="Air Strike" disabled="">Air Strike</option>
+              <option value="EMP" disabled="">EMP</option>
+              <option value="Napalm" disabled="">Napalm</option>
+              <option value="Sniper Shell" disabled="">Sniper Shell</option>
+              <option value="Flak Cannon" disabled="">Flak Cannon</option>
+            </select>
+          </div>
+        </div>
+
+        <ul id="score-board">
+          <div class="ui-label" style="text-decoration:underline">Score</div>
+            <li class="player-score" style="color: rgb(0, 102, 255); display: inline;"> <span id="blue-score">0</span> </li>
+            <li class="player-score" style="color: rgb(255, 0, 0); display: inline;"> <span id="red-score">0</span> </li>
+            <li class="player-score" style="color: rgb(255, 102, 0); display: inline;"> <span id="orange-score">0</span> </li>
+            <li class="player-score" style="color: rgb(76, 42, 127); display: inline;"> <span id="purple-score">0</span> </li>
+        </ul>
+
+        <button id="main-menu-button" class="togglebtn" onclick="playSound('click'); showMainMenu(true);">Menu</button>
+        <button id="show-grid-button" class="togglebtn" style="display:none !important;">Grid</button>
+
+        <div id="cheats" style="z-index:1;display:none; position:absolute; bottom:8px; left:200px;">
+          Cheats! <br>
+          <button class="togglebtn" onclick="payTank(tanks[tankNo],50000)">Money</button>
+          <button class="togglebtn" onclick="giveAllWeapons(tanks[tankNo])">Weapons</button>
+          <button class="togglebtn" onclick="tanks[0].kills=0;tanks[1].kills=0;updateHud();">Reset Score</button>
+        </div>
+
+        <div id="disabler-div" style="display: block; z-index: 10000; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; background: none;"></div>
+      </div>
+  </div>
+
+  <button id="skip-ai-match-button" class="togglebtn" style="display:none;" onclick="skipAiRound=true; util.get('skip-ai-match-button').style.display='none';">SKIP AI ROUND</button>
+
+  <div id="main-menu" class="screen" style="right: 0px;">
+      <div class="menu-panel">
+        <div class="menu-heading" onclick="tanksTimesClicked++; setTimeout(function(){tanksTimesClicked=0;},3000); if (tanksTimesClicked > 10) { document.getElementById('cheats').style.display='block';flashMessage('CHEATER!')}">
+        Tanks II</div><br>
+
+         <ul id="player-selection"><li class="player-select-box" style="background-color: #0066FF; "><select id="playerType0"><option id="playerType00" value="Human" style="height:21px;" selected="">Human</option><option id="playerType01" value="Computer" style="height:21px;">Computer</option></select></li><li class="player-select-box" style="background-color: #FF0000; "><select id="playerType1"><option id="playerType10" value="Human" style="height:21px;">Human</option><option id="playerType11" value="Computer" style="height:21px;" selected="">Computer</option></select></li><li class="player-select-box" style="background-color: #ff7700; "><select id="playerType2"><option id="playerType20" value="Human" style="height:21px;">Human</option><option id="playerType21" value="Computer" style="height:21px;" selected="">Computer</option></select></li><li class="player-select-box" style="background-color: #9155ff; "><select id="playerType3"><option id="playerType30" value="Human" style="height:21px;">Human</option><option id="playerType31" value="Computer" style="height:21px;" selected="">Computer</option></select></li></ul><br>
+
+        <div id="player-count">
+          <label for="player-count-box">Players:</label>
+          <select id="player-count-box" onchange="playerCountChange();">
+            <option>2</option>
+            <option>3</option>
+            <option selected="">4</option>
+          </select>
+        </div><br>
+
+        <div id="terrain-select">
+          <label for="terrain-select-box">Terrain: </label>
+          <select id="terrain-select-box">
+            <option selected="">Random</option>
+            <option>Grassland</option>
+            <option>Desert</option>
+            <option>Snow</option>
+            <option>Forest</option>
+            <option>Hills</option>
+            <option>Moon</option>
+            <option>City</option>
+            <option>City-Night</option>
+            <option>Beach</option>
+          </select>
+        </div><br>
+
+        <div id="difficulty-select">
+          <label for="difficulty">Level:<label>
+          <input id="difficulty-easy" type="radio" name="difficulty" checked="">Easy
+          <input id="difficulty-normal" type="radio" name="difficulty">Normal
+          <input id="difficulty-hard" type="radio" name="difficulty">Hard
+        </label></label></div><br>
+
+        <label id="fx-control">Special Effects <input type="checkbox" checked="" id="fx-control-checkbox"></label> |
+        
+        <label id="mute-control" style="text-align:right;">Mute <input type="checkbox" id="mute-control-checkbox"></label>
+        <br><br>
+
+        <button style="width:225px; height:45px;font-size:24px;" class="togglebtn" onclick="playSound('click');startGame();">START!</button>
+        <button id="main-menu-exit-button" style="display:none; width:30px;height:30px;position:absolute;top:0;right:0;" class="togglebtn" onclick="playSound('click');showMainMenu(false);">X</button>
+        <label class="hidden" id="wind-control">Wind <input type="checkbox" checked="" id="wind-control-checkbox"></label>
+      </div>
+
+    <div id="fullscreen-button" class="togglebtn" style="display:none !important;">Toggle Full Screen</div>
+    <div class="togglebtn" style="display:none !important;">Popout</div>
+  </div>
+  
+  <div id="store-menu" class="screen" style="bottom: 200%;">
+    <div class="menu-panel">
+      <div class="menu-heading">Armory</div>
+
+      <div class="menu-section-title" style="background: linear-gradient(90deg, #991b1b, #ef4444);">Items</div>
+      <ul class="item-list">
+        <li><div id="fuel-item" class="item ui-button" onmouseover="playSound('rollover');" onclick="playSound('click'); buy('Fuel');">
+          <img class="item-img" src="./itanks_files/gas.png">
+          <p class="tooltip">Needed for movement</p>
+          <div class="item-text">Fuel</div>
+          <div class="item-count">0</div>
+          <div class="item-cost">$50</div>
+        </div></li>
+        <li><div id="health-item" class="item ui-button" onmouseover="playSound('rollover');" onclick="playSound('click'); buy('Health');">
+          <img class="item-img" src="./itanks_files/health.png">
+          <p class="tooltip">Repair tank (max 100)</p>
+          <div class="item-text">Repair</div>
+          <div class="item-count">0</div>
+          <div class="item-cost">$75</div>
+        </div></li>
+        <li><div id="shield-item" class="item ui-button" onmouseover="playSound('rollover');" onclick="playSound('click'); buy('Shield');">
+          <img class="item-img" src="./itanks_files/shield.png">
+          <p class="tooltip">Reduces damage</p>
+          <div class="item-text">Shield</div>
+          <div class="item-count">0</div>
+          <div class="item-cost">$150</div>
+        </div></li>
+        <li><div id="targeting-item" class="item ui-button" onmouseover="playSound('rollover');" onclick="playSound('click'); buy('Targeting');">
+          <img class="item-img" src="./itanks_files/targeting.png">
+          <p class="tooltip">Trajectory prediction</p>
+          <div class="item-text">Targeting</div>
+          <div class="item-count">0</div>
+          <div class="item-cost">$200</div>
+        </div></li>
+      </ul>
+
+      <div class="menu-section-title" style="background: linear-gradient(90deg, #854d0e, #eab308);">Weapons</div>
+      <ul class="item-list">
+        <li><div id="medium-shell-item" class="item ui-button" onmouseover="playSound('rollover');" onclick="playSound('click'); buy('Medium Shell');">
+          <img class="item-img" src="./itanks_files/medium-shell.png">
+          <p class="tooltip">Medium damage</p>
+          <div class="item-text">Medium Shell</div>
+          <div class="item-count">0</div>
+          <div class="item-cost">$50</div>
+        </div></li>
+        <li><div id="large-shell-item" class="item ui-button" onmouseover="playSound('rollover');" onclick="playSound('click'); buy('Large Shell');">
+          <img class="item-img" src="./itanks_files/large-shell.png">
+          <p class="tooltip">Max damage for a shell</p>
+          <div class="item-text">Large Shell</div>
+          <div class="item-count">0</div>
+          <div class="item-cost">$200</div>
+        </div></li>
+        <li><div id="cannon-ball-item" class="item ui-button" onmouseover="playSound('rollover');" onclick="playSound('click'); buy('Cannon Ball');">
+          <img class="item-img" src="./itanks_files/rolling-bomb.png">
+          <p class="tooltip">Max damage and rolls along ground</p>
+          <div class="item-text">Cannon Ball</div>
+          <div class="item-count">0</div>
+          <div class="item-cost">$300</div>
+        </div></li>
+        <li><div id="sniper-shell-item" class="item ui-button" onmouseover="playSound('rollover');" onclick="playSound('click'); buy('Sniper Shell');">
+          <img class="item-img" src="./itanks_files/sniper-shell.png">
+          <p class="tooltip">One hit kill - only if direct hit</p>
+          <div class="item-text">Sniper Shell</div>
+          <div class="item-count">0</div>
+          <div class="item-cost">$500</div>
+        </div></li>
+        <li><div id="emp-item" class="item ui-button" onmouseover="playSound('rollover');" onclick="playSound('click'); buy('EMP');">
+          <img class="item-img" src="./itanks_files/emp.png">
+          <p class="tooltip">Disables tank shields, fuel, and targeting</p>
+          <div class="item-text">EMP</div>
+          <div class="item-count">0</div>
+          <div class="item-cost">$500</div>
+        </div></li>
+        <li><div id="atomic-shell-item" class="item ui-button" onmouseover="playSound('rollover');" onclick="playSound('click'); buy('Atomic Shell');">
+          <img class="item-img" src="./itanks_files/atom-bomb.png">
+          <p class="tooltip">Max damage and large area of effect</p>
+          <div class="item-text">Atomic Shell</div>
+          <div class="item-count">0</div>
+          <div class="item-cost">$750</div>
+        </div></li>
+        <li><div id="air-strike-item" class="item ui-button" onmouseover="playSound('rollover');" onclick="playSound('click'); buy('Air Strike');">
+          <img class="item-img" src="./itanks_files/air-strike.png">
+          <p class="tooltip">Drops bombs over wide area</p>
+          <div class="item-text">Air Strike</div>
+          <div class="item-count">0</div>
+          <div class="item-cost">$1000</div>
+        </div></li>
+        <li><div id="napalm-item" class="item ui-button" onmouseover="playSound('rollover');" onclick="playSound('click'); buy('Napalm');">
+          <img class="item-img" src="./itanks_files/napalm.png">
+          <p class="tooltip">Spews corrosive particles</p>
+          <div class="item-text">Napalm</div>
+          <div class="item-count">0</div>
+          <div class="item-cost">$1000</div>
+        </div></li>
+        <li><div id="machine-gun-item" class="item ui-button" onmouseover="playSound('rollover');" onclick="playSound('click'); buy('Flak Cannon');">
+          <img class="item-img" src="./itanks_files/napalm.png">
+          <p class="tooltip">Burst of fast bullets</p>
+          <div class="item-text">Flak Cannon</div>
+          <div class="item-count">0</div>
+          <div class="item-cost">$500</div>
+        </div></li>        
+      </ul>      
+
+      <button style="width:30px;height:30px;position:absolute;top:0;right:0;" class="togglebtn" onclick="playSound('click'); showStoreMenu(false);">X</button>
+    </div>
+  </div>
+    
+  <script src="./itanks_files/tanks.js.download"></script>
+  <script>tanksMain();</script>
+
+  <script>
+    // 1. Auto-dismiss OK load screen instantly without user interaction
+    function triggerGameLoad() {
+      var ls = document.getElementById('load-screen');
+      if (ls) {
+        try { ls.click(); } catch(e){}
+        ls.style.display = 'none';
+      }
+    }
+    window.addEventListener('DOMContentLoaded', triggerGameLoad);
+    window.addEventListener('load', triggerGameLoad);
+    document.addEventListener('click', triggerGameLoad, { once: true });
+
+    // 2. Sync Selected Weapon to Engine Memory
+    document.addEventListener('DOMContentLoaded', function() {
+      var wSelect = document.getElementById('player-weapon');
+      if (wSelect) {
+        wSelect.addEventListener('change', function() {
+          if (typeof tanks !== 'undefined' && typeof tankNo !== 'undefined' && tanks[tankNo]) {
+            tanks[tankNo].weapon = this.value;
+            tanks[tankNo].currentWeapon = this.value;
+            if (typeof changeWeapon === 'function') {
+              try { changeWeapon(); } catch(e){}
+            }
+          }
+        });
+      }
+    });
+
+    // 3. Bullet Speed Boost Handler
+    setInterval(function() {
+      if (typeof bullets !== 'undefined' && Array.isArray(bullets)) {
+        bullets.forEach(function(b) {
+          if (b && !b._speedBoosted) {
+            if (typeof b.vx === 'number') b.vx *= 1.5;
+            if (typeof b.vy === 'number') b.vy *= 1.5;
+            b._speedBoosted = true;
+          }
+        });
+      }
+    }, 16);
+
+    // 4. Cheat Hotkey 'Z'
+    window.addEventListener('keydown', function(event) {
+      if (event.key === 'z' || event.key === 'Z') {
+        if (typeof tanks !== 'undefined' && typeof tankNo !== 'undefined' && tanks[tankNo]) {
+          if (typeof payTank === 'function') {
+            payTank(tanks[tankNo], 100);
+          } else {
+            tanks[tankNo].money += 100;
+          }
+          if (typeof updateHud === 'function') {
+            updateHud();
+          }
+        }
+      }
+    });
+  </script>
+
+  <img id="crosshair" src="./itanks_files/crosshair.png">
+
+</body></html>

@@ -895,5 +895,18 @@
     "gameUrl": "https://fastidious-quizizzpony-f24627.netlify.app/",
     "rating": 4.5,
     "warningPopup": true
+  },
+  {
+    "id": "tanks-2",
+    "name": "Tanks 2",
+    "description": "Battle with tanks in explosive arena action.",
+    "icon": "🛡️",
+    "image": "tanks 2/ljCG0.jpg",
+    "categories": [
+      "action",
+      "shooter"
+    ],
+    "gameUrl": "tanks 2/gemini-code-1784572120306.html",
+    "rating": 4.5
   }
 ]
