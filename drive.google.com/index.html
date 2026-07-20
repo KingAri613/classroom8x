@@ -1594,7 +1594,7 @@
             <section class="page-view" id="homeView">
                 <div class="home-ad-banner" id="homeAdBanner" hidden>
                     <button class="home-ad-close" id="homeAdCloseBtn" type="button" aria-label="Close advertisement">✕</button>
-                    <img src="lucozade%20ad/eYR3V.jpg" alt="Lucozade advertisement">
+                    <img src="lucozade%20ad/76fHz.jpg" alt="Lucozade advertisement">
                 </div>
                 <h2 class="section-title" id="sectionTitle">All Games</h2>
                 <div class="games-grid" id="gamesGrid">
@@ -1749,8 +1749,21 @@
             const closeBtn = document.getElementById('homeAdCloseBtn');
             if (!banner || !closeBtn) return;
 
-            const dismissKey = 'classroom8x_home_ad_dismissed_v1';
-            const showOnceKey = 'classroom8x_home_ad_show_once_v1';
+            const currentBannerVersion = '2';
+            const bannerVersionKey = 'classroom8x_home_ad_banner_version';
+            const dismissKey = 'classroom8x_home_ad_dismissed_v2';
+            const showOnceKey = 'classroom8x_home_ad_show_once_v2';
+
+            const previousBannerVersion = localStorage.getItem(bannerVersionKey);
+            const previouslyDismissedOldBanner = localStorage.getItem('classroom8x_home_ad_dismissed_v1') === 'true';
+
+            if (previousBannerVersion !== currentBannerVersion) {
+                if (previouslyDismissedOldBanner) {
+                    localStorage.setItem(showOnceKey, 'true');
+                }
+                localStorage.setItem(bannerVersionKey, currentBannerVersion);
+            }
+
             const dismissed = localStorage.getItem(dismissKey) === 'true';
             const showOnce = localStorage.getItem(showOnceKey) === 'true';
 
@@ -1759,8 +1772,6 @@
                 localStorage.removeItem(showOnceKey);
             } else if (!dismissed) {
                 banner.hidden = false;
-            } else if (dismissed && !localStorage.getItem(showOnceKey)) {
-                localStorage.setItem(showOnceKey, 'true');
             }
 
             closeBtn.addEventListener('click', () => {
