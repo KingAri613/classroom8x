@@ -9,7 +9,7 @@
       "action",
       "platformer"
     ],
-    "gameUrl": "escape road/escape road.html",
+    "gameUrl": "https://quizizzdevil.netlify.app/",
     "rating": 4.5
   },
   {
@@ -61,7 +61,7 @@
       "arcade",
       "action"
     ],
-    "gameUrl": "../pac man/result (35).html",
+    "gameUrl": "https://quizizzdevil.netlify.app/",
     "rating": 4.8
   },
   {
@@ -165,7 +165,7 @@
       "action",
       "platformer"
     ],
-    "gameUrl": "stickman hook/clstickmanhook.html",
+    "gameUrl": "https://quizizzhook.netlify.app/",
     "rating": 4.5
   },
   {
@@ -282,7 +282,20 @@
       "racing",
       "arcade"
     ],
-    "gameUrl": "motox3m spooky land/clmotox3mspookyland.html",
+    "gameUrl": "https://spookyquizizz.netlify.app/",
+    "rating": 4.6
+  },
+  {
+    "id": "raft-wars",
+    "name": "Raft Wars",
+    "description": "Aim carefully, knock out your opponents, and defend your treasure.",
+    "icon": "🛶",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbnTFXxtAxUszliKXRNyGuhZ6AJ99RjjXceeIPIFyVTBxucD1kgMl9H7W1Aw&s",
+    "categories": [
+      "action",
+      "arcade"
+    ],
+    "gameUrl": "https://quizizzraft.netlify.app/",
     "rating": 4.6
   },
   {
@@ -450,7 +463,7 @@
       "platformer",
       "action"
     ],
-    "gameUrl": "vex8/clvex8.html",
+    "gameUrl": "https://quizizz8.netlify.app/",
     "rating": 4.6
   },
   {
@@ -580,7 +593,7 @@
       "racing",
       "action"
     ],
-    "gameUrl": "motoxm3/clmotox3m3.html",
+    "gameUrl": "https://quizizzmoto.netlify.app/",
     "rating": 4.7
   },
   {
@@ -853,7 +866,7 @@
       "action",
       "platformer"
     ],
-    "gameUrl": "level devil/clleveldevil.html",
+    "gameUrl": "https://quizizzdevil.netlify.app/",
     "rating": 4.3
   },
   {

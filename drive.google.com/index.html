@@ -489,7 +489,7 @@
             top: 50%;
             transform: translateY(-50%);
             color: rgba(234, 234, 234, 0.78);
-            font-size: 1.3rem;
+            font-size: 1.65rem;
             font-weight: 700;
             pointer-events: none;
             transition: opacity 0.2s ease;
@@ -994,7 +994,7 @@
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
+            gap: 24px;
             margin-bottom: 40px;
             animation: slideUp 0.6s ease-out 0.2s backwards;
             width: 100%;
@@ -1051,10 +1051,21 @@
         }
 
         .game-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 16px 40px rgba(233, 69, 96, 0.4);
+            transform: translateY(-6px) scale(1.025);
+            box-shadow: 0 16px 40px rgba(233, 69, 96, 0.5), 0 0 24px rgba(233, 69, 96, 0.2);
             border-color: #e94560;
         }
+
+        .game-play-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.25s ease; z-index: 3; pointer-events: none; }
+        .game-play-overlay span { width: 58px; height: 58px; display: grid; place-items: center; border-radius: 50%; background: rgba(233, 69, 96, 0.92); color: #fff; font-size: 1.7rem; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35); }
+        .game-card:hover .game-play-overlay, .game-card:focus-within .game-play-overlay { opacity: 1; }
+        .game-badge { position: absolute; top: 10px; left: 10px; z-index: 4; padding: 5px 9px; border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 999px; background: rgba(233, 69, 96, 0.92); color: #fff; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; }
+        .info-fab-wrap { display: none; position: fixed; right: 22px; bottom: 22px; z-index: 2500; }
+        body.home-shell-view:not(.game-open) .info-fab-wrap { display: block; }
+        .info-fab { width: 46px; height: 46px; border: 1px solid rgba(255, 255, 255, 0.28); border-radius: 50%; background: #e94560; color: #fff; font-size: 1.35rem; font-weight: 800; cursor: help; box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35); }
+        .info-panel { position: absolute; right: 0; bottom: 58px; width: min(320px, calc(100vw - 32px)); padding: 16px; border: 1px solid rgba(233, 69, 96, 0.4); border-radius: 14px; background: rgba(16, 24, 43, 0.97); color: #eaeaea; text-align: left; font-size: 0.9rem; line-height: 1.45; opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease; pointer-events: none; }
+        .info-fab-wrap:hover .info-panel, .info-fab-wrap:focus-within .info-panel { opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto; }
+        .info-panel strong { color: #ff8095; }
 
         .game-card:active {
             transform: translateY(-8px) scale(1.01);
@@ -1070,12 +1081,14 @@
             position: relative;
             background-size: cover;
             background-position: center;
+            border-radius: 12px;
         }
 
         .game-thumbnail img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-radius: 12px;
         }
 
         .game-info {
@@ -1103,7 +1116,7 @@
         .game-title {
             font-size: 1.8em;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 0;
             color: #eaeaea;
             text-align: center;
             animation: titleSlideUp 0.4s ease-out 0.2s backwards;
@@ -1139,6 +1152,7 @@
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(233, 69, 96, 0.4);
             animation: buttonSlideUp 0.4s ease-out 0.3s backwards;
+            display: block;
         }
 
         @keyframes buttonSlideUp {
@@ -1531,26 +1545,6 @@
     </div>
 
     <div class="header">
-        <div class="announcement-banner" id="announcementBanner">
-            <span>Soundboard is fixed and updated with Du Bist git genug. Live Sport is finally here — check out the Live Sport tab on the topbar.</span>
-            <button class="announcement-banner-close" type="button" aria-label="Dismiss announcement">×</button>
-        </div>
-        <script>
-            (function() {
-                const banner = document.getElementById('announcementBanner');
-                if (!banner) return;
-                if (localStorage.getItem('announcementBannerHidden') === 'true') {
-                    banner.style.display = 'none';
-                    return;
-                }
-                const closeBtn = banner.querySelector('.announcement-banner-close');
-                if (!closeBtn) return;
-                closeBtn.addEventListener('click', () => {
-                    banner.style.display = 'none';
-                    localStorage.setItem('announcementBannerHidden', 'true');
-                });
-            })();
-        </script>
         <div class="logo-container">
             <div class="logo-header-row">
                 <div class="gc-logo" aria-hidden="true"></div>
@@ -1592,10 +1586,6 @@
 
         <main class="main-content">
             <section class="page-view" id="homeView">
-                <div class="home-ad-banner" id="homeAdBanner" hidden>
-                    <button class="home-ad-close" id="homeAdCloseBtn" type="button" aria-label="Close advertisement">✕</button>
-                    <img src="lucozade%20ad/76fHz.jpg" alt="Lucozade advertisement">
-                </div>
                 <h2 class="section-title" id="sectionTitle">All Games</h2>
                 <div class="games-grid" id="gamesGrid">
                     <div class="empty-state">
@@ -1603,13 +1593,6 @@
                     </div>
                 </div>
 
-                <div style="margin-top: 60px; padding-top: 40px; border-top: 2px solid rgba(233, 69, 96, 0.3);">
-                    <h2 class="section-title" style="margin-bottom: 10px;">More Games</h2>
-                    <p style="color: rgba(234, 234, 234, 0.7); font-size: 0.9em; margin-bottom: 20px;">📝 Please note these games currently only work if your Chromebook is unblocked</p>
-                    <div class="games-grid" id="moreGamesGrid" style="grid-template-columns: repeat(4, 1fr);">
-                        <!-- More games will be populated by JavaScript -->
-                    </div>
-                </div>
             </section>
 
             <section class="page-view workspace-view" id="workspaceView" hidden>
@@ -1624,6 +1607,16 @@
                 </div>
             </section>
         </main>
+    </div>
+
+    <div class="info-fab-wrap">
+        <button class="info-fab" type="button" aria-label="Show site information">i</button>
+        <div class="info-panel" role="status">
+            <strong>Classroom8x shortcuts</strong><br>
+            <strong>Ctrl + K</strong> opens your configured quick redirect in a new tab.<br>
+            <strong>-</strong> activates the panic key and redirects this tab.<br>
+            Both shortcuts are enabled by default. Change the redirect URL or disable either shortcut in <strong>Settings</strong>.
+        </div>
     </div>
 
     <div class="modal-overlay" id="gameModal">
@@ -1692,7 +1685,7 @@
         let currentSoundSearch = '';
         const moreGameIds = ['getaway-shootout', 'volley-random', 'soccer-random', 'basket-random', 'hook-stickman', 'tag', 'johnny-trigger', 'vex-8', 'jetpack-joyride', 'among-us', 'motox-3m', 'football-bros', 'cookie-clicker', 'level-devil'];
         const hiddenGameIds = ['tanks-2'];
-        const newGameIds = ['player-games-1234', 'soccer-skills-world-cup', 'penalty-shootout-2', 'house-of-hazards', 'block-blast', 'motox3m-spooky-land', 'hextris', 'funny-shooter-2'];
+        const newGameIds = ['player-games-1234', 'soccer-skills-world-cup', 'penalty-shootout-2', 'house-of-hazards', 'block-blast', 'motox3m-spooky-land', 'raft-wars', 'hextris', 'funny-shooter-2'];
         const defaultGameSandbox = 'allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-presentation allow-downloads';
         const liveSportUrl = 'https://cube-trove-api.lovable.app/';
         let pageShellLoaded = document.readyState === 'complete';
@@ -1743,45 +1736,6 @@
         }
 
         initializeLoaderGifRotation();
-
-        function initializeHomeAdBanner() {
-            const banner = document.getElementById('homeAdBanner');
-            const closeBtn = document.getElementById('homeAdCloseBtn');
-            if (!banner || !closeBtn) return;
-
-            const currentBannerVersion = '2';
-            const bannerVersionKey = 'classroom8x_home_ad_banner_version';
-            const dismissKey = 'classroom8x_home_ad_dismissed_v2';
-            const showOnceKey = 'classroom8x_home_ad_show_once_v2';
-
-            const previousBannerVersion = localStorage.getItem(bannerVersionKey);
-            const previouslyDismissedOldBanner = localStorage.getItem('classroom8x_home_ad_dismissed_v1') === 'true';
-
-            if (previousBannerVersion !== currentBannerVersion) {
-                if (previouslyDismissedOldBanner) {
-                    localStorage.setItem(showOnceKey, 'true');
-                }
-                localStorage.setItem(bannerVersionKey, currentBannerVersion);
-            }
-
-            const dismissed = localStorage.getItem(dismissKey) === 'true';
-            const showOnce = localStorage.getItem(showOnceKey) === 'true';
-
-            if (showOnce) {
-                banner.hidden = false;
-                localStorage.removeItem(showOnceKey);
-            } else if (!dismissed) {
-                banner.hidden = false;
-            }
-
-            closeBtn.addEventListener('click', () => {
-                banner.hidden = true;
-                localStorage.setItem(dismissKey, 'true');
-                localStorage.removeItem(showOnceKey);
-            });
-        }
-
-        initializeHomeAdBanner();
 
         const workspaceApps = {
             ai: {
@@ -2445,7 +2399,6 @@
                 const response = await fetch('games.json');
                 allGames = await response.json();
                 filterGames();
-                renderMoreGames(); // Add this line
             } catch (error) {
                 console.error('Error loading games:', error);
                 document.getElementById('gamesGrid').innerHTML = `
@@ -2464,9 +2417,6 @@
 
         function filterGames() {
             filteredGames = allGames.filter(game => {
-                // Exclude more games from main grid
-                if (moreGameIds.includes(game.id)) return false;
-                
                 const matchesCategory = currentCategory === 'all' || 
                     (game.categories && game.categories.includes(currentCategory));
                 const matchesSearch = currentSearch === '' ||
@@ -2598,15 +2548,21 @@
                 }
             }
 
-            htmlContent += games
+            const orderedGames = [...games].sort((firstGame, secondGame) => {
+                return Number(moreGameIds.includes(firstGame.id)) - Number(moreGameIds.includes(secondGame.id));
+            });
+
+            htmlContent += orderedGames
                 .filter(game => !hiddenGameIds.includes(game.id))
                 .map(game => {
                 const fixedBadge = (game.id === 'vex-7' || game.id === 'hill-climber-racing' || game.id === 'death-run-3d') 
                     ? '<div style="position: absolute; top: 6px; right: 6px; background: #2ecc71; color: white; font-size: 0.6em; padding: 1px 4px; border-radius: 50%; font-weight: bold; z-index: 2; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;">✓</div>' 
                     : '';
+                const gameBadge = newGameIds.includes(game.id) ? '<div class="game-badge">New</div>' : (['getaway-shootout', 'poly-track', 'death-run-3d', 'pixel-shooter'].includes(game.id) ? '<div class="game-badge">Hot</div>' : '');
                 return `
                 <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                     <div class="game-thumbnail">
+                        ${gameBadge}
                         ${fixedBadge}
                         ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                         <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
@@ -2812,7 +2768,12 @@
                     'platformer': 'Platformer Games',
                     'racing': 'Racing Games',
                     'puzzle': 'Puzzle Games',
-                    '2player': '2 Player Games'
+                    '2player': '2 Player Games',
+                    'arcade': 'Arcade Games', 'sports': 'Sports Games', 'shooter': 'Shooter Games',
+                    'horror': 'Horror Games', 'io': 'IO Games', 'multiplayer': 'Multiplayer Games',
+                    'casual': 'Casual Games', 'idle': 'Idle Games', 'simulation': 'Simulation Games',
+                    'management': 'Management Games', 'sandbox': 'Sandbox Games', 'adventure': 'Adventure Games',
+                    'endless': 'Endless Games', 'reflex': 'Reflex Games', 'social': 'Social Games'
                 };
                 document.getElementById('sectionTitle').textContent = titles[currentCategory];
                 filterGames();
@@ -2839,9 +2800,6 @@
         window.addEventListener('load', () => {
             pageShellLoaded = true;
             revealSiteIfReady();
-            if (allGames.length > 0) {
-                setTimeout(showNewGamesPopup, 250);
-            }
             scheduleHydrationBreak();
         });
 
@@ -2963,59 +2921,6 @@
             openWorkspaceApp('feedback');
         }
 
-        function showGameRequestPopup() {
-            const key = 'game_request_popup_seen_v1';
-            if (localStorage.getItem(key)) return;
-
-            const popup = document.createElement('div');
-            popup.id = 'gameRequestPopup';
-            popup.style.cssText = `
-                position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.75);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 5000;
-                padding: 18px;
-            `;
-            popup.innerHTML = `
-                <div style="
-                    width: 100%;
-                    max-width: 520px;
-                    background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
-                    border: 2px solid #e94560;
-                    border-radius: 16px;
-                    color: #eaeaea;
-                    box-shadow: 0 16px 42px rgba(0,0,0,0.45);
-                    padding: 24px;
-                    text-align: center;
-                ">
-                    <h3 style="margin: 0 0 10px; color: #ff7d95; font-size: 1.35rem;">Game Requests</h3>
-                    <p style="margin: 0 0 14px; line-height: 1.45; color: #f3f3f3;">Have any game requests submit your request now.</p>
-                    <div style="display:flex; gap:10px; justify-content:center; margin-top: 12px;">
-                        <button id="gameRequestCloseBtn" type="button" style="padding:10px 14px; border-radius:8px; border:1px solid rgba(233,69,96,0.45); background: rgba(255,255,255,0.06); color:#eaeaea; cursor:pointer; font-weight:600;">Close</button>
-                        <button id="gameRequestGoBtn" type="button" style="padding:10px 14px; border-radius:8px; border:none; background: linear-gradient(135deg,#e94560 0%,#ff5a75 100%); color:white; cursor:pointer; font-weight:700;">Go</button>
-                    </div>
-                </div>
-            `;
-
-            popup.querySelector('#gameRequestCloseBtn').addEventListener('click', () => {
-                localStorage.setItem(key, 'true');
-                popup.remove();
-            });
-
-            popup.querySelector('#gameRequestGoBtn').addEventListener('click', () => {
-                localStorage.setItem(key, 'true');
-                popup.remove();
-                openGameRequestForm();
-            });
-
-            document.body.appendChild(popup);
-        }
-
-        window.addEventListener('load', showGameRequestPopup);
-
         // Register Service Worker for offline support and caching
 
         if ('serviceWorker' in navigator) {
@@ -3118,17 +3023,6 @@
                 });
             }
 
-            if (!localStorage.getItem('panicShortcutsNotificationShown')) {
-                localStorage.setItem('panicShortcutsNotificationShown', 'true');
-
-                var toast = document.createElement('div');
-                toast.style.cssText = 'position: fixed; bottom: 18px; right: 18px; max-width: 360px; width: calc(100% - 32px); background: rgba(16, 18, 30, 0.94); color: #f4f4f4; border: 1px solid rgba(233, 69, 96, 0.85); border-radius: 14px; padding: 14px 16px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif; font-size: 0.95rem; line-height: 1.5; box-shadow: 0 18px 48px rgba(0, 0, 0, 0.35); z-index: 999999; backdrop-filter: blur(10px);';
-                toast.innerHTML = '<div style="display:flex; gap:12px; align-items:flex-start;"><div style="flex:1;"><strong style="display:block; font-size:1rem; margin-bottom:6px; color:#fff;">Shortcut Tips</strong><span style="color:#ddd;">Use <kbd style="display:inline-block; padding:5px 9px; border-radius:6px; background:#111; color:#fff; font-size:0.9rem;">Ctrl + K</kbd> for quick redirect, or <kbd style="display:inline-block; padding:5px 9px; border-radius:6px; background:#111; color:#fff; font-size:0.9rem;">-</kbd> as your panic key.</span></div><button type="button" style="border:none; background:#e94560; color:#fff; border-radius:10px; padding:8px 12px; cursor:pointer; font-weight:700;">Close</button></div>';
-                var button = toast.querySelector('button');
-                button.addEventListener('click', function() { toast.remove(); });
-                document.body.appendChild(toast);
-                setTimeout(function() { if (toast.parentNode) toast.remove(); }, 10000);
-            }
         })();
     </script>
 

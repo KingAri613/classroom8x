@@ -39,7 +39,9 @@ function send500(res) {
 const server = http.createServer((req, res) => {
   try {
     const requestedPath = decodeURI(req.url.split('?')[0]);
-    const normalizedPath = path.normalize(requestedPath).replace(/^\/+/, '');
+    const normalizedPath = path.normalize(requestedPath)
+      .replace(/^\/+/, '')
+      .replace(/^drive\.google\.com(?:[\\/]|$)/i, '');
     let fsPath = path.join(PUBLIC_DIR, normalizedPath);
 
     if (fsPath.endsWith(path.sep) || requestedPath === '/' || requestedPath === '') {
