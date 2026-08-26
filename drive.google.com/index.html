@@ -1593,6 +1593,12 @@
                     </div>
                 </div>
 
+                <div class="more-games-section">
+                    <h2 class="section-title" style="margin-bottom: 10px;">More Games</h2>
+                    <p style="color: rgba(234, 234, 234, 0.7); font-size: 0.9em; margin-bottom: 20px;">These games may require an unblocked Chromebook connection.</p>
+                    <div class="games-grid" id="moreGamesGrid"></div>
+                </div>
+
             </section>
 
             <section class="page-view workspace-view" id="workspaceView" hidden>
@@ -1684,6 +1690,7 @@
         let currentSearch = '';
         let currentSoundSearch = '';
         const moreGameIds = ['getaway-shootout', 'volley-random', 'soccer-random', 'basket-random', 'hook-stickman', 'tag', 'johnny-trigger', 'vex-8', 'jetpack-joyride', 'among-us', 'motox-3m', 'football-bros', 'cookie-clicker', 'level-devil'];
+        const mainGameIds = ['hook-stickman', 'level-devil', 'motox-3m', 'vex-8'];
         const hiddenGameIds = ['tanks-2'];
         const newGameIds = ['player-games-1234', 'soccer-skills-world-cup', 'penalty-shootout-2', 'house-of-hazards', 'block-blast', 'motox3m-spooky-land', 'raft-wars', 'hextris', 'funny-shooter-2'];
         const defaultGameSandbox = 'allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-presentation allow-downloads';
@@ -2399,6 +2406,7 @@
                 const response = await fetch('games.json');
                 allGames = await response.json();
                 filterGames();
+                renderMoreGames();
             } catch (error) {
                 console.error('Error loading games:', error);
                 document.getElementById('gamesGrid').innerHTML = `
@@ -2417,6 +2425,7 @@
 
         function filterGames() {
             filteredGames = allGames.filter(game => {
+                if (moreGameIds.includes(game.id) && !mainGameIds.includes(game.id)) return false;
                 const matchesCategory = currentCategory === 'all' || 
                     (game.categories && game.categories.includes(currentCategory));
                 const matchesSearch = currentSearch === '' ||
@@ -2548,11 +2557,7 @@
                 }
             }
 
-            const orderedGames = [...games].sort((firstGame, secondGame) => {
-                return Number(moreGameIds.includes(firstGame.id)) - Number(moreGameIds.includes(secondGame.id));
-            });
-
-            htmlContent += orderedGames
+            htmlContent += games
                 .filter(game => !hiddenGameIds.includes(game.id))
                 .map(game => {
                 const fixedBadge = (game.id === 'vex-7' || game.id === 'hill-climber-racing' || game.id === 'death-run-3d') 
@@ -2581,7 +2586,7 @@
 
         // Render More Games section
         function renderMoreGames() {
-            const moreGames = allGames.filter(game => moreGameIds.includes(game.id) && !hiddenGameIds.includes(game.id));
+            const moreGames = allGames.filter(game => moreGameIds.includes(game.id) && !mainGameIds.includes(game.id) && !hiddenGameIds.includes(game.id));
             
             const grid = document.getElementById('moreGamesGrid');
             if (!grid) return;
