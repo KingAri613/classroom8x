@@ -1531,9 +1531,9 @@
             }
         }
 
-        @media (min-width: 1200px) {
+        @media (min-width: 901px) {
             .games-grid {
-                grid-template-columns: repeat(4, 1fr);
+                grid-template-columns: repeat(var(--game-columns, 4), 1fr);
             }
         }
     </style>
@@ -1689,10 +1689,10 @@
         let currentCategory = 'all';
         let currentSearch = '';
         let currentSoundSearch = '';
-        const moreGameIds = ['getaway-shootout', 'volley-random', 'soccer-random', 'basket-random', 'hook-stickman', 'tag', 'johnny-trigger', 'vex-8', 'jetpack-joyride', 'among-us', 'motox-3m', 'football-bros', 'cookie-clicker', 'level-devil'];
+        const moreGameIds = ['basket-random', 'johnny-trigger', 'among-us'];
         const mainGameIds = ['hook-stickman', 'level-devil', 'motox-3m', 'vex-8'];
         const hiddenGameIds = ['tanks-2'];
-        const newGameIds = ['player-games-1234', 'soccer-skills-world-cup', 'penalty-shootout-2', 'house-of-hazards', 'block-blast', 'motox3m-spooky-land', 'raft-wars', 'hextris', 'funny-shooter-2'];
+        const newGameIds = ['player-games-1234', 'soccer-skills-world-cup', 'penalty-shootout-2', 'house-of-hazards', 'block-blast', 'motox3m-spooky-land', 'raft-wars', 'drift-boss', 'duo-survival-3', 'jetpack-joyride', 'cookie-clicker', 'idle-startup-tycoon', 'soccer-random', 'volley-random', 'getaway-shootout', 'hextris', 'funny-shooter-2'];
         const defaultGameSandbox = 'allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-presentation allow-downloads';
         const liveSportUrl = 'https://cube-trove-api.lovable.app/';
         let pageShellLoaded = document.readyState === 'complete';
@@ -2250,6 +2250,7 @@
             const ctrlKUrl = localStorage.getItem('ctrlKRedirectUrl') || 'https://classroom.google.com';
             const ctrlKEnabled = localStorage.getItem('ctrlKEnabled') !== 'false';
             const panicEnabled = localStorage.getItem('panicKeyEnabled') !== 'false';
+            const gameColumns = localStorage.getItem('gameGridColumns') === '5' ? '5' : '4';
             
             const s = document.createElement('style');
             s.textContent = `
@@ -2262,6 +2263,7 @@
                 #settingsModal .form-group input { width: 100%; padding: 10px 12px; border: 1px solid rgba(233,69,96,0.5); border-radius: 8px; background: rgba(26,26,46,0.8); color: #eaeaea; font-size: 0.95rem; box-sizing: border-box; }
                 #settingsModal .form-group input:focus { outline: none; border-color: #e94560; background: rgba(26,26,46,0.95); }
                 #settingsModal .form-group p { margin: 6px 0 0 0; font-size: 0.85rem; color: #bbb; }
+                #settingsModal .form-group select { width: 100%; padding: 10px 12px; border: 1px solid rgba(233,69,96,0.5); border-radius: 8px; background: rgba(26,26,46,0.8); color: #eaeaea; font-size: 0.95rem; }
                 #settingsModal .toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
                 #settingsModal .toggle-row span { font-size: 0.9rem; color: #ddd; font-weight: 600; }
                 #settingsModal .toggle-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: #e94560; }
@@ -2292,6 +2294,15 @@
                     </div>
                     <div class="divider"></div>
                     <div class="form-group">
+                        <label for="gameGridColumnsInput">Games per row on computer</label>
+                        <select id="gameGridColumnsInput">
+                            <option value="4" ${gameColumns === '4' ? 'selected' : ''}>4 games</option>
+                            <option value="5" ${gameColumns === '5' ? 'selected' : ''}>5 games</option>
+                        </select>
+                        <p>On smaller screens, the grid remains responsive.</p>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="form-group">
                         <label for="panicUrlInput">Panic Key (-) Redirect URL</label>
                         <input type="url" id="panicUrlInput" placeholder="https://classroom.google.com" value="${panicUrl}">
                         <p>Default: https://classroom.google.com</p>
@@ -2317,12 +2328,15 @@
                 const panicInput = modal.querySelector('#panicUrlInput').value.trim();
                 const ctrlKEnabledInput = modal.querySelector('#ctrlKEnabledInput').checked;
                 const panicEnabledInput = modal.querySelector('#panicEnabledInput').checked;
+                const gameColumnsInput = modal.querySelector('#gameGridColumnsInput').value;
                 const ctrlKToSave = ctrlKInput || 'https://classroom.google.com';
                 const panicToSave = panicInput || 'https://classroom.google.com';
                 localStorage.setItem('ctrlKRedirectUrl', ctrlKToSave);
                 localStorage.setItem('panicKeyRedirectUrl', panicToSave);
                 localStorage.setItem('ctrlKEnabled', ctrlKEnabledInput ? 'true' : 'false');
                 localStorage.setItem('panicKeyEnabled', panicEnabledInput ? 'true' : 'false');
+                localStorage.setItem('gameGridColumns', gameColumnsInput);
+                applyGameGridColumns();
                 window.dispatchEvent(new Event('hotkey-settings-updated'));
                 modal.remove();
                 s.remove();
@@ -2335,6 +2349,13 @@
 
             document.body.appendChild(modal);
         }
+
+        function applyGameGridColumns() {
+            const columns = localStorage.getItem('gameGridColumns') === '5' ? '5' : '4';
+            document.documentElement.style.setProperty('--game-columns', columns);
+        }
+
+        applyGameGridColumns();
 
 
         function stopAllAudio() {

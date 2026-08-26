@@ -329,12 +329,12 @@
     "name": "Volley Random",
     "description": "Spike, block, and smash your way to victory in this fun volleyball game!",
     "icon": "\ud83c\udfd0",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSL9dAfwR2LEtzqeupIfuujKEIb28ipJjuww47FnBYXGkkI3G1V4_QaxFCbDw&s",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFC9qLdOJZO3YKSt2n1iXJ-3gtcpmIQnWNr5nYEX_VRHHVcWZKdkztJkK3Cg&s",
     "categories": [
       "sports",
       "arcade"
     ],
-    "gameUrl": "https://volleyquizizz.netlify.app/",
+    "gameUrl": "https://quizizzvolley.netlify.app/",
     "rating": 4.6
   },
   {
@@ -346,7 +346,7 @@
     "categories": [
       "sports"
     ],
-    "gameUrl": "https://quizizzsoccer.netlify.app/",
+    "gameUrl": "https://quizizzsoccer1.netlify.app/",
     "rating": 4.5
   },
   {
@@ -413,19 +413,6 @@
     ],
     "gameUrl": "Snowball.io/clsnowballio.html",
     "rating": 4.5
-  },
-  {
-    "id": "tag",
-    "name": "Tag",
-    "description": "Chase or escape in this classic game of tag.",
-    "icon": "\ud83c\udfc3",
-    "image": "https://tse1.mm.bing.net/th/id/OIP.zcNP6LH5HANeuYXFg2YyzAAAAA?pid=Api",
-    "categories": [
-      "action",
-      "multiplayer"
-    ],
-    "gameUrl": "tag/cltagcm.html",
-    "rating": 4.4
   },
   {
     "id": "temple-run-2",
@@ -497,12 +484,12 @@
     "name": "Jetpack Joyride",
     "description": "Fly through the lab with a jetpack, dodge obstacles and collect coins!",
     "icon": "\ud83d\ude80",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQq2ndgRlE0yXQ4Rr82JjjBkS34ttRQeoMSmrVBYZ-UrNQap2GIDn7k5Lc8mqI&s",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzBdzuLmYv69_6eWmPUNE-_unW6hfQMxszcaXpHSIL7VeQuF6Mm2jZESCEtQ&s",
     "categories": [
       "action",
       "arcade"
     ],
-    "gameUrl": "jetpack joyride/cljetpackjoyride.html",
+    "gameUrl": "https://quizizzjetpack.netlify.app/",
     "rating": 4.7
   },
   {
@@ -662,19 +649,6 @@
     "rating": 4.6
   },
   {
-    "id": "football-bros",
-    "name": "Football Bros",
-    "description": "Play football with your bros in this fun sports game!",
-    "icon": "\ud83c\udfc8",
-    "image": "https://tse2.mm.bing.net/th/id/OIP.QOTwHFf7QLkemkL-PH2cEAHaHa?pid=Api",
-    "categories": [
-      "sports",
-      "2player"
-    ],
-    "gameUrl": "football bros/clfootballbros.html",
-    "rating": 4.5
-  },
-  {
     "id": "stack-ball-io",
     "name": "Stack Ball.io",
     "description": "Break through colored platforms by stacking balls!",
@@ -744,12 +718,12 @@
     "name": "Cookie Clicker",
     "description": "Click cookies and build an empire! Addictive idle game at its finest.",
     "icon": "\ud83c\udf6a",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT86bIJWpfbwxjopsW7RLCYUMOrjPhDy184b4wBtmWUEWdR2NEyahDGwyqjhw&s",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4Us0e_RWtwiz8ISdyT395tS--uMNZS2xxskgfZQd3lajpG545hScDtYZmMkk&s",
     "categories": [
       "idle",
       "arcade"
     ],
-    "gameUrl": "cookie clicker/clcookieclicker.html",
+    "gameUrl": "https://quizizzcookie.netlify.app/",
     "rating": 4.5
   },
   {
@@ -775,7 +749,7 @@
       "action",
       "2player"
     ],
-    "gameUrl": "getaway shootout/clgetawayshootout.html",
+    "gameUrl": "https://quizizzget.netlify.app/",
     "rating": 4.5
   },
   {
@@ -920,6 +894,36 @@
       "shooter"
     ],
     "gameUrl": "tanks 2/gemini-code-1784572120306.html",
+    "rating": 4.5
+  },
+  {
+    "id": "drift-boss",
+    "name": "Drift Boss",
+    "description": "Keep your car on the track and master every drift.",
+    "icon": "🏎️",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwAalDJDak1J8mKQ-XFCgib06VkgxJAhtCDY103S8Jxr9cNS7fNJFSxO5_aw&s",
+    "categories": ["racing", "reflex"],
+    "gameUrl": "https://quizizzdrift.netlify.app/",
+    "rating": 4.6
+  },
+  {
+    "id": "duo-survival-3",
+    "name": "Duo Survival 3",
+    "description": "Work together, solve puzzles, and survive every level.",
+    "icon": "🧑‍🤝‍🧑",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFhZkoZaC10gRrsZMym78b4c5Mn0elgZ_G8WyO2ifiC5oGyEGZavWsdfP-6w&s",
+    "categories": ["2player", "platformer", "adventure"],
+    "gameUrl": "https://quizizzduo.netlify.app/",
+    "rating": 4.6
+  },
+  {
+    "id": "idle-startup-tycoon",
+    "name": "Idle Startup Tycoon",
+    "description": "Build your startup, hire a team, and grow your business.",
+    "icon": "💼",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfH7v5nHIYQf2jl9-EISG_lGRXDk8RX5n7r-ZHVZntG_Xki4YRv_0PqtBB2dA&s",
+    "categories": ["idle", "simulation", "management"],
+    "gameUrl": "https://quizizzidle.netlify.app/",
     "rating": 4.5
   }
 ]
