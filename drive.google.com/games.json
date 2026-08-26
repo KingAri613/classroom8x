@@ -287,7 +287,7 @@
   },
   {
     "id": "raft-wars",
-    "name": "Raft Wars",
+    "name": "Raft Wars 2",
     "description": "Aim carefully, knock out your opponents, and defend your treasure.",
     "icon": "🛶",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbnTFXxtAxUszliKXRNyGuhZ6AJ99RjjXceeIPIFyVTBxucD1kgMl9H7W1Aw&s",
@@ -295,7 +295,7 @@
       "action",
       "arcade"
     ],
-    "gameUrl": "https://quizizzraft.netlify.app/",
+    "gameUrl": "https://quizizzraft2.netlify.app/",
     "rating": 4.6
   },
   {

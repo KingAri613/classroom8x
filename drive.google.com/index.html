@@ -2483,7 +2483,7 @@
                                 <h3 style="color: #e94560; font-size: 1.3em; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
                                     <span>🔥</span> Frequently Played
                                 </h3>
-                                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px;">
+                                <div style="display: grid; grid-template-columns: repeat(var(--game-columns, 4), 1fr); gap: 30px;">
                                     ${topGames.map(game => {
                                         const fixedBadge = (game.id === 'vex-7' || game.id === 'hill-climber-racing' || game.id === 'death-run-3d') 
                                             ? '<div style="position: absolute; top: 6px; right: 6px; background: #2ecc71; color: white; font-size: 0.6em; padding: 1px 4px; border-radius: 50%; font-weight: bold; z-index: 2; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;">✓</div>' 
@@ -2519,7 +2519,7 @@
                             <h3 style="color: #e94560; font-size: 1.3em; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
                                 <span>⭐</span> Popular Games
                             </h3>
-                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px;">
+                            <div style="display: grid; grid-template-columns: repeat(var(--game-columns, 4), 1fr); gap: 30px;">
                                 ${popularGames.map(game => {
                                     const fixedBadge = (game.id === 'vex-7' || game.id === 'hill-climber-racing' || game.id === 'death-run-3d') 
                                         ? '<div style="position: absolute; top: 6px; right: 6px; background: #2ecc71; color: white; font-size: 0.6em; padding: 1px 4px; border-radius: 50%; font-weight: bold; z-index: 2; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;">✓</div>' 
@@ -2544,38 +2544,6 @@
                     `;
                 }
 
-                const newGames = allGames.filter(game => newGameIds.includes(game.id) && !hiddenGameIds.includes(game.id));
-
-                if (newGames.length > 0) {
-                    htmlContent += `
-                        <div style="grid-column: 1 / -1; margin-bottom: 20px;">
-                            <h3 style="color: #e94560; font-size: 1.3em; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                                <span>🆕</span> New Games
-                            </h3>
-                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px;">
-                                ${newGames.map(game => {
-                                    const fixedBadge = (game.id === 'vex-7' || game.id === 'hill-climber-racing' || game.id === 'death-run-3d') 
-                                        ? '<div style="position: absolute; top: 6px; right: 6px; background: #2ecc71; color: white; font-size: 0.6em; padding: 1px 4px; border-radius: 50%; font-weight: bold; z-index: 2; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;">✓</div>' 
-                                        : '';
-                                    return `
-                                        <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
-                                            <div class="game-thumbnail">
-                                                ${fixedBadge}
-                                                ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
-                                                <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
-                                            </div>
-                                            <div class="game-info">
-                                                <div class="game-title">${game.name}</div>
-                                                <button class="game-button" onclick="event.stopPropagation(); playGame('${game.gameUrl}', '${game.name}', '${game.id}')">Play Now</button>
-                                            </div>
-                                        </div>
-                                    `;
-                                }).join('')}
-                            </div>
-                        </div>
-                        <hr style="grid-column: 1 / -1; border: none; border-top: 2px solid rgba(233, 69, 96, 0.3); margin: 20px 0;">
-                    `;
-                }
             }
 
             htmlContent += games
@@ -2599,6 +2567,34 @@
                     </div>
                 </div>
             `}).join('');
+
+            if (currentCategory === 'all' && currentSearch === '') {
+                const newGames = allGames.filter(game => newGameIds.includes(game.id) && !hiddenGameIds.includes(game.id));
+                if (newGames.length > 0) {
+                    htmlContent += `
+                        <div style="grid-column: 1 / -1; margin-top: 20px;">
+                            <h3 style="color: #e94560; font-size: 1.3em; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                                <span>🆕</span> New Games
+                            </h3>
+                            <div style="display: grid; grid-template-columns: repeat(var(--game-columns, 4), 1fr); gap: 30px;">
+                                ${newGames.map(game => `
+                                    <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
+                                        <div class="game-thumbnail">
+                                            <div class="game-badge">New</div>
+                                            ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
+                                            <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
+                                        </div>
+                                        <div class="game-info">
+                                            <div class="game-title">${game.name}</div>
+                                            <button class="game-button" onclick="event.stopPropagation(); playGame('${game.gameUrl}', '${game.name}', '${game.id}')">Play Now</button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            }
 
             grid.innerHTML = htmlContent;
 
