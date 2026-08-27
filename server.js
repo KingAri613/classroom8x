@@ -41,7 +41,7 @@ const server = http.createServer((req, res) => {
     const requestedPath = decodeURI(req.url.split('?')[0]);
     const normalizedPath = path.normalize(requestedPath)
       .replace(/^\/+/, '')
-      .replace(/^drive\.google\.com(?:[\\/]|$)/i, '');
+      .replace(/^(?:drive|docs|classroom)\.google\.com(?:[\\/]|$)/i, '');
     let fsPath = path.join(PUBLIC_DIR, normalizedPath);
 
     if (fsPath.endsWith(path.sep) || requestedPath === '/' || requestedPath === '') {
