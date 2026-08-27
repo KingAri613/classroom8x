@@ -2431,14 +2431,17 @@
             document.body.classList.add('silent-player-refresh');
             try {
                 await loadPlayerCounts();
-                if (currentCategory === 'all' && currentSearch === '') {
-                    filterGames();
-                    renderMoreGames();
-                    updatePlayerCountBadges();
-                }
+                refreshHomeSectionsSilently();
             } finally {
                 document.body.classList.remove('silent-player-refresh');
             }
+        }
+
+        function refreshHomeSectionsSilently() {
+            if (currentCategory !== 'all' || currentSearch !== '') return;
+            filterGames();
+            renderMoreGames();
+            updatePlayerCountBadges();
         }
 
         function startPlayerCountRefresh() {
@@ -2453,10 +2456,17 @@
             try {
                 const response = await fetch('games.json');
                 allGames = await response.json();
-                await loadPlayerCounts();
                 filterGames();
                 renderMoreGames();
                 startPlayerCountRefresh();
+                loadPlayerCounts().then(() => {
+                    document.body.classList.add('silent-player-refresh');
+                    try {
+                        refreshHomeSectionsSilently();
+                    } finally {
+                        document.body.classList.remove('silent-player-refresh');
+                    }
+                });
             } catch (error) {
                 console.error('Error loading games:', error);
                 document.getElementById('gamesGrid').innerHTML = `
