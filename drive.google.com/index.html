@@ -1238,6 +1238,38 @@
             display: block !important;
         }
 
+        .game-loading-indicator {
+            position: absolute;
+            inset: 0;
+            z-index: 4;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 14px;
+            background: #101827;
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .game-loading-indicator.active {
+            display: flex;
+        }
+
+        .game-loading-spinner {
+            width: 42px;
+            height: 42px;
+            border: 4px solid rgba(255, 255, 255, 0.25);
+            border-top-color: #e94560;
+            border-radius: 50%;
+            animation: gameLoadingSpin 0.8s linear infinite;
+        }
+
+        @keyframes gameLoadingSpin {
+            to { transform: rotate(360deg); }
+        }
+
         #soundboardModal {
             display: none;
             position: fixed;
@@ -1694,6 +1726,10 @@
         <button class="modal-action close-button" onclick="closeGame()" title="Close">✕</button>
         <button class="modal-action fullscreen-button" type="button" onclick="toggleGameFullscreen()" title="Fullscreen">⛶</button>
         <button class="music-close ai-game-close" onclick="closeGame()" style="display:none;">← Back</button>
+        <div class="game-loading-indicator" id="gameLoadingIndicator" aria-live="polite">
+            <div class="game-loading-spinner" aria-hidden="true"></div>
+            <span>Loading game...</span>
+        </div>
         <iframe id="gameFrame" 
             allowfullscreen 
             webkitallowfullscreen 
@@ -2796,9 +2832,11 @@
             
             const gameModal = document.getElementById('gameModal');
             const gameFrame = document.getElementById('gameFrame');
+            const loadingIndicator = document.getElementById('gameLoadingIndicator');
             gameModal.classList.toggle('ai-mode', gameId === 'ai-tool');
             gameFrame.setAttribute('sandbox', defaultGameSandbox);
             gameFrame.src = '';
+            loadingIndicator.classList.add('active');
             gameModal.classList.add('active');
             document.body.classList.add('game-open');
             
@@ -2808,6 +2846,10 @@
             }, 50);
         }
 
+        document.getElementById('gameFrame').addEventListener('load', () => {
+            document.getElementById('gameLoadingIndicator').classList.remove('active');
+        });
+
         function showBitLifeWarning(gameUrl, gameName, gameId) {
             // Check if user already agreed
             const agreed = localStorage.getItem('bitlife_warning_agreed');
@@ -2816,8 +2858,10 @@
                 trackGamePlay(gameId, gameName);
                 recordCloudflareGamePlay(gameId);
                 const gameFrame = document.getElementById('gameFrame');
+                const loadingIndicator = document.getElementById('gameLoadingIndicator');
                 gameFrame.setAttribute('sandbox', defaultGameSandbox);
                 gameFrame.src = '';
+                loadingIndicator.classList.add('active');
                 document.getElementById('gameModal').classList.add('active');
                 document.body.classList.add('game-open');
                 setTimeout(() => {
@@ -2880,8 +2924,10 @@
                 trackGamePlay(gameId, gameName);
                 recordCloudflareGamePlay(gameId);
                 const gameFrame = document.getElementById('gameFrame');
+                const loadingIndicator = document.getElementById('gameLoadingIndicator');
                 gameFrame.setAttribute('sandbox', defaultGameSandbox);
                 gameFrame.src = '';
+                loadingIndicator.classList.add('active');
                 document.getElementById('gameModal').classList.add('active');
                 document.body.classList.add('game-open');
                 setTimeout(() => {
@@ -2916,10 +2962,12 @@
         function closeGame() {
             const gameModal = document.getElementById('gameModal');
             const gameFrame = document.getElementById('gameFrame');
+            const loadingIndicator = document.getElementById('gameLoadingIndicator');
             gameModal.classList.remove('active');
             gameModal.classList.remove('ai-mode');
             gameFrame.setAttribute('sandbox', defaultGameSandbox);
             gameFrame.src = '';
+            loadingIndicator.classList.remove('active');
             document.body.classList.remove('game-open');
             document.body.style.overflow = '';
         }
