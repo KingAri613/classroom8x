@@ -192,6 +192,36 @@
         .lesson-card span { color: #496766; font-size: 0.92rem; line-height: 1.45; }
         .education-footer { display: flex; justify-content: space-between; gap: 16px; margin-top: 20px; color: #496766; font-size: 0.9rem; }
 
+        .stats-view { padding: 8px 0 40px; }
+        .stats-hero { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 24px; }
+        .stats-hero h2 { color: #fff; font-size: clamp(1.8rem, 4vw, 2.7rem); }
+        .stats-hero p { margin-top: 6px; color: rgba(234, 234, 234, 0.68); }
+        .stats-range { min-width: 150px; padding: 11px 14px; border: 1px solid rgba(233, 69, 96, 0.42); border-radius: 10px; background: rgba(16, 24, 43, 0.86); color: #fff; font-weight: 700; }
+        .stats-tabs { display: inline-flex; gap: 6px; margin-bottom: 18px; padding: 5px; border: 1px solid rgba(233, 69, 96, 0.24); border-radius: 12px; background: rgba(10, 14, 25, 0.48); }
+        .stats-tab { padding: 9px 14px; border: 0; border-radius: 8px; background: transparent; color: rgba(234, 234, 234, 0.68); cursor: pointer; font-weight: 700; }
+        .stats-tab.active, .stats-tab:hover { background: rgba(233, 69, 96, 0.2); color: #fff; }
+        .stats-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
+        .stats-card, .stats-panel { border: 1px solid rgba(233, 69, 96, 0.22); border-radius: 12px; background: linear-gradient(145deg, rgba(22, 33, 62, 0.92), rgba(15, 52, 96, 0.7)); box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18); }
+        .stats-card { padding: 18px; }
+        .stats-card-label { color: rgba(234, 234, 234, 0.66); font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+        .stats-card-value { display: block; margin-top: 8px; color: #fff; font-size: 2rem; }
+        .stats-layout { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr); gap: 18px; }
+        .stats-panel { padding: 20px; }
+        .stats-panel h3 { margin-bottom: 16px; color: #fff; font-size: 1.15rem; }
+        .stats-chart { min-height: 250px; display: flex; align-items: end; gap: 10px; padding: 18px 6px 0; border-bottom: 1px solid rgba(255,255,255,0.18); }
+        .stats-bar-wrap { flex: 1; min-width: 0; height: 210px; display: flex; flex-direction: column; align-items: center; justify-content: end; gap: 8px; }
+        .stats-bar { width: min(42px, 70%); min-height: 3px; border-radius: 7px 7px 0 0; background: linear-gradient(180deg, #ff8095, #e94560); transition: height 0.35s ease; }
+        .stats-bar-value, .stats-bar-label { color: rgba(234, 234, 234, 0.72); font-size: 0.75rem; }
+        .stats-bar-label { white-space: nowrap; }
+        .stats-ranking { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+        .stats-ranking-row { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .stats-ranking-row:last-child { border-bottom: 0; }
+        .stats-rank-number { color: #ff8095; font-weight: 800; }
+        .stats-game-name { overflow: hidden; color: #f4f4f4; text-overflow: ellipsis; white-space: nowrap; }
+        .stats-game-total { color: #fff; font-weight: 800; }
+        .stats-empty { color: rgba(234, 234, 234, 0.62); text-align: center; padding: 32px 10px; }
+        @media (max-width: 760px) { .stats-hero { align-items: stretch; flex-direction: column; } .stats-summary, .stats-layout { grid-template-columns: 1fr; } }
+
         @media (max-width: 760px) {
             .education-hero, .education-footer { align-items: flex-start; flex-direction: column; }
             .education-layout, .lesson-grid { grid-template-columns: 1fr; }
@@ -634,6 +664,7 @@
             display: flex;
             max-width: 100%;
             width: 100%;
+            background: #16213e;
             margin: 0;
             overflow: hidden;
             min-height: calc(100vh - 86px);
@@ -651,14 +682,14 @@
             padding: 20px;
             min-height: calc(100vh - 86px);
             position: sticky;
-            top: 86px;
+            top: 6px;
             max-height: calc(100vh - 86px);
             overflow-y: auto;
             overflow-x: hidden;
             animation: slideInLeft 0.6s ease-out;
             transition: width 0.28s ease, padding 0.28s ease;
             flex: 0 0 220px;
-            border-top: 1px solid rgba(233, 69, 96, 0.18);
+            border-top: 8px solid #16213e;
         }
 
         .sidebar-toggle {
@@ -684,8 +715,8 @@
         }
 
         body.home-shell-view .sidebar {
-            padding-top: 0;
-            border-top: none;
+            padding-top: 8px;
+            border-top: 8px solid #16213e;
         }
 
         body.home-shell-view .sidebar h3 {
@@ -694,6 +725,10 @@
         }
 
         body.workspace-shell-view .sidebar {
+            display: none;
+        }
+
+        body.stats-shell-view .sidebar {
             display: none;
         }
 
@@ -1137,14 +1172,14 @@
         }
 
         .game-button {
-            width: 100%;
-            padding: 14px 20px;
+            width: 88%;
+            padding: 10px 14px;
             background: linear-gradient(135deg, #e94560 0%, #ff5a75 100%);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 999px;
             cursor: pointer;
-            font-size: 1.2em;
+            font-size: 1em;
             font-weight: 700;
             transition: all 0.3s ease;
             position: relative;
@@ -1661,6 +1696,7 @@
             <button class="shell-nav-btn" type="button" data-shell-app="youtube">YouTube</button>
             <button class="shell-nav-btn" type="button" data-shell-app="feedback">Feedback</button>
             <button class="shell-nav-btn" id="settingsTopBtn" type="button">Settings</button>
+            <button class="shell-nav-btn" id="statsTopBtn" type="button" data-shell-target="stats">Stats</button>
         </nav>
         <div class="topbar-search" id="topbarSearchBox">
             <input type="text" id="searchInput" placeholder="Search games...">
@@ -1711,6 +1747,32 @@
                         sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-presentation allow-downloads"
                         allow="autoplay; encrypted-media; camera; microphone; clipboard-read; clipboard-write; fullscreen"
                         referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </section>
+
+            <section class="page-view stats-view" id="statsView" hidden>
+                <div class="stats-hero">
+                    <div>
+                        <h2>Game Stats</h2>
+                        <p>Track plays across the Classroom8x game library.</p>
+                    </div>
+                    <select class="stats-range" id="statsRange" aria-label="Stats time range">
+                        <option value="week">Last 7 days</option>
+                        <option value="today">Today</option>
+                    </select>
+                </div>
+                <div class="stats-tabs" role="tablist" aria-label="Stats type">
+                    <button class="stats-tab active" id="myStatsTab" type="button" role="tab" aria-selected="true">My Stats</button>
+                    <button class="stats-tab" id="globalStatsTab" type="button" role="tab" aria-selected="false">Global Stats</button>
+                </div>
+                <div class="stats-summary">
+                    <div class="stats-card"><span class="stats-card-label">All-time plays</span><strong class="stats-card-value" id="statsTotalPlays">0</strong></div>
+                    <div class="stats-card"><span class="stats-card-label">Plays today</span><strong class="stats-card-value" id="statsTodayPlays">0</strong></div>
+                    <div class="stats-card"><span class="stats-card-label">Games played</span><strong class="stats-card-value" id="statsGamesPlayed">0</strong></div>
+                </div>
+                <div class="stats-layout">
+                    <div class="stats-panel"><h3 id="statsChartTitle">Plays this week</h3><div class="stats-chart" id="statsChart"></div></div>
+                    <div class="stats-panel"><h3>Game ranking</h3><ol class="stats-ranking" id="statsRanking"></ol></div>
                 </div>
             </section>
         </main>
@@ -1803,6 +1865,8 @@
         let pageShellLoaded = document.readyState === 'complete';
         let gamesContentLoaded = false;
         let currentShellView = 'home';
+        let currentStatsData = null;
+        let currentStatsMode = 'my';
         const cloudflarePlayerCounts = new Map();
         let playerCountRefreshId = null;
 
@@ -1890,16 +1954,20 @@
         function setShellView(view) {
             currentShellView = view;
             const isHome = view === 'home';
+            const isStats = view === 'stats';
             const header = document.querySelector('.header');
             document.getElementById('homeView').hidden = !isHome;
-            document.getElementById('workspaceView').hidden = isHome;
+            document.getElementById('workspaceView').hidden = isHome || isStats;
+            document.getElementById('statsView').hidden = !isStats;
             document.getElementById('topbarSearchBox').style.display = isHome ? 'flex' : 'none';
             document.body.classList.toggle('home-shell-view', isHome);
-            document.body.classList.toggle('workspace-shell-view', !isHome);
+            document.body.classList.toggle('workspace-shell-view', !isHome && !isStats);
+            document.body.classList.toggle('stats-shell-view', isStats);
             if (isHome) {
                 header.classList.remove('header-collapsed');
                 updateHeaderCollapseButton(false);
             }
+            if (isStats) loadStats();
             updateTopbarState(view);
         }
 
@@ -2538,7 +2606,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ visitorId: getVisitorId() }),
                 keepalive: true
-            }).then(() => refreshPlayerCounts()).catch(() => {});
+            }).catch(() => {});
         }
 
         function updatePlayerCountBadges() {
@@ -2572,6 +2640,56 @@
             updatePlayerCountBadges();
         }
 
+        function getLocalStatsData() {
+            let stats = {};
+            try { stats = JSON.parse(localStorage.getItem(GAME_STATS_KEY)) || {}; } catch (error) {}
+            const games = Object.values(stats).map(stat => ({ gameId: stat.id, total: Number(stat.playCount) || 0, today: stat.lastPlayed && stat.lastPlayed.slice(0, 10) === new Date().toISOString().slice(0, 10) ? 1 : 0 }));
+            return { totalPlays: games.reduce((sum, game) => sum + game.total, 0), today: games.reduce((sum, game) => sum + game.today, 0), daily: [], games };
+        }
+
+        function getStatsGameName(gameId) {
+            return allGames.find(game => game.id === gameId)?.name || gameId;
+        }
+
+        function renderStats(data) {
+            currentStatsData = data || getLocalStatsData();
+            const range = document.getElementById('statsRange')?.value || 'week';
+            const games = [...(currentStatsData.games || [])].sort((first, second) => Number(second[range === 'today' ? 'today' : 'total'] || 0) - Number(first[range === 'today' ? 'today' : 'total'] || 0));
+            const todayTotal = Number(currentStatsData.today ?? games.reduce((sum, game) => sum + (Number(game.today) || 0), 0));
+            document.getElementById('statsTotalPlays').textContent = Number(currentStatsData.totalPlays || 0).toLocaleString();
+            document.getElementById('statsTodayPlays').textContent = todayTotal.toLocaleString();
+            document.getElementById('statsGamesPlayed').textContent = games.filter(game => Number(game.total) > 0).length.toLocaleString();
+            document.getElementById('statsChartTitle').textContent = range === 'today' ? 'Plays today' : 'Plays this week';
+
+            const chart = document.getElementById('statsChart');
+            const points = range === 'today' ? [{ date: currentStatsData.today || new Date().toISOString().slice(0, 10), plays: todayTotal }] : (currentStatsData.daily || []);
+            const max = Math.max(...points.map(point => Number(point.plays) || 0), 1);
+            chart.innerHTML = points.length ? points.map(point => {
+                const height = Math.max(3, ((Number(point.plays) || 0) / max) * 180);
+                const label = range === 'today' ? 'Today' : new Date(`${point.date}T00:00:00Z`).toLocaleDateString(undefined, { weekday: 'short' });
+                return `<div class="stats-bar-wrap"><span class="stats-bar-value">${Number(point.plays) || 0}</span><div class="stats-bar" style="height:${height}px"></div><span class="stats-bar-label">${label}</span></div>`;
+            }).join('') : '<div class="stats-empty">No play data yet.</div>';
+
+            const ranking = document.getElementById('statsRanking');
+            const rankedGames = games.filter(game => Number(game[range === 'today' ? 'today' : 'total'] || 0) > 0);
+            ranking.innerHTML = rankedGames.length ? rankedGames.map((game, index) => `<li class="stats-ranking-row"><span class="stats-rank-number">#${index + 1}</span><span class="stats-game-name">${getStatsGameName(game.gameId)}</span><span class="stats-game-total">${Number(game[range === 'today' ? 'today' : 'total'] || 0).toLocaleString()}</span></li>`).join('') : '<li class="stats-empty">No game plays recorded yet.</li>';
+        }
+
+        async function loadStats() {
+            if (currentStatsMode === 'my') {
+                renderStats(getLocalStatsData());
+                return;
+            }
+            try {
+                const response = await fetch('/api/game-stats?range=week');
+                if (!response.ok) throw new Error(`Stats request failed: ${response.status}`);
+                renderStats(await response.json());
+            } catch (error) {
+                console.warn('Could not load Cloudflare game stats:', error);
+                renderStats(getLocalStatsData());
+            }
+        }
+
         async function refreshPlayerCounts() {
             document.body.classList.add('silent-player-refresh');
             try {
@@ -2591,7 +2709,7 @@
 
         function startPlayerCountRefresh() {
             if (playerCountRefreshId) clearInterval(playerCountRefreshId);
-            playerCountRefreshId = setInterval(refreshPlayerCounts, 60000);
+            playerCountRefreshId = null;
         }
 
         // ============ END GAME PLAY TRACKING ============
@@ -2758,6 +2876,21 @@
             if (currentCategory === 'all' && currentSearch === '') {
                 const newGames = allGames.filter(game => newGameIds.includes(game.id) && !hiddenGameIds.includes(game.id));
                 if (newGames.length > 0) {
+                    htmlContent += newGames.map(game => `
+                        <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
+                            <div class="game-thumbnail">
+                                <span class="player-count" data-player-count="${game.id}" title="Play count for the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
+                                <div class="game-badge">New</div>
+                                ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
+                                <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
+                            </div>
+                            <div class="game-info">
+                                <div class="game-title">${game.name}</div>
+                                <button class="game-button" onclick="event.stopPropagation(); playGame('${game.gameUrl}', '${game.name}', '${game.id}')">Play Now</button>
+                            </div>
+                        </div>
+                    `).join('');
+
                     htmlContent += `
                         <div class="new-games-section" style="grid-column: 1 / -1; margin-top: 20px;">
                             <h3 style="color: #e94560; font-size: 1.3em; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
@@ -3048,6 +3181,24 @@
         });
 
         document.getElementById('settingsTopBtn').addEventListener('click', openSettings);
+        document.getElementById('statsTopBtn').addEventListener('click', () => setShellView('stats'));
+        document.getElementById('myStatsTab').addEventListener('click', () => {
+            currentStatsMode = 'my';
+            document.getElementById('myStatsTab').classList.add('active');
+            document.getElementById('globalStatsTab').classList.remove('active');
+            document.getElementById('myStatsTab').setAttribute('aria-selected', 'true');
+            document.getElementById('globalStatsTab').setAttribute('aria-selected', 'false');
+            loadStats();
+        });
+        document.getElementById('globalStatsTab').addEventListener('click', () => {
+            currentStatsMode = 'global';
+            document.getElementById('globalStatsTab').classList.add('active');
+            document.getElementById('myStatsTab').classList.remove('active');
+            document.getElementById('globalStatsTab').setAttribute('aria-selected', 'true');
+            document.getElementById('myStatsTab').setAttribute('aria-selected', 'false');
+            loadStats();
+        });
+        document.getElementById('statsRange').addEventListener('change', () => renderStats(currentStatsData || getLocalStatsData()));
         document.getElementById('headerCollapseToggle').addEventListener('click', toggleHeaderCollapsed);
         setShellView('home');
 

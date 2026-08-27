@@ -61,7 +61,7 @@
       "arcade",
       "action"
     ],
-    "gameUrl": "https://quizizzdevil.netlify.app/",
+    "gameUrl": "pac man/result (35).html",
     "rating": 4.8
   },
   {
@@ -134,7 +134,7 @@
     "name": "Fireboy and Watergirl 2",
     "description": "Control both heroes and solve elemental platform puzzles together.",
     "icon": "🔥",
-    "image": "https://tse1.mm.bing.net/th/id/OIP.z1paRGH-_GfJ2r1KtUxnjAHaHa?pid=Api",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVyEbk2kIE3NWxtPZzY4Omwcw2ZxFhdCrSDT7Zzf1h1wsBL-EIh0jTGWWUBQ&s",
     "categories": [
       "platformer",
       "2player"
@@ -290,7 +290,7 @@
     "name": "Raft Wars 2",
     "description": "Aim carefully, knock out your opponents, and defend your treasure.",
     "icon": "🛶",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbnTFXxtAxUszliKXRNyGuhZ6AJ99RjjXceeIPIFyVTBxucD1kgMl9H7W1Aw&s",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZGXaWEuJA24IRKc17Dzk01_euBTde_FCwXylGb4fwWy4lS1cdprG5Dr9giTs&s",
     "categories": [
       "action",
       "arcade"
