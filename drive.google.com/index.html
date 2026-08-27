@@ -1005,7 +1005,7 @@
         .game-play-overlay span { width: 58px; height: 58px; display: grid; place-items: center; border-radius: 50%; background: rgba(233, 69, 96, 0.92); color: #fff; font-size: 1.7rem; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35); }
         .game-card:hover .game-play-overlay, .game-card:focus-within .game-play-overlay { opacity: 1; }
         .game-badge { position: absolute; top: 10px; left: 10px; z-index: 4; padding: 5px 9px; border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 999px; background: rgba(233, 69, 96, 0.92); color: #fff; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; }
-        .player-count { position: absolute; right: 8px; bottom: 8px; z-index: 4; padding: 4px 7px; border-radius: 999px; background: rgba(0, 0, 0, 0.78); color: #fff; font-size: 0.7rem; font-weight: 700; white-space: nowrap; }
+        .player-count { position: absolute; top: 8px; right: 8px; z-index: 4; display: inline-flex; align-items: center; gap: 4px; padding: 4px 7px; border-radius: 999px; background: rgba(0, 0, 0, 0.78); color: #fff; font-size: 0.7rem; font-weight: 700; white-space: nowrap; }
         .info-fab-wrap { display: none; position: fixed; right: 22px; bottom: 22px; z-index: 2500; }
         body.home-shell-view:not(.game-open) .info-fab-wrap { display: block; }
         .info-fab { width: 46px; height: 46px; border: 1px solid rgba(255, 255, 255, 0.28); border-radius: 50%; background: #e94560; color: #fff; font-size: 1.35rem; font-weight: 800; cursor: help; box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35); }
@@ -2399,7 +2399,7 @@
                     if (!response.ok) return;
                     const data = await response.json();
                     document.querySelectorAll(`[data-player-count="${game.id}"]`).forEach(element => {
-                        element.textContent = `${data.players || 0} played`;
+                        element.querySelector('.player-count-number').textContent = data.players || 0;
                     });
                 } catch (error) {
                     console.warn(`Could not load player count for ${game.id}`, error);
@@ -2480,7 +2480,7 @@
                                         return `
                                             <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                                                 <div class="game-thumbnail">
-                                                    <span class="player-count" data-player-count="${game.id}">Loading...</span>
+                                                    <span class="player-count" data-player-count="${game.id}" title="Players in the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                                                     ${fixedBadge}
                                                     ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                                                     <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
@@ -2517,7 +2517,7 @@
                                     return `
                                         <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                                             <div class="game-thumbnail">
-                                                <span class="player-count" data-player-count="${game.id}">Loading...</span>
+                                                <span class="player-count" data-player-count="${game.id}" title="Players in the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                                                 ${fixedBadge}
                                                 ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                                                 <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
@@ -2547,7 +2547,7 @@
                 return `
                 <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                     <div class="game-thumbnail">
-                        <span class="player-count" data-player-count="${game.id}">Loading...</span>
+                        <span class="player-count" data-player-count="${game.id}" title="Players in the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                         ${gameBadge}
                         ${fixedBadge}
                         ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
@@ -2572,7 +2572,7 @@
                                 ${newGames.map(game => `
                                     <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                                         <div class="game-thumbnail">
-                                            <span class="player-count" data-player-count="${game.id}">Loading...</span>
+                                            <span class="player-count" data-player-count="${game.id}" title="Players in the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                                             <div class="game-badge">New</div>
                                             ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                                             <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
@@ -2608,7 +2608,7 @@
                 return `
                 <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                     <div class="game-thumbnail">
-                        <span class="player-count" data-player-count="${game.id}">Loading...</span>
+                        <span class="player-count" data-player-count="${game.id}" title="Players in the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                         ${fixedBadge}
                         ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                         <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
