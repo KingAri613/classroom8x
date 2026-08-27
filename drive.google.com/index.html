@@ -147,6 +147,56 @@
             overflow: hidden;
         }
 
+        body.classroom-calculator-mode {
+            background: #edf5f2;
+            color: #163b3a;
+        }
+
+        body.classroom-calculator-mode > :not(.education-calculator):not(.site-loader) {
+            display: none !important;
+        }
+
+        body.classroom-calculator-mode .site-loader {
+            display: none !important;
+        }
+
+        .education-calculator {
+            display: none;
+            min-height: 100vh;
+            padding: 32px 22px 44px;
+            background: radial-gradient(circle at 8% 10%, rgba(242, 178, 82, 0.28), transparent 30%), linear-gradient(135deg, #edf5f2 0%, #dcebe7 100%);
+        }
+
+        body.classroom-calculator-mode .education-calculator { display: block; }
+        .education-calculator-inner { width: min(1120px, 100%); margin: 0 auto; }
+        .education-hero { display: flex; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: 28px; }
+        .education-kicker { margin-bottom: 8px; color: #d06b32; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
+        .education-hero h1 { max-width: 680px; color: #163b3a; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(2.2rem, 5vw, 4.7rem); line-height: 0.98; }
+        .education-hero p { max-width: 440px; color: #496766; font-size: 1.05rem; line-height: 1.6; }
+        .education-layout { display: grid; grid-template-columns: minmax(300px, 0.9fr) minmax(0, 1.1fr); gap: 22px; align-items: start; }
+        .education-panel, .lesson-panel { border: 1px solid rgba(22, 59, 58, 0.14); border-radius: 14px; background: rgba(255, 255, 255, 0.76); box-shadow: 0 18px 44px rgba(22, 59, 58, 0.12); }
+        .education-panel { padding: 22px; }
+        .calculator-screen { width: 100%; min-height: 82px; margin-bottom: 16px; padding: 14px 16px; border: 1px solid rgba(22, 59, 58, 0.18); border-radius: 10px; background: #163b3a; color: #f8fbf8; font-size: clamp(1.8rem, 5vw, 2.7rem); font-weight: 700; text-align: right; overflow-wrap: anywhere; }
+        .calculator-keypad { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; }
+        .calculator-key { min-height: 54px; border: 1px solid rgba(22, 59, 58, 0.13); border-radius: 9px; background: #fff; color: #163b3a; font-size: 1.08rem; font-weight: 800; cursor: pointer; }
+        .calculator-key:hover, .calculator-key:focus-visible { border-color: #d06b32; background: #fff4e7; outline: none; }
+        .calculator-key.operator { background: #f2b252; }
+        .calculator-key.equals { background: #d06b32; color: #fff; }
+        .calculator-key.clear { background: #dcebe7; }
+        .lesson-panel { padding: 26px; }
+        .lesson-panel h2 { margin-bottom: 10px; color: #163b3a; font-family: Georgia, 'Times New Roman', serif; font-size: 1.9rem; }
+        .lesson-panel > p { margin-bottom: 20px; color: #496766; line-height: 1.55; }
+        .lesson-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+        .lesson-card { padding: 15px; border-left: 4px solid #f2b252; background: rgba(220, 235, 231, 0.7); }
+        .lesson-card strong { display: block; margin-bottom: 5px; color: #163b3a; }
+        .lesson-card span { color: #496766; font-size: 0.92rem; line-height: 1.45; }
+        .education-footer { display: flex; justify-content: space-between; gap: 16px; margin-top: 20px; color: #496766; font-size: 0.9rem; }
+
+        @media (max-width: 760px) {
+            .education-hero, .education-footer { align-items: flex-start; flex-direction: column; }
+            .education-layout, .lesson-grid { grid-template-columns: 1fr; }
+        }
+
         .site-loader {
             position: fixed;
             inset: 0;
@@ -1497,6 +1547,63 @@
     </style>
 </head>
 <body>
+    <script>
+        if (window.location.pathname === '/classroom.google.com' || window.location.pathname.startsWith('/classroom.google.com/')) {
+            document.body.classList.add('classroom-calculator-mode');
+        }
+    </script>
+    <section class="education-calculator" id="educationCalculator" aria-label="Education calculator">
+        <div class="education-calculator-inner">
+            <div class="education-hero">
+                <div>
+                    <div class="education-kicker">Classroom8x Learning Desk</div>
+                    <h1>Numbers become clearer when you can explore them.</h1>
+                </div>
+                <p>Use the calculator to test ideas, check your arithmetic, and build confidence one step at a time.</p>
+            </div>
+            <div class="education-layout">
+                <div class="education-panel">
+                    <div class="calculator-screen" id="calculatorScreen" role="status" aria-live="polite">0</div>
+                    <div class="calculator-keypad" id="calculatorKeypad">
+                        <button class="calculator-key clear" type="button" data-calculator-action="clear">Clear</button>
+                        <button class="calculator-key" type="button" data-calculator-value="(">(</button>
+                        <button class="calculator-key" type="button" data-calculator-value=")">)</button>
+                        <button class="calculator-key operator" type="button" data-calculator-value="/">÷</button>
+                        <button class="calculator-key" type="button" data-calculator-value="7">7</button>
+                        <button class="calculator-key" type="button" data-calculator-value="8">8</button>
+                        <button class="calculator-key" type="button" data-calculator-value="9">9</button>
+                        <button class="calculator-key operator" type="button" data-calculator-value="*">×</button>
+                        <button class="calculator-key" type="button" data-calculator-value="4">4</button>
+                        <button class="calculator-key" type="button" data-calculator-value="5">5</button>
+                        <button class="calculator-key" type="button" data-calculator-value="6">6</button>
+                        <button class="calculator-key operator" type="button" data-calculator-value="-">−</button>
+                        <button class="calculator-key" type="button" data-calculator-value="1">1</button>
+                        <button class="calculator-key" type="button" data-calculator-value="2">2</button>
+                        <button class="calculator-key" type="button" data-calculator-value="3">3</button>
+                        <button class="calculator-key operator" type="button" data-calculator-value="+">+</button>
+                        <button class="calculator-key" type="button" data-calculator-value="0">0</button>
+                        <button class="calculator-key" type="button" data-calculator-value=".">.</button>
+                        <button class="calculator-key clear" type="button" data-calculator-action="backspace">⌫</button>
+                        <button class="calculator-key equals" type="button" data-calculator-action="equals">Enter</button>
+                    </div>
+                    <div class="education-footer">
+                        <span>Press Enter to solve.</span>
+                        <span>Empty Enter opens the full site.</span>
+                    </div>
+                </div>
+                <div class="lesson-panel">
+                    <h2>Quick study notes</h2>
+                    <p>Try a calculation, then explain each step in your own words. That is where the learning sticks.</p>
+                    <div class="lesson-grid">
+                        <div class="lesson-card"><strong>Order of operations</strong><span>Parentheses first, then multiplication and division, then addition and subtraction.</span></div>
+                        <div class="lesson-card"><strong>Fractions</strong><span>Divide the top number by the bottom number to turn a fraction into a decimal.</span></div>
+                        <div class="lesson-card"><strong>Percentages</strong><span>To find 20% of a number, multiply it by 0.20.</span></div>
+                        <div class="lesson-card"><strong>Estimate first</strong><span>A quick estimate helps you notice an answer that does not make sense.</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
     <div class="site-loader" id="siteLoader" aria-hidden="true">
         <img src="Gif/2026-07-09.gif" alt="Loading">
         <div class="site-loader-text">Classroom8x Loading</div>
@@ -2890,6 +2997,81 @@
         document.getElementById('settingsTopBtn').addEventListener('click', openSettings);
         document.getElementById('headerCollapseToggle').addEventListener('click', toggleHeaderCollapsed);
         setShellView('home');
+
+        function showFullSiteFromCalculator() {
+            document.body.classList.remove('classroom-calculator-mode');
+        }
+
+        function setupEducationCalculator() {
+            const calculator = document.getElementById('educationCalculator');
+            const screen = document.getElementById('calculatorScreen');
+            if (!calculator || !screen || !document.body.classList.contains('classroom-calculator-mode')) return;
+
+            let expression = '';
+
+            function renderCalculator() {
+                screen.textContent = expression || '0';
+            }
+
+            function calculate() {
+                if (!expression.trim()) {
+                    showFullSiteFromCalculator();
+                    return;
+                }
+
+                if (!/^[0-9+*/().\s-]+$/.test(expression)) {
+                    screen.textContent = 'Use numbers';
+                    return;
+                }
+
+                try {
+                    const result = Function(`"use strict"; return (${expression})`)();
+                    if (!Number.isFinite(result)) throw new Error('Invalid result');
+                    expression = String(Number(result.toFixed(10)));
+                    renderCalculator();
+                } catch (error) {
+                    screen.textContent = 'Check expression';
+                }
+            }
+
+            calculator.querySelectorAll('[data-calculator-value]').forEach(button => {
+                button.addEventListener('click', () => {
+                    expression += button.dataset.calculatorValue;
+                    renderCalculator();
+                });
+            });
+
+            calculator.querySelector('[data-calculator-action="clear"]').addEventListener('click', () => {
+                expression = '';
+                renderCalculator();
+            });
+
+            calculator.querySelector('[data-calculator-action="backspace"]').addEventListener('click', () => {
+                expression = expression.slice(0, -1);
+                renderCalculator();
+            });
+
+            calculator.querySelector('[data-calculator-action="equals"]').addEventListener('click', calculate);
+
+            document.addEventListener('keydown', event => {
+                if (!document.body.classList.contains('classroom-calculator-mode')) return;
+                if (/^[0-9+*/().-]$/.test(event.key)) {
+                    expression += event.key;
+                    renderCalculator();
+                } else if (event.key === 'Backspace') {
+                    expression = expression.slice(0, -1);
+                    renderCalculator();
+                } else if (event.key === 'Enter') {
+                    event.preventDefault();
+                    calculate();
+                } else if (event.key === 'Escape') {
+                    expression = '';
+                    renderCalculator();
+                }
+            });
+        }
+
+        setupEducationCalculator();
 
         // Add keyboard shortcut for Google Classroom (global with capture phase)
         document.addEventListener('keydown', (e) => {
