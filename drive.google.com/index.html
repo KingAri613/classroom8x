@@ -1184,13 +1184,13 @@
         }
 
         .game-button:hover {
-            transform: translateY(-2px);
+            transform: translateY(-2px) scale(0.96);
             box-shadow: 0 8px 24px rgba(233, 69, 96, 0.6);
             background: linear-gradient(135deg, #ff5a75 0%, #ff7094 100%);
         }
 
         .game-button:active {
-            transform: translateY(0);
+            transform: translateY(0) scale(0.95);
         }
 
         .empty-state {
@@ -1796,6 +1796,7 @@
         let currentSoundSearch = '';
         const moreGameIds = ['basket-random', 'johnny-trigger', 'among-us'];
         const mainGameIds = ['hook-stickman', 'level-devil', 'motox-3m', 'vex-8'];
+        const excludedFromMoreGames = ['soccer-random'];
         const hiddenGameIds = ['tanks-2'];
         const newGameIds = ['player-games-1234', 'soccer-skills-world-cup', 'penalty-shootout-2', 'house-of-hazards', 'block-blast', 'motox3m-spooky-land', 'raft-wars', 'drift-boss', 'duo-survival-3', 'jetpack-joyride', 'cookie-clicker', 'idle-startup-tycoon', 'soccer-random', 'volley-random', 'getaway-shootout', 'hextris', 'funny-shooter-2'];
         const defaultGameSandbox = 'allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-presentation allow-downloads';
@@ -2631,6 +2632,7 @@
         function filterGames() {
             filteredGames = allGames.filter(game => {
                 if (moreGameIds.includes(game.id) && !mainGameIds.includes(game.id)) return false;
+                if (excludedFromMoreGames.includes(game.id)) return false;
                 const matchesCategory = currentCategory === 'all' || 
                     (game.categories && game.categories.includes(currentCategory));
                 const matchesSearch = currentSearch === '' ||
@@ -2792,7 +2794,7 @@
 
         // Render More Games section
         function renderMoreGames() {
-            const moreGames = allGames.filter(game => moreGameIds.includes(game.id) && !mainGameIds.includes(game.id) && !hiddenGameIds.includes(game.id));
+            const moreGames = allGames.filter(game => moreGameIds.includes(game.id) && !mainGameIds.includes(game.id) && !hiddenGameIds.includes(game.id) && !excludedFromMoreGames.includes(game.id));
             
             const grid = document.getElementById('moreGamesGrid');
             if (!grid) return;
