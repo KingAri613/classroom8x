@@ -1238,6 +1238,42 @@
             display: block !important;
         }
 
+        .game-loading-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 18px;
+            background: rgba(10, 14, 25, 0.78);
+            backdrop-filter: blur(6px);
+            z-index: 2001;
+            pointer-events: none;
+        }
+
+        .game-loading-overlay.visible {
+            display: flex;
+        }
+
+        .game-loading-spinner {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(255, 255, 255, 0.14);
+            border-top-color: #e94560;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .game-loading-text {
+            color: #f4f4f4;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: none;
+            text-align: center;
+        }
+
         #soundboardModal {
             display: none;
             position: fixed;
@@ -1694,6 +1730,10 @@
         <button class="modal-action close-button" onclick="closeGame()" title="Close">✕</button>
         <button class="modal-action fullscreen-button" type="button" onclick="toggleGameFullscreen()" title="Fullscreen">⛶</button>
         <button class="music-close ai-game-close" onclick="closeGame()" style="display:none;">← Back</button>
+        <div class="game-loading-overlay" id="gameLoadingOverlay" aria-live="polite">
+            <div class="game-loading-spinner" aria-hidden="true"></div>
+            <div class="game-loading-text">Loading game...</div>
+        </div>
         <iframe id="gameFrame" 
             allowfullscreen 
             webkitallowfullscreen 
@@ -1769,10 +1809,8 @@
         const loaderGifPaths = [
             'Gif/Dvd%20Screensaver%20Loading%20Error%20GIF.gif',
             'Gif/Lights%20Glow%20GIF%20by%20Erica%20Anderson.gif',
-            'Gif/Loading%20Hp%20GIF%20by%20OMEN.gif',
-            'Gif/World%20Cup%20Football%20GIF.gif'
+            'Gif/Loading%20Hp%20GIF%20by%20OMEN.gif'
         ];
-        const worldCupLoaderGif = 'Gif/World%20Cup%20Football%20GIF.gif';
 
         let activeAudioElements = [];
         let validSoundFiles = [];
@@ -1803,8 +1841,7 @@
 
             const selectedGif = loaderGifPaths[selectedIndex];
             loaderImage.src = selectedGif;
-            const showLoaderTitle = selectedGif !== worldCupLoaderGif;
-            loaderText.classList.toggle('hidden', !showLoaderTitle);
+            loaderText.classList.remove('hidden');
             loaderText.textContent = 'Classroom8x Loading';
         }
 
@@ -2780,6 +2817,18 @@
             setupLazyLoading();
         }
 
+        function setGameLoadingState(isLoading) {
+            const overlay = document.getElementById('gameLoadingOverlay');
+            if (!overlay) return;
+            overlay.classList.toggle('visible', isLoading);
+        }
+
+        const gameFrame = document.getElementById('gameFrame');
+        if (gameFrame) {
+            gameFrame.addEventListener('load', () => setGameLoadingState(false));
+            gameFrame.addEventListener('error', () => setGameLoadingState(false));
+        }
+
         function playGame(gameUrl, gameName, gameId) {
             // Check if game has warning popup (BitLife)
             const game = allGames.find(g => g.id === gameId);
@@ -2799,6 +2848,7 @@
             gameModal.classList.toggle('ai-mode', gameId === 'ai-tool');
             gameFrame.setAttribute('sandbox', defaultGameSandbox);
             gameFrame.src = '';
+            setGameLoadingState(true);
             gameModal.classList.add('active');
             document.body.classList.add('game-open');
             
@@ -2818,6 +2868,7 @@
                 const gameFrame = document.getElementById('gameFrame');
                 gameFrame.setAttribute('sandbox', defaultGameSandbox);
                 gameFrame.src = '';
+                setGameLoadingState(true);
                 document.getElementById('gameModal').classList.add('active');
                 document.body.classList.add('game-open');
                 setTimeout(() => {
@@ -2882,6 +2933,7 @@
                 const gameFrame = document.getElementById('gameFrame');
                 gameFrame.setAttribute('sandbox', defaultGameSandbox);
                 gameFrame.src = '';
+                setGameLoadingState(true);
                 document.getElementById('gameModal').classList.add('active');
                 document.body.classList.add('game-open');
                 setTimeout(() => {
@@ -2920,6 +2972,7 @@
             gameModal.classList.remove('ai-mode');
             gameFrame.setAttribute('sandbox', defaultGameSandbox);
             gameFrame.src = '';
+            setGameLoadingState(false);
             document.body.classList.remove('game-open');
             document.body.style.overflow = '';
         }
