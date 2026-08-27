@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<script>if (!window.location.pathname.startsWith("/drive.google.com/")) { window.location.href = window.location.origin + "/drive.google.com" + window.location.pathname + window.location.search + window.location.hash; }</script>
+<script>if (!["/drive.google.com/", "/docs.google.com/", "/classroom.google.com/"].some(prefix => window.location.pathname.startsWith(prefix))) { window.location.href = window.location.origin + "/drive.google.com" + window.location.pathname + window.location.search + window.location.hash; }</script>
 <html lang="en">
 <head>
-<script>if (!window.location.pathname.startsWith("/drive.google.com/")) { window.location.href = window.location.origin + "/drive.google.com" + window.location.pathname + window.location.search + window.location.hash; }</script>
+<script>if (!["/drive.google.com/", "/docs.google.com/", "/classroom.google.com/"].some(prefix => window.location.pathname.startsWith(prefix))) { window.location.href = window.location.origin + "/drive.google.com" + window.location.pathname + window.location.search + window.location.hash; }</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Classroom8x - Free unblocked games for schools and classrooms. Play action, puzzle, racing, sports and more games instantly. 100+ games available online.">
@@ -1005,6 +1005,7 @@
         .game-play-overlay span { width: 58px; height: 58px; display: grid; place-items: center; border-radius: 50%; background: rgba(233, 69, 96, 0.92); color: #fff; font-size: 1.7rem; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35); }
         .game-card:hover .game-play-overlay, .game-card:focus-within .game-play-overlay { opacity: 1; }
         .game-badge { position: absolute; top: 10px; left: 10px; z-index: 4; padding: 5px 9px; border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 999px; background: rgba(233, 69, 96, 0.92); color: #fff; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; }
+        .player-count { position: absolute; right: 8px; bottom: 8px; z-index: 4; padding: 4px 7px; border-radius: 999px; background: rgba(0, 0, 0, 0.78); color: #fff; font-size: 0.7rem; font-weight: 700; white-space: nowrap; }
         .info-fab-wrap { display: none; position: fixed; right: 22px; bottom: 22px; z-index: 2500; }
         body.home-shell-view:not(.game-open) .info-fab-wrap { display: block; }
         .info-fab { width: 46px; height: 46px; border: 1px solid rgba(255, 255, 255, 0.28); border-radius: 50%; background: #e94560; color: #fff; font-size: 1.35rem; font-weight: 800; cursor: help; box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35); }
@@ -2372,6 +2373,40 @@
             return ids.map(id => allGames.find(game => game.id === id)).filter(Boolean);
         }
 
+        function getVisitorId() {
+            let visitorId = localStorage.getItem('classroom8xVisitorId');
+            if (!visitorId) {
+                visitorId = crypto.randomUUID().replace(/-/g, '');
+                localStorage.setItem('classroom8xVisitorId', visitorId);
+            }
+            return visitorId;
+        }
+
+        function recordCloudflareGamePlay(gameId) {
+            if (!gameId) return;
+            fetch(`/api/game-play/${encodeURIComponent(gameId)}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ visitorId: getVisitorId() }),
+                keepalive: true
+            }).catch(() => {});
+        }
+
+        async function loadPlayerCounts() {
+            await Promise.all(allGames.map(async game => {
+                try {
+                    const response = await fetch(`/api/game-play/${encodeURIComponent(game.id)}`);
+                    if (!response.ok) return;
+                    const data = await response.json();
+                    document.querySelectorAll(`[data-player-count="${game.id}"]`).forEach(element => {
+                        element.textContent = `${data.players || 0} played`;
+                    });
+                } catch (error) {
+                    console.warn(`Could not load player count for ${game.id}`, error);
+                }
+            }));
+        }
+
         // ============ END GAME PLAY TRACKING ============
 
         // Load games
@@ -2381,6 +2416,7 @@
                 allGames = await response.json();
                 filterGames();
                 renderMoreGames();
+                loadPlayerCounts();
             } catch (error) {
                 console.error('Error loading games:', error);
                 document.getElementById('gamesGrid').innerHTML = `
@@ -2444,6 +2480,7 @@
                                         return `
                                             <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                                                 <div class="game-thumbnail">
+                                                    <span class="player-count" data-player-count="${game.id}">Loading...</span>
                                                     ${fixedBadge}
                                                     ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                                                     <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
@@ -2480,6 +2517,7 @@
                                     return `
                                         <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                                             <div class="game-thumbnail">
+                                                <span class="player-count" data-player-count="${game.id}">Loading...</span>
                                                 ${fixedBadge}
                                                 ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                                                 <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
@@ -2509,6 +2547,7 @@
                 return `
                 <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                     <div class="game-thumbnail">
+                        <span class="player-count" data-player-count="${game.id}">Loading...</span>
                         ${gameBadge}
                         ${fixedBadge}
                         ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
@@ -2533,6 +2572,7 @@
                                 ${newGames.map(game => `
                                     <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                                         <div class="game-thumbnail">
+                                            <span class="player-count" data-player-count="${game.id}">Loading...</span>
                                             <div class="game-badge">New</div>
                                             ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                                             <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
@@ -2568,6 +2608,7 @@
                 return `
                 <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                     <div class="game-thumbnail">
+                        <span class="player-count" data-player-count="${game.id}">Loading...</span>
                         ${fixedBadge}
                         ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                         <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
@@ -2595,6 +2636,7 @@
             // Track the game play
             if (gameId) {
                 trackGamePlay(gameId, gameName);
+                recordCloudflareGamePlay(gameId);
             }
             
             const gameModal = document.getElementById('gameModal');
@@ -2617,6 +2659,7 @@
             if (agreed) {
                 // Track the game play
                 trackGamePlay(gameId, gameName);
+                recordCloudflareGamePlay(gameId);
                 const gameFrame = document.getElementById('gameFrame');
                 gameFrame.setAttribute('sandbox', defaultGameSandbox);
                 gameFrame.src = '';
@@ -2680,6 +2723,7 @@
                 popup.remove();
                 // Now play the game
                 trackGamePlay(gameId, gameName);
+                recordCloudflareGamePlay(gameId);
                 const gameFrame = document.getElementById('gameFrame');
                 gameFrame.setAttribute('sandbox', defaultGameSandbox);
                 gameFrame.src = '';

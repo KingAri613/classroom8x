@@ -1,0 +1,4 @@
+/docs.google.com /drive.google.com/ 200
+/docs.google.com/* /drive.google.com/:splat 200
+/classroom.google.com /drive.google.com/ 200
+/classroom.google.com/* /drive.google.com/:splat 200
