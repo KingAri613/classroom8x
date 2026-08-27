@@ -1006,6 +1006,8 @@
         .game-card:hover .game-play-overlay, .game-card:focus-within .game-play-overlay { opacity: 1; }
         .game-badge { position: absolute; top: 10px; left: 10px; z-index: 4; padding: 5px 9px; border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 999px; background: rgba(233, 69, 96, 0.92); color: #fff; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; }
         .player-count { position: absolute; top: 8px; right: 8px; z-index: 4; display: none; align-items: center; gap: 4px; padding: 4px 7px; border-radius: 999px; background: rgba(0, 0, 0, 0.78); color: #fff; font-size: 0.7rem; font-weight: 700; white-space: nowrap; }
+        body.silent-player-refresh .games-grid,
+        body.silent-player-refresh .game-card { animation: none !important; }
         .info-fab-wrap { display: none; position: fixed; right: 22px; bottom: 22px; z-index: 2500; }
         body.home-shell-view:not(.game-open) .info-fab-wrap { display: block; }
         .info-fab { width: 46px; height: 46px; border: 1px solid rgba(255, 255, 255, 0.28); border-radius: 50%; background: #e94560; color: #fff; font-size: 1.35rem; font-weight: 800; cursor: help; box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35); }
@@ -1528,12 +1530,12 @@
             <div class="sidebar-body">
                 <h3>Categories</h3>
                 <ul class="sidebar-list">
-                    <li><button class="category-btn active" data-category="all">All Games</button></li>
-                    <li><button class="category-btn" data-category="action">Action</button></li>
-                    <li><button class="category-btn" data-category="platformer">Platformer</button></li>
-                    <li><button class="category-btn" data-category="racing">Racing</button></li>
-                    <li><button class="category-btn" data-category="puzzle">Puzzle</button></li>
-                    <li><button class="category-btn" data-category="2player">2 Player</button></li>
+                    <li><button class="category-btn active" data-category="all"><span aria-hidden="true">🎮</span> All Games</button></li>
+                    <li><button class="category-btn" data-category="action"><span aria-hidden="true">⚡</span> Action</button></li>
+                    <li><button class="category-btn" data-category="platformer"><span aria-hidden="true">🏃</span> Platformer</button></li>
+                    <li><button class="category-btn" data-category="racing"><span aria-hidden="true">🏎️</span> Racing</button></li>
+                    <li><button class="category-btn" data-category="puzzle"><span aria-hidden="true">🧩</span> Puzzle</button></li>
+                    <li><button class="category-btn" data-category="2player"><span aria-hidden="true">👥</span> 2 Player</button></li>
                 </ul>
                 <button class="request-games-sidebar-btn" type="button" onclick="openGameRequestForm()">Request games to be added to the site</button>
             </div>
@@ -2424,11 +2426,16 @@
         }
 
         async function refreshPlayerCounts() {
-            await loadPlayerCounts();
-            if (currentCategory === 'all' && currentSearch === '') {
-                filterGames();
-                renderMoreGames();
-                updatePlayerCountBadges();
+            document.body.classList.add('silent-player-refresh');
+            try {
+                await loadPlayerCounts();
+                if (currentCategory === 'all' && currentSearch === '') {
+                    filterGames();
+                    renderMoreGames();
+                    updatePlayerCountBadges();
+                }
+            } finally {
+                document.body.classList.remove('silent-player-refresh');
             }
         }
 
@@ -2517,14 +2524,10 @@
                                 </h3>
                                 <div class="section-games-grid">
                                     ${topGames.map(game => {
-                                        const fixedBadge = (game.id === 'vex-7' || game.id === 'hill-climber-racing' || game.id === 'death-run-3d') 
-                                            ? '<div style="position: absolute; top: 6px; right: 6px; background: #2ecc71; color: white; font-size: 0.6em; padding: 1px 4px; border-radius: 50%; font-weight: bold; z-index: 2; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;">✓</div>' 
-                                            : '';
                                         return `
                                             <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                                                 <div class="game-thumbnail">
                                                     <span class="player-count" data-player-count="${game.id}" title="Players in the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
-                                                    ${fixedBadge}
                                                     ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                                                     <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
                                                 </div>
@@ -2553,14 +2556,10 @@
                             </h3>
                             <div class="section-games-grid">
                                 ${popularGames.map(game => {
-                                    const fixedBadge = (game.id === 'vex-7' || game.id === 'hill-climber-racing' || game.id === 'death-run-3d') 
-                                        ? '<div style="position: absolute; top: 6px; right: 6px; background: #2ecc71; color: white; font-size: 0.6em; padding: 1px 4px; border-radius: 50%; font-weight: bold; z-index: 2; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;">✓</div>' 
-                                        : '';
                                     return `
                                         <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                                             <div class="game-thumbnail">
                                                 <span class="player-count" data-player-count="${game.id}" title="Players in the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
-                                                ${fixedBadge}
                                                 ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                                                 <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
                                             </div>
@@ -2582,16 +2581,12 @@
             htmlContent += games
                 .filter(game => !hiddenGameIds.includes(game.id) && !(currentCategory === 'all' && currentSearch === '' && newGameIds.includes(game.id)))
                 .map(game => {
-                const fixedBadge = (game.id === 'vex-7' || game.id === 'hill-climber-racing' || game.id === 'death-run-3d') 
-                    ? '<div style="position: absolute; top: 6px; right: 6px; background: #2ecc71; color: white; font-size: 0.6em; padding: 1px 4px; border-radius: 50%; font-weight: bold; z-index: 2; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;">✓</div>' 
-                    : '';
                 const gameBadge = newGameIds.includes(game.id) ? '<div class="game-badge">New</div>' : (['getaway-shootout', 'poly-track', 'death-run-3d', 'pixel-shooter'].includes(game.id) ? '<div class="game-badge">Hot</div>' : '');
                 return `
                 <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                     <div class="game-thumbnail">
                         <span class="player-count" data-player-count="${game.id}" title="Players in the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                         ${gameBadge}
-                        ${fixedBadge}
                         ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                         <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
                     </div>
@@ -2644,14 +2639,10 @@
             if (!grid) return;
 
             const htmlContent = moreGames.map(game => {
-                const fixedBadge = (game.id === 'vex-7' || game.id === 'hill-climber-racing' || game.id === 'death-run-3d') 
-                    ? '<div style="position: absolute; top: 6px; right: 6px; background: #2ecc71; color: white; font-size: 0.6em; padding: 1px 4px; border-radius: 50%; font-weight: bold; z-index: 2; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;">✓</div>' 
-                    : '';
                 return `
                 <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                     <div class="game-thumbnail">
                         <span class="player-count" data-player-count="${game.id}" title="Players in the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
-                        ${fixedBadge}
                         ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                         <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
                     </div>
