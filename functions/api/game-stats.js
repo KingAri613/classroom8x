@@ -16,10 +16,9 @@ export async function onRequestGet(context) {
 
   const [totalResult, todayResult, dailyResult, gamesResult] = await Promise.all([
     context.env.DB.prepare(`
-      SELECT COUNT(*) AS periodPlays
+      SELECT COUNT(*) AS totalPlays
       FROM game_plays
-      WHERE played_at >= ?
-    `).bind(rangeStart).first(),
+    `).first(),
     context.env.DB.prepare(`
       SELECT COUNT(*) AS todayPlays
       FROM game_plays
@@ -48,19 +47,19 @@ export async function onRequestGet(context) {
   try {
     [minutesResult, gameMinutesResult] = await Promise.all([
       context.env.DB.prepare(`
-        SELECT COALESCE(SUM(CASE WHEN played_at >= ? THEN duration_seconds ELSE 0 END), 0) AS totalSeconds
+        SELECT COALESCE(SUM(duration_seconds), 0) AS totalSeconds
         FROM game_play_sessions
-      `).bind(rangeStart).first(),
+      `).first(),
       context.env.DB.prepare(`
-        SELECT game_id AS gameId, COALESCE(SUM(CASE WHEN played_at >= ? THEN duration_seconds ELSE 0 END), 0) AS totalSeconds
+        SELECT game_id AS gameId, COALESCE(SUM(duration_seconds), 0) AS totalSeconds
         FROM game_play_sessions
         GROUP BY game_id
-      `).bind(rangeStart).all()
+      `).all()
     ]);
   } catch (error) {
     console.warn('game_play_sessions is unavailable; returning zero minutes', error);
   }
-  const gameMinutes = new Map((gameMinutesResult.results || []).map(row => [row.gameId, Math.round((Number(row.totalSeconds) || 0) / 60)]));
+  const gameMinutes = new Map((gameMinutesResult.results || []).map(row => [row.gameId, Math.round((Number(row.totalSeconds) || 0) / 6) / 10]));
 
   const dailyCounts = new Map((dailyResult.results || []).map(row => [row.date, Number(row.plays) || 0]));
   const daily = range === 'all'
@@ -74,10 +73,10 @@ export async function onRequestGet(context) {
   }
 
   return json({
-    totalPlays: Number(totalResult?.periodPlays) || 0,
+    totalPlays: Number(totalResult?.totalPlays) || 0,
     today: Number(todayResult?.todayPlays) || 0,
     todayDate: new Date(dayStart * 1000).toISOString().slice(0, 10),
-    totalMinutes: Math.round((Number(minutesResult?.totalSeconds) || 0) / 60),
+    totalMinutes: Math.round((Number(minutesResult?.totalSeconds) || 0) / 6) / 10,
     daily,
     games: (gamesResult.results || []).map(row => ({
       gameId: row.gameId,
