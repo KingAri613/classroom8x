@@ -2732,7 +2732,7 @@
                 renderStats(globalStatsCache);
             } catch (error) {
                 console.warn('Could not load Cloudflare game stats:', error);
-                renderStats(getLocalStatsData());
+                renderStats({ totalPlays: 0, today: 0, totalMinutes: 0, daily: [], games: [] });
             }
         }
 

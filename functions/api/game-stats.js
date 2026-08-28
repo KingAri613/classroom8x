@@ -13,7 +13,7 @@ export async function onRequestGet(context) {
   const dayStart = now - (now % 86400);
   const weekStart = dayStart - (6 * 86400);
 
-  const [totalResult, todayResult, dailyResult, gamesResult, minutesResult] = await Promise.all([
+  const [totalResult, todayResult, dailyResult, gamesResult] = await Promise.all([
     context.env.DB.prepare(`
       SELECT COUNT(*) AS totalPlays
       FROM game_plays
@@ -37,18 +37,26 @@ export async function onRequestGet(context) {
       FROM game_plays
       GROUP BY game_id
       ORDER BY total DESC, game_id ASC
-    `).bind(dayStart).all(),
-    context.env.DB.prepare(`
-      SELECT COALESCE(SUM(duration_seconds), 0) AS totalSeconds
-      FROM game_play_sessions
-    `).first()
+    `).bind(dayStart).all()
   ]);
 
-  const gameMinutesResult = await context.env.DB.prepare(`
-    SELECT game_id AS gameId, COALESCE(SUM(duration_seconds), 0) AS totalSeconds
-    FROM game_play_sessions
-    GROUP BY game_id
-  `).all();
+  let minutesResult = null;
+  let gameMinutesResult = { results: [] };
+  try {
+    [minutesResult, gameMinutesResult] = await Promise.all([
+      context.env.DB.prepare(`
+        SELECT COALESCE(SUM(duration_seconds), 0) AS totalSeconds
+        FROM game_play_sessions
+      `).first(),
+      context.env.DB.prepare(`
+        SELECT game_id AS gameId, COALESCE(SUM(duration_seconds), 0) AS totalSeconds
+        FROM game_play_sessions
+        GROUP BY game_id
+      `).all()
+    ]);
+  } catch (error) {
+    console.warn('game_play_sessions is unavailable; returning zero minutes', error);
+  }
   const gameMinutes = new Map((gameMinutesResult.results || []).map(row => [row.gameId, Math.round((Number(row.totalSeconds) || 0) / 60)]));
 
   const dailyCounts = new Map((dailyResult.results || []).map(row => [row.date, Number(row.plays) || 0]));
