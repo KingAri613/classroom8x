@@ -16,9 +16,10 @@ export async function onRequestGet(context) {
 
   const [totalResult, todayResult, dailyResult, gamesResult] = await Promise.all([
     context.env.DB.prepare(`
-      SELECT COUNT(*) AS totalPlays
+      SELECT COUNT(*) AS periodPlays
       FROM game_plays
-    `).first(),
+      WHERE played_at >= ?
+    `).bind(rangeStart).first(),
     context.env.DB.prepare(`
       SELECT COUNT(*) AS todayPlays
       FROM game_plays
@@ -47,14 +48,14 @@ export async function onRequestGet(context) {
   try {
     [minutesResult, gameMinutesResult] = await Promise.all([
       context.env.DB.prepare(`
-        SELECT COALESCE(SUM(duration_seconds), 0) AS totalSeconds
+        SELECT COALESCE(SUM(CASE WHEN played_at >= ? THEN duration_seconds ELSE 0 END), 0) AS totalSeconds
         FROM game_play_sessions
-      `).first(),
+      `).bind(rangeStart).first(),
       context.env.DB.prepare(`
-        SELECT game_id AS gameId, COALESCE(SUM(duration_seconds), 0) AS totalSeconds
+        SELECT game_id AS gameId, COALESCE(SUM(CASE WHEN played_at >= ? THEN duration_seconds ELSE 0 END), 0) AS totalSeconds
         FROM game_play_sessions
         GROUP BY game_id
-      `).all()
+      `).bind(rangeStart).all()
     ]);
   } catch (error) {
     console.warn('game_play_sessions is unavailable; returning zero minutes', error);
@@ -73,7 +74,7 @@ export async function onRequestGet(context) {
   }
 
   return json({
-    totalPlays: Number(totalResult?.totalPlays) || 0,
+    totalPlays: Number(totalResult?.periodPlays) || 0,
     today: Number(todayResult?.todayPlays) || 0,
     todayDate: new Date(dayStart * 1000).toISOString().slice(0, 10),
     totalMinutes: Math.round((Number(minutesResult?.totalSeconds) || 0) / 60),

@@ -32,6 +32,14 @@ export async function onRequestPost(context) {
   if (durationSeconds > 0) {
     if (durationSeconds > 24 * 60 * 60) return json({ error: 'Invalid duration' }, 400);
     await context.env.DB.prepare(`
+      CREATE TABLE IF NOT EXISTS game_play_sessions (
+        game_id TEXT NOT NULL,
+        visitor_id TEXT NOT NULL,
+        played_at INTEGER NOT NULL,
+        duration_seconds INTEGER NOT NULL
+      )
+    `).run();
+    await context.env.DB.prepare(`
       INSERT INTO game_play_sessions (game_id, visitor_id, played_at, duration_seconds)
       VALUES (?, ?, ?, ?)
     `).bind(gameId, visitorId, Math.floor(Date.now() / 1000), durationSeconds).run();
