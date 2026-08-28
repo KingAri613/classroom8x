@@ -1092,6 +1092,7 @@
         .game-play-overlay span { width: 58px; height: 58px; display: grid; place-items: center; border-radius: 50%; background: rgba(233, 69, 96, 0.92); color: #fff; font-size: 1.7rem; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35); }
         .game-card:hover .game-play-overlay, .game-card:focus-within .game-play-overlay { opacity: 1; }
         .game-badge { position: absolute; top: 10px; left: 10px; z-index: 4; padding: 5px 9px; border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 999px; background: rgba(233, 69, 96, 0.92); color: #fff; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; }
+        .game-badge.broken { background: rgba(92, 96, 112, 0.96); border-color: rgba(255, 255, 255, 0.32); }
         .player-count { position: absolute; top: 8px; right: 8px; z-index: 4; display: none; align-items: center; gap: 4px; padding: 4px 7px; border-radius: 999px; background: rgba(0, 0, 0, 0.78); color: #fff; font-size: 0.7rem; font-weight: 700; white-space: nowrap; }
         body.silent-player-refresh .games-grid,
         body.silent-player-refresh .game-card { animation: none !important; }
@@ -1863,6 +1864,7 @@
         const moreGameIds = ['basket-random', 'johnny-trigger'];
         const mainGameIds = ['hook-stickman', 'level-devil', 'motox-3m', 'vex-8'];
         const hiddenGameIds = ['tanks-2'];
+        const brokenGameIds = ['temple-run-2'];
         const newGameIds = ['player-games-1234', 'soccer-skills-world-cup', 'penalty-shootout-2', 'house-of-hazards', 'block-blast', 'motox3m-spooky-land', 'raft-wars', 'drift-boss', 'duo-survival-3', 'jetpack-joyride', 'cookie-clicker', 'idle-startup-tycoon', 'soccer-random', 'volley-random', 'getaway-shootout', 'hextris', 'funny-shooter-2'];
         const defaultGameSandbox = 'allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-presentation allow-downloads';
         const liveSportUrl = 'https://cube-trove-api.lovable.app/';
@@ -2820,6 +2822,7 @@
             const gameLimit = Number(getComputedStyle(document.documentElement).getPropertyValue('--game-columns')) || 5;
             const gamesWithCounts = allGames
                 .filter(game => !hiddenGameIds.includes(game.id))
+                .filter(game => !brokenGameIds.includes(game.id))
                 .filter(game => cloudflarePlayerCounts.has(game.id) && cloudflarePlayerCounts.get(game.id) > 0)
                 .sort((firstGame, secondGame) => cloudflarePlayerCounts.get(secondGame.id) - cloudflarePlayerCounts.get(firstGame.id));
 
@@ -2913,7 +2916,9 @@
             htmlContent += games
                 .filter(game => !hiddenGameIds.includes(game.id) && !(currentCategory === 'all' && currentSearch === '' && newGameIds.includes(game.id)))
                 .map(game => {
-                const gameBadge = newGameIds.includes(game.id) ? '<div class="game-badge">New</div>' : '';
+                const gameBadge = brokenGameIds.includes(game.id)
+                    ? '<div class="game-badge broken">Currently broken</div>'
+                    : newGameIds.includes(game.id) ? '<div class="game-badge">New</div>' : '';
                 return `
                 <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                     <div class="game-thumbnail">
