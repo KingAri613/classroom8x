@@ -16,9 +16,10 @@ export async function onRequestGet(context) {
 
   const [totalResult, todayResult, dailyResult, gamesResult] = await Promise.all([
     context.env.DB.prepare(`
-      SELECT COUNT(*) AS totalPlays
+      SELECT COUNT(*) AS totalPlays,
+             SUM(CASE WHEN played_at >= ? THEN 1 ELSE 0 END) AS periodPlays
       FROM game_plays
-    `).first(),
+    `).bind(rangeStart).first(),
     context.env.DB.prepare(`
       SELECT COUNT(*) AS todayPlays
       FROM game_plays
@@ -74,6 +75,7 @@ export async function onRequestGet(context) {
 
   return json({
     totalPlays: Number(totalResult?.totalPlays) || 0,
+    periodPlays: Number(totalResult?.periodPlays) || 0,
     today: Number(todayResult?.todayPlays) || 0,
     todayDate: new Date(dayStart * 1000).toISOString().slice(0, 10),
     totalMinutes: Math.round((Number(minutesResult?.totalSeconds) || 0) / 6) / 10,
