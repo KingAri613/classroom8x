@@ -2692,11 +2692,15 @@
             return allGames.find(game => game.id === gameId)?.name || gameId;
         }
 
+        function getStatsMetric(game, metric) {
+            return Number(game[metric] ?? (metric === 'period' ? game.total : 0)) || 0;
+        }
+
         function renderStats(data) {
             currentStatsData = data || getLocalStatsData();
             const range = document.getElementById('statsRange')?.value || 'week';
             const metric = range === 'today' ? 'today' : range === 'all' ? 'total' : 'period';
-            const games = [...(currentStatsData.games || [])].sort((first, second) => Number(second[metric] || 0) - Number(first[metric] || 0));
+            const games = [...(currentStatsData.games || [])].sort((first, second) => getStatsMetric(second, metric) - getStatsMetric(first, metric));
             const todayTotal = Number(currentStatsData.today ?? games.reduce((sum, game) => sum + (Number(game.today) || 0), 0));
             document.getElementById('statsTotalPlays').textContent = Number(currentStatsData.totalPlays || 0).toLocaleString();
             document.getElementById('statsTodayPlays').textContent = todayTotal.toLocaleString();
@@ -2715,8 +2719,8 @@
             }).join('') : '<div class="stats-empty">No play data yet.</div>';
 
             const ranking = document.getElementById('statsRanking');
-            const rankedGames = games.filter(game => Number(game[metric] || 0) > 0);
-            ranking.innerHTML = rankedGames.length ? rankedGames.map((game, index) => `<li class="stats-ranking-row"><span class="stats-rank-number">#${index + 1}</span><span class="stats-game-name">${getStatsGameName(game.gameId)}</span><span class="stats-game-total">${Number(game[metric] || 0).toLocaleString()}</span></li>`).join('') : '<li class="stats-empty">No game plays recorded yet.</li>';
+            const rankedGames = games.filter(game => getStatsMetric(game, metric) > 0);
+            ranking.innerHTML = rankedGames.length ? rankedGames.map((game, index) => `<li class="stats-ranking-row"><span class="stats-rank-number">#${index + 1}</span><span class="stats-game-name">${getStatsGameName(game.gameId)}</span><span class="stats-game-total">${getStatsMetric(game, metric).toLocaleString()}</span></li>`).join('') : '<li class="stats-empty">No game plays recorded yet.</li>';
         }
 
         async function loadStats() {
