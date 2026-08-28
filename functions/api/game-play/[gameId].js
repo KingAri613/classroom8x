@@ -28,6 +28,16 @@ export async function onRequestPost(context) {
     return json({ error: 'Invalid visitor ID' }, 400);
   }
 
+  const durationSeconds = Math.floor(Number(body.durationSeconds) || 0);
+  if (durationSeconds > 0) {
+    if (durationSeconds > 24 * 60 * 60) return json({ error: 'Invalid duration' }, 400);
+    await context.env.DB.prepare(`
+      INSERT INTO game_play_sessions (game_id, visitor_id, played_at, duration_seconds)
+      VALUES (?, ?, ?, ?)
+    `).bind(gameId, visitorId, Math.floor(Date.now() / 1000), durationSeconds).run();
+    return json({ success: true });
+  }
+
   await context.env.DB.prepare(`
     INSERT INTO game_plays (game_id, visitor_id, played_at)
     VALUES (?, ?, ?)

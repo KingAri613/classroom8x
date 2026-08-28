@@ -200,7 +200,7 @@
         .stats-tabs { display: inline-flex; gap: 6px; margin-bottom: 18px; padding: 5px; border: 1px solid rgba(233, 69, 96, 0.24); border-radius: 12px; background: rgba(10, 14, 25, 0.48); }
         .stats-tab { padding: 9px 14px; border: 0; border-radius: 8px; background: transparent; color: rgba(234, 234, 234, 0.68); cursor: pointer; font-weight: 700; }
         .stats-tab.active, .stats-tab:hover { background: rgba(233, 69, 96, 0.2); color: #fff; }
-        .stats-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
+        .stats-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
         .stats-card, .stats-panel { border: 1px solid rgba(233, 69, 96, 0.22); border-radius: 12px; background: linear-gradient(145deg, rgba(22, 33, 62, 0.92), rgba(15, 52, 96, 0.7)); box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18); }
         .stats-card { padding: 18px; }
         .stats-card-label { color: rgba(234, 234, 234, 0.66); font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
@@ -220,6 +220,7 @@
         .stats-game-name { overflow: hidden; color: #f4f4f4; text-overflow: ellipsis; white-space: nowrap; }
         .stats-game-total { color: #fff; font-weight: 800; }
         .stats-empty { color: rgba(234, 234, 234, 0.62); text-align: center; padding: 32px 10px; }
+        @media (max-width: 900px) { .stats-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
         @media (max-width: 760px) { .stats-hero { align-items: stretch; flex-direction: column; } .stats-summary, .stats-layout { grid-template-columns: 1fr; } }
 
         @media (max-width: 760px) {
@@ -1769,6 +1770,7 @@
                     <div class="stats-card"><span class="stats-card-label">All-time plays</span><strong class="stats-card-value" id="statsTotalPlays">0</strong></div>
                     <div class="stats-card"><span class="stats-card-label">Plays today</span><strong class="stats-card-value" id="statsTodayPlays">0</strong></div>
                     <div class="stats-card"><span class="stats-card-label">Games played</span><strong class="stats-card-value" id="statsGamesPlayed">0</strong></div>
+                    <div class="stats-card"><span class="stats-card-label">Minutes played</span><strong class="stats-card-value" id="statsTotalMinutes">0</strong></div>
                 </div>
                 <div class="stats-layout">
                     <div class="stats-panel"><h3 id="statsChartTitle">Plays this week</h3><div class="stats-chart" id="statsChart"></div></div>
@@ -1867,6 +1869,9 @@
         let currentShellView = 'home';
         let currentStatsData = null;
         let currentStatsMode = 'global';
+        let activeGameSession = null;
+        let globalStatsCache = null;
+        let globalStatsCacheTime = 0;
         const cloudflarePlayerCounts = new Map();
         let playerCountRefreshId = null;
 
@@ -2535,6 +2540,7 @@
 
         // ============ GAME PLAY TRACKING ============
         const GAME_STATS_KEY = 'classroom8x_game_stats';
+        const GAME_MINUTES_KEY = 'classroom8x_game_minutes';
 
         // Track a game play
         function trackGamePlay(gameId, gameName) {
@@ -2609,6 +2615,37 @@
             }).catch(() => {});
         }
 
+        function recordCloudflareGameDuration(gameId, durationSeconds) {
+            if (!gameId || durationSeconds < 1) return;
+            fetch(`/api/game-play/${encodeURIComponent(gameId)}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ visitorId: getVisitorId(), durationSeconds }),
+                keepalive: true
+            }).catch(() => {});
+        }
+
+        function startGameSession(gameId) {
+            if (!gameId) return;
+            finishGameSession();
+            activeGameSession = { gameId, startedAt: Date.now() };
+        }
+
+        function finishGameSession() {
+            if (!activeGameSession) return;
+            const session = activeGameSession;
+            activeGameSession = null;
+            const durationSeconds = Math.max(0, Math.floor((Date.now() - session.startedAt) / 1000));
+            if (durationSeconds < 1) return;
+
+            try {
+                const minutes = JSON.parse(localStorage.getItem(GAME_MINUTES_KEY)) || {};
+                minutes[session.gameId] = (Number(minutes[session.gameId]) || 0) + durationSeconds;
+                localStorage.setItem(GAME_MINUTES_KEY, JSON.stringify(minutes));
+            } catch (error) {}
+            recordCloudflareGameDuration(session.gameId, durationSeconds);
+        }
+
         function updatePlayerCountBadges() {
             document.querySelectorAll('[data-player-count]').forEach(element => {
                 const gameId = element.dataset.playerCount;
@@ -2627,24 +2664,26 @@
         }
 
         async function loadPlayerCounts() {
-            await Promise.all(allGames.map(async game => {
-                try {
-                    const response = await fetch(`/api/game-play/${encodeURIComponent(game.id)}`);
-                    if (!response.ok) return;
-                    const data = await response.json();
-                    cloudflarePlayerCounts.set(game.id, Number(data.players) || 0);
-                } catch (error) {
-                    console.warn(`Could not load player count for ${game.id}`, error);
-                }
-            }));
+            try {
+                const response = await fetch('/api/game-play');
+                if (!response.ok) throw new Error(`Player count request failed: ${response.status}`);
+                const data = await response.json();
+                Object.entries(data.games || {}).forEach(([gameId, players]) => {
+                    cloudflarePlayerCounts.set(gameId, Number(players) || 0);
+                });
+            } catch (error) {
+                console.warn('Could not load player counts:', error);
+            }
             updatePlayerCountBadges();
         }
 
         function getLocalStatsData() {
             let stats = {};
+            let minutes = {};
             try { stats = JSON.parse(localStorage.getItem(GAME_STATS_KEY)) || {}; } catch (error) {}
-            const games = Object.values(stats).map(stat => ({ gameId: stat.id, total: Number(stat.playCount) || 0, today: stat.lastPlayed && stat.lastPlayed.slice(0, 10) === new Date().toISOString().slice(0, 10) ? 1 : 0 }));
-            return { totalPlays: games.reduce((sum, game) => sum + game.total, 0), today: games.reduce((sum, game) => sum + game.today, 0), daily: [], games };
+            try { minutes = JSON.parse(localStorage.getItem(GAME_MINUTES_KEY)) || {}; } catch (error) {}
+            const games = Object.values(stats).map(stat => ({ gameId: stat.id, total: Number(stat.playCount) || 0, today: stat.lastPlayed && stat.lastPlayed.slice(0, 10) === new Date().toISOString().slice(0, 10) ? 1 : 0, minutes: Math.round((Number(minutes[stat.id]) || 0) / 60) }));
+            return { totalPlays: games.reduce((sum, game) => sum + game.total, 0), today: games.reduce((sum, game) => sum + game.today, 0), totalMinutes: games.reduce((sum, game) => sum + game.minutes, 0), daily: [], games };
         }
 
         function getStatsGameName(gameId) {
@@ -2659,10 +2698,11 @@
             document.getElementById('statsTotalPlays').textContent = Number(currentStatsData.totalPlays || 0).toLocaleString();
             document.getElementById('statsTodayPlays').textContent = todayTotal.toLocaleString();
             document.getElementById('statsGamesPlayed').textContent = games.filter(game => Number(game.total) > 0).length.toLocaleString();
+            document.getElementById('statsTotalMinutes').textContent = Number(currentStatsData.totalMinutes || games.reduce((sum, game) => sum + (Number(game.minutes) || 0), 0)).toLocaleString();
             document.getElementById('statsChartTitle').textContent = range === 'today' ? 'Plays today' : 'Plays this week';
 
             const chart = document.getElementById('statsChart');
-            const points = range === 'today' ? [{ date: currentStatsData.today || new Date().toISOString().slice(0, 10), plays: todayTotal }] : (currentStatsData.daily || []);
+            const points = range === 'today' ? [{ date: currentStatsData.todayDate || new Date().toISOString().slice(0, 10), plays: todayTotal }] : (currentStatsData.daily || []);
             const max = Math.max(...points.map(point => Number(point.plays) || 0), 1);
             chart.innerHTML = points.length ? points.map(point => {
                 const height = Math.max(3, ((Number(point.plays) || 0) / max) * 180);
@@ -2680,10 +2720,16 @@
                 renderStats(getLocalStatsData());
                 return;
             }
+            if (globalStatsCache && Date.now() - globalStatsCacheTime < 300000) {
+                renderStats(globalStatsCache);
+                return;
+            }
             try {
                 const response = await fetch('/api/game-stats?range=week');
                 if (!response.ok) throw new Error(`Stats request failed: ${response.status}`);
-                renderStats(await response.json());
+                globalStatsCache = await response.json();
+                globalStatsCacheTime = Date.now();
+                renderStats(globalStatsCache);
             } catch (error) {
                 console.warn('Could not load Cloudflare game stats:', error);
                 renderStats(getLocalStatsData());
@@ -2982,6 +3028,7 @@
             gameFrame.setAttribute('sandbox', defaultGameSandbox);
             gameFrame.src = '';
             setGameLoadingState(true);
+            startGameSession(gameId);
             gameModal.classList.add('active');
             document.body.classList.add('game-open');
             
@@ -3002,6 +3049,7 @@
                 gameFrame.setAttribute('sandbox', defaultGameSandbox);
                 gameFrame.src = '';
                 setGameLoadingState(true);
+                startGameSession(gameId);
                 document.getElementById('gameModal').classList.add('active');
                 document.body.classList.add('game-open');
                 setTimeout(() => {
@@ -3067,6 +3115,7 @@
                 gameFrame.setAttribute('sandbox', defaultGameSandbox);
                 gameFrame.src = '';
                 setGameLoadingState(true);
+                startGameSession(gameId);
                 document.getElementById('gameModal').classList.add('active');
                 document.body.classList.add('game-open');
                 setTimeout(() => {
@@ -3106,9 +3155,12 @@
             gameFrame.setAttribute('sandbox', defaultGameSandbox);
             gameFrame.src = '';
             setGameLoadingState(false);
+            finishGameSession();
             document.body.classList.remove('game-open');
             document.body.style.overflow = '';
         }
+
+        window.addEventListener('pagehide', finishGameSession);
 
         document.getElementById('searchInput').addEventListener('input', (e) => {
             showHomeView();
