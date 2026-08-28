@@ -11,7 +11,8 @@ function json(data, status = 200) {
 export async function onRequestGet(context) {
   const now = Math.floor(Date.now() / 1000);
   const dayStart = now - (now % 86400);
-  const weekStart = dayStart - (6 * 86400);
+  const range = new URL(context.request.url).searchParams.get('range') || 'week';
+  const rangeStart = range === 'today' ? dayStart : range === 'month' ? dayStart - (29 * 86400) : range === 'all' ? 0 : dayStart - (6 * 86400);
 
   const [totalResult, todayResult, dailyResult, gamesResult] = await Promise.all([
     context.env.DB.prepare(`
@@ -29,15 +30,16 @@ export async function onRequestGet(context) {
       WHERE played_at >= ?
       GROUP BY date
       ORDER BY date ASC
-    `).bind(weekStart).all(),
+    `).bind(rangeStart).all(),
     context.env.DB.prepare(`
       SELECT game_id AS gameId,
              COUNT(*) AS total,
-             SUM(CASE WHEN played_at >= ? THEN 1 ELSE 0 END) AS today
+             SUM(CASE WHEN played_at >= ? THEN 1 ELSE 0 END) AS today,
+             SUM(CASE WHEN played_at >= ? THEN 1 ELSE 0 END) AS period
       FROM game_plays
       GROUP BY game_id
       ORDER BY total DESC, game_id ASC
-    `).bind(dayStart).all()
+    `).bind(dayStart, rangeStart).all()
   ]);
 
   let minutesResult = null;
@@ -60,10 +62,15 @@ export async function onRequestGet(context) {
   const gameMinutes = new Map((gameMinutesResult.results || []).map(row => [row.gameId, Math.round((Number(row.totalSeconds) || 0) / 60)]));
 
   const dailyCounts = new Map((dailyResult.results || []).map(row => [row.date, Number(row.plays) || 0]));
-  const daily = Array.from({ length: 7 }, (_, index) => {
-    const date = new Date((weekStart + (index * 86400)) * 1000).toISOString().slice(0, 10);
-    return { date, plays: dailyCounts.get(date) || 0 };
-  });
+  const daily = range === 'all'
+    ? [...dailyCounts.entries()].map(([date, plays]) => ({ date, plays }))
+    : [];
+  if (range !== 'all') {
+    for (let timestamp = rangeStart; timestamp <= dayStart; timestamp += 86400) {
+      const date = new Date(timestamp * 1000).toISOString().slice(0, 10);
+      daily.push({ date, plays: dailyCounts.get(date) || 0 });
+    }
+  }
 
   return json({
     totalPlays: Number(totalResult?.totalPlays) || 0,
@@ -75,6 +82,7 @@ export async function onRequestGet(context) {
       gameId: row.gameId,
       total: Number(row.total) || 0,
       today: Number(row.today) || 0,
+      period: Number(row.period) || 0,
       minutes: gameMinutes.get(row.gameId) || 0
     }))
   });

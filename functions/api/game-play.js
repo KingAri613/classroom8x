@@ -11,7 +11,7 @@ function json(data, status = 200) {
 export async function onRequestGet(context) {
   const cutoff = Math.floor(Date.now() / 1000) - (30 * 24 * 60 * 60);
   const result = await context.env.DB.prepare(`
-    SELECT game_id AS gameId, COUNT(DISTINCT visitor_id) AS players
+    SELECT game_id AS gameId, COUNT(*) AS players
     FROM game_plays
     WHERE played_at >= ?
     GROUP BY game_id

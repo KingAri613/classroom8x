@@ -52,7 +52,7 @@ export async function onRequestGet(context) {
 
   const cutoff = Math.floor(Date.now() / 1000) - (30 * 24 * 60 * 60);
   const result = await context.env.DB.prepare(`
-    SELECT COUNT(DISTINCT visitor_id) AS players
+    SELECT COUNT(*) AS players
     FROM game_plays
     WHERE game_id = ? AND played_at >= ?
   `).bind(gameId, cutoff).first();

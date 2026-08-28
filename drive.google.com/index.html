@@ -1758,8 +1758,10 @@
                         <p>Track plays across the Classroom8x game library.</p>
                     </div>
                     <select class="stats-range" id="statsRange" aria-label="Stats time range">
-                        <option value="week">Last 7 days</option>
                         <option value="today">Today</option>
+                        <option value="week" selected>Last 7 days</option>
+                        <option value="month">Last 30 days</option>
+                        <option value="all">All time</option>
                     </select>
                 </div>
                 <div class="stats-tabs" role="tablist" aria-label="Stats type">
@@ -1770,7 +1772,7 @@
                     <div class="stats-card"><span class="stats-card-label">All-time plays</span><strong class="stats-card-value" id="statsTotalPlays">0</strong></div>
                     <div class="stats-card"><span class="stats-card-label">Plays today</span><strong class="stats-card-value" id="statsTodayPlays">0</strong></div>
                     <div class="stats-card"><span class="stats-card-label">Games played</span><strong class="stats-card-value" id="statsGamesPlayed">0</strong></div>
-                    <div class="stats-card"><span class="stats-card-label">Minutes played</span><strong class="stats-card-value" id="statsTotalMinutes">0</strong></div>
+                    <div class="stats-card"><span class="stats-card-label">All-time minutes</span><strong class="stats-card-value" id="statsTotalMinutes">0</strong></div>
                 </div>
                 <div class="stats-layout">
                     <div class="stats-panel"><h3 id="statsChartTitle">Plays this week</h3><div class="stats-chart" id="statsChart"></div></div>
@@ -1870,8 +1872,8 @@
         let currentStatsData = null;
         let currentStatsMode = 'global';
         let activeGameSession = null;
-        let globalStatsCache = null;
-        let globalStatsCacheTime = 0;
+        const globalStatsCache = new Map();
+        const globalStatsCacheTime = new Map();
         const cloudflarePlayerCounts = new Map();
         let playerCountRefreshId = null;
 
@@ -2654,8 +2656,8 @@
                 if (players > 0) {
                     const formattedPlayers = players.toLocaleString();
                     element.style.display = 'inline-flex';
-                    element.title = `${formattedPlayers} played in the last 30 days`;
-                    element.setAttribute('aria-label', `${formattedPlayers} played in the last 30 days`);
+                    element.title = `${formattedPlayers} plays in the last 30 days`;
+                    element.setAttribute('aria-label', `${formattedPlayers} plays in the last 30 days`);
                     numberElement.textContent = formattedPlayers;
                 } else {
                     element.style.display = 'none';
@@ -2693,13 +2695,15 @@
         function renderStats(data) {
             currentStatsData = data || getLocalStatsData();
             const range = document.getElementById('statsRange')?.value || 'week';
-            const games = [...(currentStatsData.games || [])].sort((first, second) => Number(second[range === 'today' ? 'today' : 'total'] || 0) - Number(first[range === 'today' ? 'today' : 'total'] || 0));
+            const metric = range === 'today' ? 'today' : range === 'all' ? 'total' : 'period';
+            const games = [...(currentStatsData.games || [])].sort((first, second) => Number(second[metric] || 0) - Number(first[metric] || 0));
             const todayTotal = Number(currentStatsData.today ?? games.reduce((sum, game) => sum + (Number(game.today) || 0), 0));
             document.getElementById('statsTotalPlays').textContent = Number(currentStatsData.totalPlays || 0).toLocaleString();
             document.getElementById('statsTodayPlays').textContent = todayTotal.toLocaleString();
             document.getElementById('statsGamesPlayed').textContent = games.filter(game => Number(game.total) > 0).length.toLocaleString();
             document.getElementById('statsTotalMinutes').textContent = Number(currentStatsData.totalMinutes || games.reduce((sum, game) => sum + (Number(game.minutes) || 0), 0)).toLocaleString();
-            document.getElementById('statsChartTitle').textContent = range === 'today' ? 'Plays today' : 'Plays this week';
+            const chartTitles = { today: 'Plays today', week: 'Plays this week', month: 'Plays in the last 30 days', all: 'All-time plays by day' };
+            document.getElementById('statsChartTitle').textContent = chartTitles[range] || chartTitles.week;
 
             const chart = document.getElementById('statsChart');
             const points = range === 'today' ? [{ date: currentStatsData.todayDate || new Date().toISOString().slice(0, 10), plays: todayTotal }] : (currentStatsData.daily || []);
@@ -2711,8 +2715,8 @@
             }).join('') : '<div class="stats-empty">No play data yet.</div>';
 
             const ranking = document.getElementById('statsRanking');
-            const rankedGames = games.filter(game => Number(game[range === 'today' ? 'today' : 'total'] || 0) > 0);
-            ranking.innerHTML = rankedGames.length ? rankedGames.map((game, index) => `<li class="stats-ranking-row"><span class="stats-rank-number">#${index + 1}</span><span class="stats-game-name">${getStatsGameName(game.gameId)}</span><span class="stats-game-total">${Number(game[range === 'today' ? 'today' : 'total'] || 0).toLocaleString()}</span></li>`).join('') : '<li class="stats-empty">No game plays recorded yet.</li>';
+            const rankedGames = games.filter(game => Number(game[metric] || 0) > 0);
+            ranking.innerHTML = rankedGames.length ? rankedGames.map((game, index) => `<li class="stats-ranking-row"><span class="stats-rank-number">#${index + 1}</span><span class="stats-game-name">${getStatsGameName(game.gameId)}</span><span class="stats-game-total">${Number(game[metric] || 0).toLocaleString()}</span></li>`).join('') : '<li class="stats-empty">No game plays recorded yet.</li>';
         }
 
         async function loadStats() {
@@ -2720,16 +2724,18 @@
                 renderStats(getLocalStatsData());
                 return;
             }
-            if (globalStatsCache && Date.now() - globalStatsCacheTime < 300000) {
-                renderStats(globalStatsCache);
+            const range = document.getElementById('statsRange')?.value || 'week';
+            if (globalStatsCache.has(range) && Date.now() - globalStatsCacheTime.get(range) < 300000) {
+                renderStats(globalStatsCache.get(range));
                 return;
             }
             try {
-                const response = await fetch('/api/game-stats?range=week');
+                const response = await fetch(`/api/game-stats?range=${encodeURIComponent(range)}`);
                 if (!response.ok) throw new Error(`Stats request failed: ${response.status}`);
-                globalStatsCache = await response.json();
-                globalStatsCacheTime = Date.now();
-                renderStats(globalStatsCache);
+                const data = await response.json();
+                globalStatsCache.set(range, data);
+                globalStatsCacheTime.set(range, Date.now());
+                renderStats(data);
             } catch (error) {
                 console.warn('Could not load Cloudflare game stats:', error);
                 renderStats({ totalPlays: 0, today: 0, totalMinutes: 0, daily: [], games: [] });
@@ -3250,7 +3256,7 @@
             document.getElementById('myStatsTab').setAttribute('aria-selected', 'false');
             loadStats();
         });
-        document.getElementById('statsRange').addEventListener('change', () => renderStats(currentStatsData || getLocalStatsData()));
+        document.getElementById('statsRange').addEventListener('change', loadStats);
         document.getElementById('headerCollapseToggle').addEventListener('click', toggleHeaderCollapsed);
         setShellView('home');
 
