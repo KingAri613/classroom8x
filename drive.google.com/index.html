@@ -2087,6 +2087,24 @@
             });
         }
 
+        function updateKookieokTriggerVisibility() {
+            const trigger = document.getElementById('ag-privacy-trigger');
+            if (!trigger) return;
+            const shouldHide = document.body.classList.contains('game-open') || currentShellView !== 'home';
+            const displayValue = shouldHide ? 'none' : 'block';
+            const ariaHiddenValue = shouldHide ? 'true' : 'false';
+            if (trigger.style.getPropertyValue('display') !== displayValue || trigger.style.getPropertyPriority('display') !== 'important') {
+                trigger.style.setProperty('display', displayValue, 'important');
+            }
+            if (trigger.getAttribute('aria-hidden') !== ariaHiddenValue) {
+                trigger.setAttribute('aria-hidden', ariaHiddenValue);
+            }
+        }
+
+        const kookieokTriggerObserver = new MutationObserver(() => updateKookieokTriggerVisibility());
+        kookieokTriggerObserver.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+        updateKookieokTriggerVisibility();
+
         // Play an audio file by URL (for files placed in /soundboard)
         function playAudioFile(src, button) {
             try {
