@@ -68,6 +68,7 @@
             'ad_personalization': 'denied'
         });
     </script>
+    <script id="kookieok-consent-script" src="https://cdn.kookiok.com/consent.js?id=01a05d08-8356-73a8-a0b2-bdc0afc3a115"></script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-FEKCEXRBE2"></script>
     <script>
@@ -1137,6 +1138,13 @@
             display: none !important;
         }
 
+        body:not(.consent-ready) .ag-consent-banner-host,
+        body:not(.consent-ready) .ag-privacy-trigger,
+        body:not(.consent-ready) .ag-overlay {
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+
         .game-card:active {
             transform: translateY(-8px) scale(1.01);
         }
@@ -2062,16 +2070,8 @@
             const loader = document.getElementById('siteLoader');
             if (!loader || loader.classList.contains('hidden')) return;
             loader.classList.add('hidden');
-            loadKookieokConsent();
+            document.body.classList.add('consent-ready');
             trackHomepagePageView();
-        }
-
-        function loadKookieokConsent() {
-            if (document.getElementById('kookieok-consent-script')) return;
-            const script = document.createElement('script');
-            script.id = 'kookieok-consent-script';
-            script.src = 'https://cdn.kookiok.com/consent.js?id=01a05d08-8356-73a8-a0b2-bdc0afc3a115';
-            document.head.appendChild(script);
         }
 
         function trackAnalyticsEvent(eventName, parameters = {}) {
@@ -2616,6 +2616,7 @@
         // ============ GAME PLAY TRACKING ============
         const GAME_STATS_KEY = 'classroom8x_game_stats';
         const GAME_MINUTES_KEY = 'classroom8x_game_minutes';
+        const GAME_SESSIONS_KEY = 'classroom8x_game_sessions';
 
         // Track a game play
         function trackGamePlay(gameId, gameName) {
@@ -2719,6 +2720,9 @@
                 const minutes = JSON.parse(localStorage.getItem(GAME_MINUTES_KEY)) || {};
                 minutes[session.gameId] = (Number(minutes[session.gameId]) || 0) + durationSeconds;
                 localStorage.setItem(GAME_MINUTES_KEY, JSON.stringify(minutes));
+                const sessions = JSON.parse(localStorage.getItem(GAME_SESSIONS_KEY)) || [];
+                sessions.push({ gameId: session.gameId, playedAt: Date.now(), durationSeconds });
+                localStorage.setItem(GAME_SESSIONS_KEY, JSON.stringify(sessions.slice(-500)));
             } catch (error) {}
             recordCloudflareGameDuration(session.gameId, durationSeconds);
         }
@@ -2757,10 +2761,19 @@
         function getLocalStatsData() {
             let stats = {};
             let minutes = {};
+            let sessions = [];
             try { stats = JSON.parse(localStorage.getItem(GAME_STATS_KEY)) || {}; } catch (error) {}
             try { minutes = JSON.parse(localStorage.getItem(GAME_MINUTES_KEY)) || {}; } catch (error) {}
-            const games = Object.values(stats).map(stat => ({ gameId: stat.id, total: Number(stat.playCount) || 0, today: stat.lastPlayed && stat.lastPlayed.slice(0, 10) === new Date().toISOString().slice(0, 10) ? Number(stat.playCount) || 0 : 0, minutes: (Number(minutes[stat.id]) || 0) / 60 }));
-            return { totalPlays: games.reduce((sum, game) => sum + game.total, 0), today: games.reduce((sum, game) => sum + game.today, 0), totalMinutes: games.reduce((sum, game) => sum + game.minutes, 0), daily: [], games };
+            try { sessions = JSON.parse(localStorage.getItem(GAME_SESSIONS_KEY)) || []; } catch (error) {}
+            const range = document.getElementById('statsRange')?.value || 'week';
+            const now = Date.now();
+            const rangeStart = range === 'today' ? new Date().setHours(0, 0, 0, 0) : range === 'month' ? now - (29 * 86400000) : range === 'all' ? 0 : now - (6 * 86400000);
+            const rangedSessions = sessions.filter(session => Number(session.playedAt) >= rangeStart);
+            const rangedMinutes = new Map();
+            rangedSessions.forEach(session => rangedMinutes.set(session.gameId, (rangedMinutes.get(session.gameId) || 0) + (Number(session.durationSeconds) || 0) / 60));
+            const games = Object.values(stats).map(stat => ({ gameId: stat.id, total: Number(stat.playCount) || 0, today: stat.lastPlayed && stat.lastPlayed.slice(0, 10) === new Date().toISOString().slice(0, 10) ? Number(stat.playCount) || 0 : 0, minutes: range === 'all' ? (Number(minutes[stat.id]) || 0) / 60 : rangedMinutes.get(stat.id) || 0 }));
+            const totalMinutes = range === 'all' ? Object.values(minutes).reduce((sum, value) => sum + (Number(value) || 0) / 60, 0) : rangedSessions.reduce((sum, session) => sum + (Number(session.durationSeconds) || 0) / 60, 0);
+            return { totalPlays: games.reduce((sum, game) => sum + game.total, 0), today: games.reduce((sum, game) => sum + game.today, 0), totalMinutes, daily: [], games };
         }
 
         function getStatsGameName(gameId) {

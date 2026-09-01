@@ -50,12 +50,14 @@ export async function onRequestGet(context) {
       context.env.DB.prepare(`
         SELECT COALESCE(SUM(duration_seconds), 0) AS totalSeconds
         FROM game_play_sessions
-      `).first(),
+        WHERE played_at >= ?
+      `).bind(rangeStart).first(),
       context.env.DB.prepare(`
         SELECT game_id AS gameId, COALESCE(SUM(duration_seconds), 0) AS totalSeconds
         FROM game_play_sessions
+        WHERE played_at >= ?
         GROUP BY game_id
-      `).all()
+      `).bind(rangeStart).all()
     ]);
   } catch (error) {
     console.warn('game_play_sessions is unavailable; returning zero minutes', error);
