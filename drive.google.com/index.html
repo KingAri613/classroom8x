@@ -1134,7 +1134,7 @@
             display: none;
         }
 
-        body.game-open #ag-privacy-trigger {
+        #ag-privacy-trigger {
             display: none !important;
         }
 
@@ -2090,7 +2090,7 @@
         function updateKookieokTriggerVisibility() {
             const trigger = document.getElementById('ag-privacy-trigger');
             if (!trigger) return;
-            const shouldHide = document.body.classList.contains('game-open') || currentShellView !== 'home';
+            const shouldHide = true;
             const displayValue = shouldHide ? 'none' : 'block';
             const ariaHiddenValue = shouldHide ? 'true' : 'false';
             if (trigger.style.getPropertyValue('display') !== displayValue || trigger.style.getPropertyPriority('display') !== 'important') {
