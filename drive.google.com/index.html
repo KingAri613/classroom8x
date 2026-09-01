@@ -1134,17 +1134,6 @@
             display: none;
         }
 
-        #ag-privacy-trigger {
-            display: none !important;
-        }
-
-        body:not(.consent-ready) .ag-consent-banner-host,
-        body:not(.consent-ready) #ag-privacy-trigger,
-        body:not(.consent-ready) .ag-overlay {
-            visibility: hidden !important;
-            pointer-events: none !important;
-        }
-
         .game-card:active {
             transform: translateY(-8px) scale(1.01);
         }
@@ -2070,7 +2059,6 @@
             const loader = document.getElementById('siteLoader');
             if (!loader || loader.classList.contains('hidden')) return;
             loader.classList.add('hidden');
-            document.body.classList.add('consent-ready');
             trackHomepagePageView();
         }
 
@@ -2086,24 +2074,6 @@
                 page_title: document.title
             });
         }
-
-        function updateKookieokTriggerVisibility() {
-            const trigger = document.getElementById('ag-privacy-trigger');
-            if (!trigger) return;
-            const shouldHide = true;
-            const displayValue = shouldHide ? 'none' : 'block';
-            const ariaHiddenValue = shouldHide ? 'true' : 'false';
-            if (trigger.style.getPropertyValue('display') !== displayValue || trigger.style.getPropertyPriority('display') !== 'important') {
-                trigger.style.setProperty('display', displayValue, 'important');
-            }
-            if (trigger.getAttribute('aria-hidden') !== ariaHiddenValue) {
-                trigger.setAttribute('aria-hidden', ariaHiddenValue);
-            }
-        }
-
-        const kookieokTriggerObserver = new MutationObserver(() => updateKookieokTriggerVisibility());
-        kookieokTriggerObserver.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
-        updateKookieokTriggerVisibility();
 
         // Play an audio file by URL (for files placed in /soundboard)
         function playAudioFile(src, button) {
