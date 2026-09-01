@@ -68,14 +68,12 @@
             'ad_personalization': 'denied'
         });
     </script>
-    <script src="https://cdn.kookiok.com/consent.js?id=01a05d08-8356-73a8-a0b2-bdc0afc3a115"></script>
-
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-FEKCEXRBE2"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         gtag('js', new Date());
-        gtag('config', 'G-FEKCEXRBE2');
+        gtag('config', 'G-FEKCEXRBE2', { 'send_page_view': false });
     </script>
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <script>
@@ -1135,6 +1133,10 @@
             display: none;
         }
 
+        body.game-open .ag-privacy-trigger {
+            display: none !important;
+        }
+
         .game-card:active {
             transform: translateY(-8px) scale(1.01);
         }
@@ -1913,6 +1915,8 @@
         let currentStatsData = null;
         let currentStatsMode = 'global';
         let activeGameSession = null;
+        let gameLoadStartedAt = 0;
+        let homepagePageViewSent = false;
         const globalStatsCache = new Map();
         const globalStatsCacheTime = new Map();
         const cloudflarePlayerCounts = new Map();
@@ -2058,6 +2062,29 @@
             const loader = document.getElementById('siteLoader');
             if (!loader || loader.classList.contains('hidden')) return;
             loader.classList.add('hidden');
+            loadKookieokConsent();
+            trackHomepagePageView();
+        }
+
+        function loadKookieokConsent() {
+            if (document.getElementById('kookieok-consent-script')) return;
+            const script = document.createElement('script');
+            script.id = 'kookieok-consent-script';
+            script.src = 'https://cdn.kookiok.com/consent.js?id=01a05d08-8356-73a8-a0b2-bdc0afc3a115';
+            document.head.appendChild(script);
+        }
+
+        function trackAnalyticsEvent(eventName, parameters = {}) {
+            if (typeof gtag === 'function') gtag('event', eventName, parameters);
+        }
+
+        function trackHomepagePageView() {
+            if (homepagePageViewSent) return;
+            homepagePageViewSent = true;
+            trackAnalyticsEvent('page_view', {
+                page_path: window.location.pathname,
+                page_title: document.title
+            });
         }
 
         // Play an audio file by URL (for files placed in /soundboard)
@@ -2555,6 +2582,11 @@
                 localStorage.setItem('ctrlKEnabled', ctrlKEnabledInput ? 'true' : 'false');
                 localStorage.setItem('panicKeyEnabled', panicEnabledInput ? 'true' : 'false');
                 localStorage.setItem('gameGridColumns', gameColumnsInput);
+                trackAnalyticsEvent('settings_update', {
+                    grid_columns: Number(gameColumnsInput),
+                    panic_key_enabled: panicEnabledInput,
+                    ctrl_k_enabled: ctrlKEnabledInput
+                });
                 applyGameGridColumns();
                 window.dispatchEvent(new Event('hotkey-settings-updated'));
                 modal.remove();
@@ -2681,6 +2713,8 @@
             const durationSeconds = Math.max(0, Math.floor((Date.now() - session.startedAt) / 1000));
             if (durationSeconds < 1) return;
 
+            trackAnalyticsEvent('game_end', { game_id: session.gameId, duration_seconds: durationSeconds });
+
             try {
                 const minutes = JSON.parse(localStorage.getItem(GAME_MINUTES_KEY)) || {};
                 minutes[session.gameId] = (Number(minutes[session.gameId]) || 0) + durationSeconds;
@@ -2725,7 +2759,7 @@
             let minutes = {};
             try { stats = JSON.parse(localStorage.getItem(GAME_STATS_KEY)) || {}; } catch (error) {}
             try { minutes = JSON.parse(localStorage.getItem(GAME_MINUTES_KEY)) || {}; } catch (error) {}
-            const games = Object.values(stats).map(stat => ({ gameId: stat.id, total: Number(stat.playCount) || 0, today: stat.lastPlayed && stat.lastPlayed.slice(0, 10) === new Date().toISOString().slice(0, 10) ? 1 : 0, minutes: (Number(minutes[stat.id]) || 0) / 60 }));
+            const games = Object.values(stats).map(stat => ({ gameId: stat.id, total: Number(stat.playCount) || 0, today: stat.lastPlayed && stat.lastPlayed.slice(0, 10) === new Date().toISOString().slice(0, 10) ? Number(stat.playCount) || 0 : 0, minutes: (Number(minutes[stat.id]) || 0) / 60 }));
             return { totalPlays: games.reduce((sum, game) => sum + game.total, 0), today: games.reduce((sum, game) => sum + game.today, 0), totalMinutes: games.reduce((sum, game) => sum + game.minutes, 0), daily: [], games };
         }
 
@@ -2740,6 +2774,12 @@
         function formatMinutes(minutes) {
             const value = Number(minutes) || 0;
             return value % 1 === 0 ? value.toLocaleString() : value.toFixed(1);
+        }
+
+        function getTotalMinutes(data, games) {
+            if (data.totalMinutes !== undefined && data.totalMinutes !== null) return Number(data.totalMinutes) || 0;
+            if (data.totalSeconds !== undefined && data.totalSeconds !== null) return (Number(data.totalSeconds) || 0) / 60;
+            return games.reduce((sum, game) => sum + (Number(game.minutes) || 0), 0);
         }
 
         function renderStats(data) {
@@ -2760,7 +2800,7 @@
             document.getElementById('statsTotalPlays').textContent = Number(rangePlayTotal || 0).toLocaleString();
             document.getElementById('statsTodayPlays').textContent = todayTotal.toLocaleString();
             document.getElementById('statsGamesPlayed').textContent = games.filter(game => getStatsMetric(game, metric) > 0).length.toLocaleString();
-            document.getElementById('statsTotalMinutes').textContent = formatMinutes(currentStatsData.totalMinutes ?? games.reduce((sum, game) => sum + (Number(game.minutes) || 0), 0));
+            document.getElementById('statsTotalMinutes').textContent = formatMinutes(getTotalMinutes(currentStatsData, games));
             const chartTitles = { today: 'Plays today', week: 'Plays this week', month: 'Plays in the last 30 days', all: 'All-time plays by day' };
             document.getElementById('statsChartTitle').textContent = chartTitles[range] || chartTitles.week;
             document.getElementById('statsTotalPlaysLabel').textContent = isAllTime ? 'Total plays' : `${rangeLabel} plays`;
@@ -3075,8 +3115,33 @@
 
         const gameFrame = document.getElementById('gameFrame');
         if (gameFrame) {
-            gameFrame.addEventListener('load', () => setGameLoadingState(false));
-            gameFrame.addEventListener('error', () => setGameLoadingState(false));
+            gameFrame.addEventListener('load', () => {
+                setGameLoadingState(false);
+                if (gameLoadStartedAt) {
+                    trackAnalyticsEvent('game_load_time', { load_time_ms: Date.now() - gameLoadStartedAt });
+                    gameLoadStartedAt = 0;
+                }
+            });
+            gameFrame.addEventListener('error', () => {
+                setGameLoadingState(false);
+                trackAnalyticsEvent('game_load_error');
+                gameLoadStartedAt = 0;
+            });
+        }
+
+        function trackGamePageView(gameName, gameId) {
+            if (typeof gtag !== 'function' || !gameName) return;
+            const slug = String(gameId || gameName)
+                .trim()
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            if (!slug) return;
+
+            gtag('event', 'page_view', {
+                page_path: `/games/${slug}`,
+                page_title: gameName
+            });
         }
 
         function playGame(gameUrl, gameName, gameId) {
@@ -3098,10 +3163,13 @@
             gameModal.classList.toggle('ai-mode', gameId === 'ai-tool');
             gameFrame.setAttribute('sandbox', defaultGameSandbox);
             gameFrame.src = '';
+            gameLoadStartedAt = Date.now();
             setGameLoadingState(true);
             startGameSession(gameId);
             gameModal.classList.add('active');
             document.body.classList.add('game-open');
+            trackGamePageView(gameName, gameId);
+            trackAnalyticsEvent('game_start', { game_id: gameId, game_name: gameName });
             
             // Small delay to ensure modal is active before loading game
             setTimeout(() => {
@@ -3119,10 +3187,13 @@
                 const gameFrame = document.getElementById('gameFrame');
                 gameFrame.setAttribute('sandbox', defaultGameSandbox);
                 gameFrame.src = '';
+                gameLoadStartedAt = Date.now();
                 setGameLoadingState(true);
                 startGameSession(gameId);
                 document.getElementById('gameModal').classList.add('active');
                 document.body.classList.add('game-open');
+                trackGamePageView(gameName, gameId);
+                trackAnalyticsEvent('game_start', { game_id: gameId, game_name: gameName });
                 setTimeout(() => {
                     gameFrame.src = gameUrl;
                 }, 50);
@@ -3185,10 +3256,13 @@
                 const gameFrame = document.getElementById('gameFrame');
                 gameFrame.setAttribute('sandbox', defaultGameSandbox);
                 gameFrame.src = '';
+                gameLoadStartedAt = Date.now();
                 setGameLoadingState(true);
                 startGameSession(gameId);
                 document.getElementById('gameModal').classList.add('active');
                 document.body.classList.add('game-open');
+                trackGamePageView(gameName, gameId);
+                trackAnalyticsEvent('game_start', { game_id: gameId, game_name: gameName });
                 setTimeout(() => {
                     gameFrame.src = gameUrl;
                 }, 50);
@@ -3239,12 +3313,18 @@
             filterGames();
         });
 
+        document.getElementById('searchInput').addEventListener('change', (e) => {
+            const searchTerm = e.target.value.trim();
+            if (searchTerm) trackAnalyticsEvent('search', { search_term: searchTerm.slice(0, 100) });
+        });
+
         document.querySelectorAll('.category-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 showHomeView();
                 document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
                 e.target.classList.add('active');
                 currentCategory = e.target.dataset.category;
+                trackAnalyticsEvent('category_select', { category_name: currentCategory });
                 const titles = {
                     'all': 'All Games',
                     'action': 'Action Games',
