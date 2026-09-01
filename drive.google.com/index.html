@@ -57,11 +57,23 @@
     }
     </script>
     
+    <!-- Establish privacy-protective defaults before analytics loads. -->
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('consent', 'default', {
+            'analytics_storage': 'denied',
+            'ad_storage': 'denied',
+            'ad_user_data': 'denied',
+            'ad_personalization': 'denied'
+        });
+    </script>
+    <script src="https://cdn.kookiok.com/consent.js?id=01a05d08-8356-73a8-a0b2-bdc0afc3a115"></script>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-FEKCEXRBE2"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'G-FEKCEXRBE2');
     </script>
@@ -1104,6 +1116,25 @@
         .info-fab-wrap:hover .info-panel, .info-fab-wrap:focus-within .info-panel { opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto; }
         .info-panel strong { color: #ff8095; }
 
+        .privacy-footer {
+            padding: 28px 20px;
+            text-align: center;
+            color: rgba(234, 234, 234, 0.7);
+        }
+
+        .privacy-footer a {
+            color: #ff5a75;
+            text-decoration: none;
+        }
+
+        .privacy-footer a:hover {
+            text-decoration: underline;
+        }
+
+        body.game-open .privacy-footer {
+            display: none;
+        }
+
         .game-card:active {
             transform: translateY(-8px) scale(1.01);
         }
@@ -1784,6 +1815,12 @@
             </section>
         </main>
     </div>
+
+    <footer class="privacy-footer" id="privacyFooter">
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <span aria-hidden="true">|</span>
+        <a href="cookie-policy.html">Cookie Policy</a>
+    </footer>
 
     <div class="info-fab-wrap">
         <button class="info-fab" type="button" aria-label="Show site information">i</button>
