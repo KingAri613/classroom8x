@@ -931,6 +931,299 @@
             max-height: none;
         }
 
+        .whats-new-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 4000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 28px;
+            background: rgba(5, 9, 18, 0.72);
+            backdrop-filter: blur(10px);
+        }
+
+        .whats-new-overlay.hidden {
+            display: none;
+        }
+
+        .whats-new-panel {
+            position: relative;
+            width: min(960px, 92vw);
+            max-height: 92vh;
+            overflow-y: auto;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 144, 169, 0.4);
+            background: linear-gradient(180deg, rgba(17, 26, 40, 0.98) 0%, rgba(10, 18, 30, 0.96) 100%);
+            box-shadow: 0 28px 70px rgba(0, 0, 0, 0.48), 0 0 0 1px rgba(255, 255, 255, 0.04);
+            padding: 28px 28px 22px;
+            color: #eef3ff;
+        }
+
+        .whats-new-panel::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .whats-new-panel::-webkit-scrollbar-thumb {
+            background: rgba(255, 144, 169, 0.35);
+            border-radius: 999px;
+        }
+
+        .whats-new-close {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            font-size: 1.8rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .whats-new-close:hover,
+        .whats-new-close:focus-visible {
+            background: rgba(255, 255, 255, 0.16);
+            transform: scale(1.04);
+            outline: none;
+        }
+
+        .whats-new-header {
+            margin-bottom: 18px;
+        }
+
+        .whats-new-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 7px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 144, 169, 0.4);
+            background: rgba(233, 69, 96, 0.16);
+            color: #ffacc1;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .whats-new-header h2 {
+            margin: 0;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.1;
+            letter-spacing: -0.04em;
+            color: #f3f7ff;
+        }
+
+        .whats-new-copy {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+
+        .copy-block {
+            padding: 16px 16px 15px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .copy-block h3 {
+            margin: 0 0 8px;
+            color: #ff9ab0;
+            font-size: 1.08rem;
+            font-weight: 800;
+        }
+
+        .copy-block p {
+            margin: 0;
+            color: rgba(238, 243, 255, 0.8);
+            line-height: 1.58;
+            font-size: 0.96rem;
+        }
+
+        .feature-preview {
+            margin-top: 12px;
+        }
+
+        .mini-game-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(12, 17, 28, 0.72);
+        }
+
+        .mini-game-card img {
+            width: 68px;
+            height: 68px;
+            border-radius: 12px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .mini-game-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .mini-game-meta strong {
+            color: #fff;
+            font-size: 0.96rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mini-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            width: fit-content;
+            padding: 6px 8px;
+            border-radius: 999px;
+            background: rgba(233, 69, 96, 0.16);
+            color: #ffb8c6;
+            font-size: 0.76rem;
+            font-weight: 800;
+        }
+
+        .stats-demo {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .stats-demo-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: rgba(12, 17, 28, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: rgba(238, 243, 255, 0.78);
+            font-size: 0.82rem;
+        }
+
+        .stats-demo-row strong {
+            color: #fff;
+            font-size: 0.88rem;
+        }
+
+        .stats-demo-cta {
+            margin-top: 4px;
+            border: 0;
+            border-radius: 10px;
+            padding: 10px 14px;
+            background: linear-gradient(135deg, #e94560 0%, #ff7b96 100%);
+            color: #fff;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .new-games-grid {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .notification-game {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, rgba(34, 48, 72, 1) 0%, rgba(18, 30, 50, 1) 100%);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .notification-game::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255, 141, 168, 0.22), transparent 56%);
+        }
+
+        .notification-game:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 144, 169, 0.45);
+            box-shadow: 0 12px 24px rgba(10, 18, 30, 0.34);
+        }
+
+        .notification-game img,
+        .notification-game .notification-fallback {
+            position: relative;
+            z-index: 1;
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .notification-game .notification-fallback {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.6rem, 2vw, 2.4rem);
+            font-weight: 800;
+            color: #fff;
+            background: rgba(13, 22, 36, 0.24);
+        }
+
+        .whats-new-cta {
+            display: block;
+            margin: 0 auto;
+            padding: 14px 28px;
+            border: 0;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #e94560 0%, #ff7b96 100%);
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            box-shadow: 0 16px 32px rgba(233, 69, 96, 0.34);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .whats-new-cta:hover,
+        .whats-new-cta:focus-visible {
+            transform: translateY(-1px);
+            box-shadow: 0 20px 34px rgba(233, 69, 96, 0.4);
+            outline: none;
+        }
+
+        @media (max-width: 760px) {
+            .whats-new-panel {
+                padding: 24px 18px 18px;
+            }
+
+            .whats-new-copy {
+                grid-template-columns: 1fr;
+            }
+
+            .new-games-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
         .home-ad-close {
             position: absolute;
             top: 10px;
@@ -1713,6 +2006,42 @@
         <div class="site-loader-text">Classroom8x Loading</div>
     </div>
 
+    <div id="whatsNewOverlay" class="whats-new-overlay hidden" aria-hidden="true">
+        <div class="whats-new-panel" role="dialog" aria-modal="true" aria-labelledby="whatsNewTitle">
+            <button class="whats-new-close" type="button" aria-label="Close notification">×</button>
+            <div class="whats-new-header">
+                <span class="whats-new-pill">Updated</span>
+                <h2 id="whatsNewTitle">What’s new at Classroom8x</h2>
+            </div>
+            <div class="whats-new-copy">
+                <div class="copy-block">
+                    <h3>Live play counts</h3>
+                    <p>These are real-time popularity numbers for each game. You can see how many people are playing a title right now, so it’s easier to find the most active games and jump into the fun ones first.</p>
+                    <div class="feature-preview">
+                        <div class="mini-game-card">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTg234g1grmtcYccS3AYpE4IHePAQd2lmNBduLKNOFI6QKKAnVta-gO9m2dtuA&s" alt="Paper.io game thumbnail">
+                            <div class="mini-game-meta">
+                                <strong>Paper.io</strong>
+                                <span class="mini-count"><span aria-hidden="true">🔥</span> 12,480 plays</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="copy-block">
+                    <h3>Stats</h3>
+                    <p>The Stats screen shows your own and global overall play totals, recent activity, and time spent across games. It helps you track which games you’ve played most and spot the trend in the classroom game library.</p>
+                    <div class="stats-demo">
+                        <div class="stats-demo-row"><span>Plays</span><strong>42,860</strong></div>
+                        <div class="stats-demo-row"><span>Minutes</span><strong>4.8h</strong></div>
+                        <button class="stats-demo-cta" id="whatsNewStatsCta" type="button">Go to Stats</button>
+                    </div>
+                </div>
+            </div>
+            <div class="new-games-grid" id="newGamesNotificationGrid" aria-label="New games"></div>
+            <button class="whats-new-cta" type="button">Start exploring</button>
+        </div>
+    </div>
+
     <div class="header">
         <div class="logo-container">
             <div class="logo-header-row">
@@ -1904,8 +2233,93 @@
         const hiddenGameIds = ['tanks-2'];
         const brokenGameIds = ['temple-run-2'];
         const newGameIds = ['player-games-1234', 'soccer-skills-world-cup', 'penalty-shootout-2', 'house-of-hazards', 'block-blast', 'motox3m-spooky-land', 'raft-wars', 'drift-boss', 'duo-survival-3', 'jetpack-joyride', 'cookie-clicker', 'idle-startup-tycoon', 'soccer-random', 'volley-random', 'getaway-shootout', 'hextris', 'funny-shooter-2'];
+        const whatsNewStorageKey = 'classroom8x_whats_new_seen';
+        const whatsNewFallbackIcons = ['🏎️', '⚽', '🎯', '🧩', '🚀', '🎮', '🛹', '🏀', '🧱', '🎲', '⏱️', '🧠', '🏁', '🎰', '🛠️', '⚡', '🎧', '🔥'];
         const defaultGameSandbox = 'allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-presentation allow-downloads';
         const liveSportUrl = 'https://cube-trove-api.lovable.app/';
+
+        function renderWhatsNewGrid() {
+            const grid = document.getElementById('newGamesNotificationGrid');
+            if (!grid) return;
+
+            const tiles = newGameIds.slice(0, 18).map((gameId, index) => {
+                const game = allGames.find(item => item.id === gameId) || {};
+                const image = game.image || '';
+                const label = game.name || `New game ${index + 1}`;
+                const fallback = game.icon || whatsNewFallbackIcons[index % whatsNewFallbackIcons.length];
+
+                return `
+                    <div class="notification-game" title="${label}" aria-label="${label}">
+                        ${image ? `<img src="${image}" alt="${label}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` : ''}
+                        <span class="notification-fallback" style="display:${image ? 'none' : 'flex'};">${fallback}</span>
+                    </div>
+                `;
+            }).join('');
+
+            grid.innerHTML = tiles;
+        }
+
+        function closeWhatsNewNotification(openStats = false) {
+            const overlay = document.getElementById('whatsNewOverlay');
+            if (!overlay) return;
+            overlay.classList.add('hidden');
+            overlay.setAttribute('aria-hidden', 'true');
+            try {
+                localStorage.setItem(whatsNewStorageKey, 'true');
+            } catch (error) {
+                console.warn('Could not save Whats New preference:', error);
+            }
+            if (openStats) {
+                setShellView('stats');
+            }
+        }
+
+        function showWhatsNewOnce() {
+            try {
+                if (localStorage.getItem(whatsNewStorageKey) === 'true') return;
+            } catch (error) {
+                console.warn('Could not read Whats New preference:', error);
+            }
+
+            const overlay = document.getElementById('whatsNewOverlay');
+            if (!overlay) return;
+
+            renderWhatsNewGrid();
+            overlay.classList.remove('hidden');
+            overlay.setAttribute('aria-hidden', 'false');
+
+            const closeBtn = overlay.querySelector('.whats-new-close');
+            const ctaBtn = overlay.querySelector('.whats-new-cta');
+            const statsCtaBtn = document.getElementById('whatsNewStatsCta');
+            if (closeBtn) {
+                closeBtn.onclick = () => closeWhatsNewNotification();
+            }
+            if (ctaBtn) {
+                ctaBtn.onclick = () => closeWhatsNewNotification();
+            }
+            if (statsCtaBtn) {
+                statsCtaBtn.onclick = () => closeWhatsNewNotification(true);
+            }
+
+            overlay.onclick = (event) => {
+                if (event.target === overlay) {
+                    closeWhatsNewNotification();
+                }
+            };
+
+            const handleKeydown = (event) => {
+                if (event.key === 'Escape') {
+                    closeWhatsNewNotification();
+                    document.removeEventListener('keydown', handleKeydown);
+                }
+            };
+            document.addEventListener('keydown', handleKeydown);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderWhatsNewGrid();
+            showWhatsNewOnce();
+        });
         let pageShellLoaded = document.readyState === 'complete';
         let gamesContentLoaded = false;
         let currentShellView = 'home';
@@ -2874,6 +3288,8 @@
             try {
                 const response = await fetch('games.json');
                 allGames = await response.json();
+                renderWhatsNewGrid();
+                showWhatsNewOnce();
                 filterGames();
                 renderMoreGames();
                 startPlayerCountRefresh();
