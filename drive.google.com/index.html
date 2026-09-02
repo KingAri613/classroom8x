@@ -3019,6 +3019,13 @@
         const GAME_STATS_KEY = 'classroom8x_game_stats';
         const GAME_MINUTES_KEY = 'classroom8x_game_minutes';
         const GAME_SESSIONS_KEY = 'classroom8x_game_sessions';
+        const MAX_SESSION_SECONDS = 60 * 60 * 3;
+
+        function normalizeSessionSeconds(value) {
+            const seconds = Number(value);
+            if (!Number.isFinite(seconds) || seconds < 0) return 0;
+            return Math.min(seconds, MAX_SESSION_SECONDS);
+        }
 
         // Track a game play
         function trackGamePlay(gameId, gameName) {
@@ -3113,14 +3120,14 @@
             if (!activeGameSession) return;
             const session = activeGameSession;
             activeGameSession = null;
-            const durationSeconds = Math.max(0, Math.floor((Date.now() - session.startedAt) / 1000));
+            const durationSeconds = normalizeSessionSeconds(Math.max(0, Math.floor((Date.now() - session.startedAt) / 1000)));
             if (durationSeconds < 1) return;
 
             trackAnalyticsEvent('game_end', { game_id: session.gameId, duration_seconds: durationSeconds });
 
             try {
                 const minutes = JSON.parse(localStorage.getItem(GAME_MINUTES_KEY)) || {};
-                minutes[session.gameId] = (Number(minutes[session.gameId]) || 0) + durationSeconds;
+                minutes[session.gameId] = normalizeSessionSeconds((Number(minutes[session.gameId]) || 0) + durationSeconds);
                 localStorage.setItem(GAME_MINUTES_KEY, JSON.stringify(minutes));
                 const sessions = JSON.parse(localStorage.getItem(GAME_SESSIONS_KEY)) || [];
                 sessions.push({ gameId: session.gameId, playedAt: Date.now(), durationSeconds });
@@ -3170,11 +3177,20 @@
             const range = document.getElementById('statsRange')?.value || 'week';
             const now = Date.now();
             const rangeStart = range === 'today' ? new Date().setHours(0, 0, 0, 0) : range === 'month' ? now - (29 * 86400000) : range === 'all' ? 0 : now - (6 * 86400000);
-            const rangedSessions = sessions.filter(session => Number(session.playedAt) >= rangeStart);
+            const rangedSessions = sessions.filter(session => Number(session.playedAt) >= rangeStart).map(session => ({
+                ...session,
+                durationSeconds: normalizeSessionSeconds(session.durationSeconds)
+            }));
             const rangedMinutes = new Map();
             rangedSessions.forEach(session => rangedMinutes.set(session.gameId, (rangedMinutes.get(session.gameId) || 0) + (Number(session.durationSeconds) || 0) / 60));
-            const games = Object.values(stats).map(stat => ({ gameId: stat.id, total: Number(stat.playCount) || 0, today: stat.lastPlayed && stat.lastPlayed.slice(0, 10) === new Date().toISOString().slice(0, 10) ? Number(stat.playCount) || 0 : 0, minutes: range === 'all' ? (Number(minutes[stat.id]) || 0) / 60 : rangedMinutes.get(stat.id) || 0 }));
-            const totalMinutes = range === 'all' ? Object.values(minutes).reduce((sum, value) => sum + (Number(value) || 0) / 60, 0) : rangedSessions.reduce((sum, session) => sum + (Number(session.durationSeconds) || 0) / 60, 0);
+            const safeMinutes = Object.fromEntries(Object.entries(minutes).map(([gameId, value]) => [gameId, normalizeSessionSeconds(value)]));
+            const games = Object.values(stats).map(stat => ({
+                gameId: stat.id,
+                total: Number(stat.playCount) || 0,
+                today: stat.lastPlayed && stat.lastPlayed.slice(0, 10) === new Date().toISOString().slice(0, 10) ? Number(stat.playCount) || 0 : 0,
+                minutes: range === 'all' ? (Number(safeMinutes[stat.id]) || 0) / 60 : rangedMinutes.get(stat.id) || 0
+            }));
+            const totalMinutes = range === 'all' ? Object.values(safeMinutes).reduce((sum, value) => sum + (Number(value) || 0) / 60, 0) : rangedSessions.reduce((sum, session) => sum + (Number(session.durationSeconds) || 0) / 60, 0);
             return { totalPlays: games.reduce((sum, game) => sum + game.total, 0), today: games.reduce((sum, game) => sum + game.today, 0), totalMinutes, daily: [], games };
         }
 
