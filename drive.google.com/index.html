@@ -1398,6 +1398,10 @@
         .game-card:hover .game-play-overlay, .game-card:focus-within .game-play-overlay { opacity: 1; }
         .game-badge { position: absolute; top: 10px; left: 10px; z-index: 4; padding: 5px 9px; border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 999px; background: rgba(233, 69, 96, 0.92); color: #fff; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; }
         .game-badge.broken { background: rgba(92, 96, 112, 0.96); border-color: rgba(255, 255, 255, 0.32); }
+        .game-badge.fixed { background: rgba(16, 185, 129, 0.92); border-color: rgba(255, 255, 255, 0.28); }
+        .game-badge.fixed { background: rgba(16, 185, 129, 0.92); border-color: rgba(255, 255, 255, 0.28); }
+        .game-badge.fixed { background: rgba(16, 185, 129, 0.92); border-color: rgba(255, 255, 255, 0.28); }
+        .game-badge.fixed { background: rgba(16, 185, 129, 0.92); border-color: rgba(255, 255, 255, 0.28); }
         .player-count { position: absolute; top: 8px; right: 8px; z-index: 4; display: none; align-items: center; gap: 4px; padding: 4px 7px; border-radius: 999px; background: rgba(0, 0, 0, 0.78); color: #fff; font-size: 0.7rem; font-weight: 700; white-space: nowrap; }
         body.silent-player-refresh .games-grid,
         body.silent-player-refresh .game-card { animation: none !important; }
@@ -2229,9 +2233,13 @@
         let currentSearch = '';
         let currentSoundSearch = '';
         const moreGameIds = ['basket-random', 'johnny-trigger'];
+        const fixedGameIds = ['escape-road'];
         const mainGameIds = ['hook-stickman', 'level-devil', 'motox-3m', 'vex-8'];
+        const fixedGameIds = ['escape-road'];
         const hiddenGameIds = ['tanks-2'];
+        const fixedGameIds = ['escape-road'];
         const brokenGameIds = ['temple-run-2'];
+        const fixedGameIds = ['escape-road'];
         const newGameIds = ['player-games-1234', 'soccer-skills-world-cup', 'penalty-shootout-2', 'house-of-hazards', 'block-blast', 'motox3m-spooky-land', 'raft-wars', 'drift-boss', 'duo-survival-3', 'jetpack-joyride', 'cookie-clicker', 'idle-startup-tycoon', 'soccer-random', 'volley-random', 'getaway-shootout', 'hextris', 'funny-shooter-2'];
         const whatsNewStorageKey = 'classroom8x_whats_new_seen';
         const whatsNewFallbackIcons = ['🏎️', '⚽', '🎯', '🧩', '🚀', '🎮', '🛹', '🏀', '🧱', '🎲', '⏱️', '🧠', '🏁', '🎰', '🛠️', '⚡', '🎧', '🔥'];
@@ -3441,12 +3449,16 @@
                 }
 
             }
-
+fixedGameIds.includes(game.id) ? '<div class="game-badge fixed">Fixed</div>'
+                    : 
             htmlContent += games
-                .filter(game => !hiddenGameIds.includes(game.id) && !(currentCategory === 'all' && currentSearch === '' && newGameIds.includes(game.id)))
+                .filtefixedGameIds.includes(game.id) ? '<div class="game-badge fixed">Fixed</div>'
+                    : r(game => !hiddenGameIds.includes(game.id) && !(currentCategory === 'all' && currentSearch === '' && newGameIds.includes(game.id)))
                 .map(game => {
-                const gameBadge = brokenGameIds.includes(game.id)
+                const fixedGameIds.includes(game.id) ? '<div class="game-badge fixed">Fixed</div>'
+                    : gameBadge = brokenGameIds.includes(game.id)
                     ? '<div class="game-badge broken">Currently broken</div>'
+                    : fixedGameIds.includes(game.id) ? '<div class="game-badge fixed">Fixed</div>'
                     : newGameIds.includes(game.id) ? '<div class="game-badge">New</div>' : '';
                 return `
                 <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
