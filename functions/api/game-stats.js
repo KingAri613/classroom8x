@@ -43,21 +43,24 @@ export async function onRequestGet(context) {
     `).bind(dayStart, rangeStart).all()
   ]);
 
+  const maxSessionSeconds = 60 * 60 * 3;
+
   let minutesResult = null;
   let gameMinutesResult = { results: [] };
   try {
     [minutesResult, gameMinutesResult] = await Promise.all([
       context.env.DB.prepare(`
-        SELECT COALESCE(SUM(duration_seconds), 0) AS totalSeconds
+        SELECT COALESCE(SUM(CASE WHEN duration_seconds > ? THEN ? ELSE duration_seconds END), 0) AS totalSeconds
         FROM game_play_sessions
         WHERE played_at >= ?
-      `).bind(rangeStart).first(),
+      `).bind(maxSessionSeconds, maxSessionSeconds, rangeStart).first(),
       context.env.DB.prepare(`
-        SELECT game_id AS gameId, COALESCE(SUM(duration_seconds), 0) AS totalSeconds
+        SELECT game_id AS gameId,
+               COALESCE(SUM(CASE WHEN duration_seconds > ? THEN ? ELSE duration_seconds END), 0) AS totalSeconds
         FROM game_play_sessions
         WHERE played_at >= ?
         GROUP BY game_id
-      `).bind(rangeStart).all()
+      `).bind(maxSessionSeconds, maxSessionSeconds, rangeStart).all()
     ]);
   } catch (error) {
     console.warn('game_play_sessions is unavailable; returning zero minutes', error);

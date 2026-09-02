@@ -30,7 +30,7 @@ export async function onRequestPost(context) {
 
   const durationSeconds = Math.floor(Number(body.durationSeconds) || 0);
   if (durationSeconds > 0) {
-    if (durationSeconds > 24 * 60 * 60) return json({ error: 'Invalid duration' }, 400);
+    if (durationSeconds > 60 * 60 * 3) return json({ error: 'Invalid duration' }, 400);
     await context.env.DB.prepare(`
       CREATE TABLE IF NOT EXISTS game_play_sessions (
         game_id TEXT NOT NULL,
