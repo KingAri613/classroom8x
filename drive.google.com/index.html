@@ -2235,11 +2235,8 @@
         const moreGameIds = ['basket-random', 'johnny-trigger'];
         const fixedGameIds = ['escape-road'];
         const mainGameIds = ['hook-stickman', 'level-devil', 'motox-3m', 'vex-8'];
-        const fixedGameIds = ['escape-road'];
         const hiddenGameIds = ['tanks-2'];
-        const fixedGameIds = ['escape-road'];
         const brokenGameIds = ['temple-run-2'];
-        const fixedGameIds = ['escape-road'];
         const newGameIds = ['player-games-1234', 'soccer-skills-world-cup', 'penalty-shootout-2', 'house-of-hazards', 'block-blast', 'motox3m-spooky-land', 'raft-wars', 'drift-boss', 'duo-survival-3', 'jetpack-joyride', 'cookie-clicker', 'idle-startup-tycoon', 'soccer-random', 'volley-random', 'getaway-shootout', 'hextris', 'funny-shooter-2'];
         const whatsNewStorageKey = 'classroom8x_whats_new_seen';
         const whatsNewFallbackIcons = ['🏎️', '⚽', '🎯', '🧩', '🚀', '🎮', '🛹', '🏀', '🧱', '🎲', '⏱️', '🧠', '🏁', '🎰', '🛠️', '⚡', '🎧', '🔥'];
@@ -3449,14 +3446,11 @@
                 }
 
             }
-fixedGameIds.includes(game.id) ? '<div class="game-badge fixed">Fixed</div>'
-                    : 
+
             htmlContent += games
-                .filtefixedGameIds.includes(game.id) ? '<div class="game-badge fixed">Fixed</div>'
-                    : r(game => !hiddenGameIds.includes(game.id) && !(currentCategory === 'all' && currentSearch === '' && newGameIds.includes(game.id)))
+                .filter(game => !hiddenGameIds.includes(game.id) && !(currentCategory === 'all' && currentSearch === '' && newGameIds.includes(game.id)))
                 .map(game => {
-                const fixedGameIds.includes(game.id) ? '<div class="game-badge fixed">Fixed</div>'
-                    : gameBadge = brokenGameIds.includes(game.id)
+                const gameBadge = brokenGameIds.includes(game.id)
                     ? '<div class="game-badge broken">Currently broken</div>'
                     : fixedGameIds.includes(game.id) ? '<div class="game-badge fixed">Fixed</div>'
                     : newGameIds.includes(game.id) ? '<div class="game-badge">New</div>' : '';
