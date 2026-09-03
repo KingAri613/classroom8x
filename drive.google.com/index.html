@@ -260,12 +260,12 @@
         }
 
         .site-loader img {
-            width: auto;
-            max-width: 100vw;
-            height: 100vh;
-            max-height: 100vh;
+            width: min(800px, 92vw);
+            height: auto;
+            max-height: 82vh;
             display: block;
             object-fit: contain;
+            object-position: center;
         }
 
         .site-loader-text {
@@ -2006,8 +2006,8 @@
         </div>
     </section>
     <div class="site-loader" id="siteLoader" aria-hidden="true">
-        <img src="Gif/2026-07-09.gif" alt="Loading">
-        <div class="site-loader-text">Classroom8x Loading</div>
+        <img src="Gif/Classroom8x%20loading.gif" alt="Classroom8x loading">
+        <div class="site-loader-text hidden">Classroom8x Loading</div>
     </div>
 
     <div id="whatsNewOverlay" class="whats-new-overlay hidden" aria-hidden="true">
@@ -2339,9 +2339,7 @@
         let playerCountRefreshId = null;
 
         const loaderGifPaths = [
-            'Gif/Dvd%20Screensaver%20Loading%20Error%20GIF.gif',
-            'Gif/Lights%20Glow%20GIF%20by%20Erica%20Anderson.gif',
-            'Gif/Loading%20Hp%20GIF%20by%20OMEN.gif'
+            'Gif/Classroom8x%20loading.gif'
         ];
 
         let activeAudioElements = [];
@@ -2373,8 +2371,7 @@
 
             const selectedGif = loaderGifPaths[selectedIndex];
             loaderImage.src = selectedGif;
-            loaderText.classList.remove('hidden');
-            loaderText.textContent = 'Classroom8x Loading';
+            loaderText.classList.add('hidden');
         }
 
         initializeLoaderGifRotation();
