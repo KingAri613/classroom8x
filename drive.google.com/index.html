@@ -208,6 +208,10 @@
         .stats-hero h2 { color: #fff; font-size: clamp(1.8rem, 4vw, 2.7rem); }
         .stats-hero p { margin-top: 6px; color: rgba(234, 234, 234, 0.68); }
         .stats-scope { display: inline-block; margin-top: 12px; padding: 6px 10px; border: 1px solid rgba(233, 69, 96, 0.32); border-radius: 999px; color: #ffb3bf; font-size: 0.82rem; font-weight: 800; letter-spacing: 0.04em; }
+        .stats-hero-actions { display: flex; align-items: center; gap: 10px; }
+        .stats-refresh { min-height: 44px; padding: 10px 14px; border: 1px solid rgba(233, 69, 96, 0.42); border-radius: 10px; background: rgba(16, 24, 43, 0.86); color: #fff; cursor: pointer; font-weight: 700; }
+        .stats-refresh:disabled { opacity: 0.6; cursor: wait; }
+        .stats-updated { margin-top: 8px; color: rgba(234, 234, 234, 0.56); font-size: 0.78rem; }
         .stats-range { min-width: 150px; padding: 11px 14px; border: 1px solid rgba(233, 69, 96, 0.42); border-radius: 10px; background: rgba(16, 24, 43, 0.86); color: #fff; font-weight: 700; }
         .stats-tabs { display: inline-flex; gap: 6px; margin-bottom: 18px; padding: 5px; border: 1px solid rgba(233, 69, 96, 0.24); border-radius: 12px; background: rgba(10, 14, 25, 0.48); }
         .stats-tab { padding: 9px 14px; border: 0; border-radius: 8px; background: transparent; color: rgba(234, 234, 234, 0.68); cursor: pointer; font-weight: 700; }
@@ -233,7 +237,7 @@
         .stats-game-total { color: #fff; font-weight: 800; }
         .stats-empty { color: rgba(234, 234, 234, 0.62); text-align: center; padding: 32px 10px; }
         @media (max-width: 900px) { .stats-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-        @media (max-width: 760px) { .stats-hero { align-items: stretch; flex-direction: column; } .stats-summary, .stats-layout { grid-template-columns: 1fr; } }
+        @media (max-width: 760px) { .stats-hero { align-items: stretch; flex-direction: column; } .stats-hero-actions { justify-content: space-between; } .stats-range { flex: 1; } .stats-summary, .stats-layout { grid-template-columns: 1fr; } }
 
         @media (max-width: 760px) {
             .education-hero, .education-footer { align-items: flex-start; flex-direction: column; }
@@ -423,6 +427,8 @@
             z-index: 1999;
             min-width: 0;
         }
+
+        .mobile-menu-toggle, .mobile-search-toggle { display: none; min-width: 44px; min-height: 44px; padding: 0; border: 1px solid rgba(233, 69, 96, 0.35); border-radius: 10px; background: rgba(10, 18, 36, 0.7); color: #fff; cursor: pointer; font-size: 1.25rem; }
 
         .topbar-nav {
             min-width: 0;
@@ -1396,6 +1402,7 @@
         .game-play-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.25s ease; z-index: 3; pointer-events: none; }
         .game-play-overlay span { width: 58px; height: 58px; display: grid; place-items: center; border-radius: 50%; background: rgba(233, 69, 96, 0.92); color: #fff; font-size: 1.7rem; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35); }
         .game-card:hover .game-play-overlay, .game-card:focus-within .game-play-overlay { opacity: 1; }
+        @media (hover: none), (pointer: coarse) { .game-play-overlay { opacity: 1; } .game-card:hover { transform: none; } }
         .game-badge { position: absolute; top: 10px; left: 10px; z-index: 4; padding: 5px 9px; border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 999px; background: rgba(233, 69, 96, 0.92); color: #fff; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; }
         .game-badge.broken { background: rgba(92, 96, 112, 0.96); border-color: rgba(255, 255, 255, 0.32); }
         .game-badge.fixed { background: rgba(16, 185, 129, 0.92); border-color: rgba(255, 255, 255, 0.28); }
@@ -1840,8 +1847,8 @@
             transform: scale(1) !important;
             transform-origin: top left !important;
             display: none;
-            min-width: 100vw;
-            min-height: 100vh;
+            min-width: 0;
+            min-height: 0;
         }
 
         @media (max-width: 768px) {
@@ -1850,9 +1857,17 @@
             }
 
             .header {
-                grid-template-columns: 1fr;
-                justify-items: stretch;
+                grid-template-columns: auto 1fr auto auto;
+                padding: 8px 10px;
+                gap: 8px;
             }
+
+            .mobile-menu-toggle, .mobile-search-toggle { display: inline-flex; align-items: center; justify-content: center; }
+            .mobile-menu-toggle { order: 3; }
+            .mobile-search-toggle { order: 4; }
+            .topbar-nav { display: none; position: absolute; top: 100%; left: 0; right: 0; padding: 8px 10px; flex-direction: column; align-items: stretch; background: rgba(10, 14, 25, 0.98); border-bottom: 1px solid rgba(233, 69, 96, 0.25); }
+            .topbar-nav.mobile-menu-open { display: flex; }
+            .topbar-nav .shell-nav-btn { min-height: 44px; text-align: left; }
 
             .logo-container {
                 min-width: 0;
@@ -1866,15 +1881,17 @@
                 max-height: none;
                 position: static;
                 top: auto;
-                padding: 50px 15px 15px;
+                padding: 46px 10px 10px;
                 flex-basis: auto;
             }
 
             .sidebar.collapsed {
                 width: 100%;
                 flex-basis: auto;
-                padding-bottom: 10px;
+                padding: 8px 10px;
             }
+
+            body.home-shell-view .sidebar-toggle { display: inline-flex; }
 
             .topbar {
                 flex-wrap: wrap;
@@ -1883,8 +1900,8 @@
             }
 
             .games-grid {
-                grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
-                gap: 20px;
+                grid-template-columns: 1fr;
+                gap: 14px;
             }
 
             .section-games-grid {
@@ -1893,7 +1910,7 @@
             }
 
             .main-content {
-                padding: 20px;
+                padding: 12px;
             }
 
             .topbar-search {
@@ -1903,6 +1920,10 @@
             .topbar-search input {
                 width: 0;
             }
+
+            .topbar-search.mobile-search-open { position: absolute; top: 100%; left: 10px; right: 10px; padding: 8px 0; background: rgba(10, 14, 25, 0.98); }
+            .topbar-search.mobile-search-open input { width: 100%; opacity: 1; pointer-events: auto; padding-left: 16px; padding-right: 16px; }
+            .topbar-search.mobile-search-open::before { display: none; }
 
             .topbar-search:hover,
             .topbar-search:focus-within {
@@ -1934,7 +1955,14 @@
             .section-title {
                 font-size: 1.8em;
             }
+
+            #gameModal iframe { width: 100% !important; height: 100dvh !important; }
+            .modal-action { width: 48px; height: 48px; top: max(10px, env(safe-area-inset-top)); }
+            .close-button { left: max(10px, env(safe-area-inset-left)); }
+            .fullscreen-button { right: max(10px, env(safe-area-inset-right)); }
         }
+
+        @media (min-width: 480px) and (max-width: 768px) { .games-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
         @media (min-width: 901px) {
             .games-grid {
@@ -2064,6 +2092,8 @@
             <button class="shell-nav-btn" id="settingsTopBtn" type="button">Settings</button>
             <button class="shell-nav-btn" id="statsTopBtn" type="button" data-shell-target="stats">Stats</button>
         </nav>
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-expanded="false" aria-label="Open menu">☰</button>
+        <button class="mobile-search-toggle" id="mobileSearchToggle" type="button" aria-expanded="false" aria-label="Open search">⌕</button>
         <div class="topbar-search" id="topbarSearchBox">
             <input type="text" id="searchInput" placeholder="Search games...">
         </div>
@@ -2119,27 +2149,25 @@
             <section class="page-view stats-view" id="statsView" hidden>
                 <div class="stats-hero">
                     <div>
-                        <h2>Game Stats</h2>
-                        <p>Track plays across the Classroom8x game library.</p>
                         <span class="stats-scope" id="statsScope">Global Stats · Last 7 Days</span>
                     </div>
-                    <select class="stats-range" id="statsRange" aria-label="Stats time range">
-                        <option value="today">Today</option>
-                        <option value="week" selected>Last 7 days</option>
-                        <option value="month">Last 30 days</option>
-                        <option value="all">All time</option>
-                    </select>
                 </div>
                 <div class="stats-tabs" role="tablist" aria-label="Stats type">
                     <button class="stats-tab" id="myStatsTab" type="button" role="tab" aria-selected="false">My Stats</button>
                     <button class="stats-tab active" id="globalStatsTab" type="button" role="tab" aria-selected="true">Global Stats</button>
                 </div>
-                <div class="stats-summary">
-                    <div class="stats-card all-time-stat-card" id="statsTotalPlaysCard"><span class="stats-card-label" id="statsTotalPlaysLabel">Total plays</span><strong class="stats-card-value" id="statsTotalPlays">0</strong></div>
-                    <div class="stats-card" id="statsTodayPlaysCard"><span class="stats-card-label">Plays today</span><strong class="stats-card-value" id="statsTodayPlays">0</strong></div>
-                    <div class="stats-card"><span class="stats-card-label">Games with plays</span><strong class="stats-card-value" id="statsGamesPlayed">0</strong></div>
-                    <div class="stats-card all-time-stat-card" id="statsTotalMinutesCard"><span class="stats-card-label" id="statsTotalMinutesLabel">Total minutes</span><strong class="stats-card-value" id="statsTotalMinutes">0</strong></div>
+                <div class="stats-hero-actions">
+                    <select class="stats-range" id="statsRange" aria-label="Stats time range">
+                        <option value="today">Today</option><option value="week" selected>Last 7 Days</option><option value="month">Last 30 Days</option><option value="all">All Time</option>
+                    </select>
+                    <button class="stats-refresh" id="statsRefresh" type="button">Refresh</button>
                 </div>
+                <div class="stats-summary">
+                    <div class="stats-card"><span class="stats-card-label" id="statsTotalPlaysLabel">Total plays</span><strong class="stats-card-value" id="statsTotalPlays">0</strong></div>
+                    <div class="stats-card"><span class="stats-card-label">Games with plays</span><strong class="stats-card-value" id="statsGamesPlayed">0</strong></div>
+                    <div class="stats-card"><span class="stats-card-label" id="statsTotalMinutesLabel">Total minutes</span><strong class="stats-card-value" id="statsTotalMinutes">0</strong></div>
+                </div>
+                <div class="stats-updated" id="statsUpdated">Last updated: not yet</div>
                 <div class="stats-layout">
                     <div class="stats-panel"><h3 id="statsChartTitle">Plays this week</h3><div class="stats-chart" id="statsChart"></div></div>
                     <div class="stats-panel"><h3 id="statsRankingTitle">Game ranking · Last 7 Days</h3><ol class="stats-ranking" id="statsRanking"></ol></div>
@@ -3206,7 +3234,7 @@
 
         function formatMinutes(minutes) {
             const value = Number(minutes) || 0;
-            return value % 1 === 0 ? value.toLocaleString() : value.toFixed(1);
+            return value.toFixed(1);
         }
 
         function getTotalMinutes(data, games) {
@@ -3221,9 +3249,6 @@
             const metric = range === 'today' ? 'today' : range === 'all' ? 'total' : 'period';
             const isToday = range === 'today';
             const isAllTime = range === 'all';
-            document.getElementById('statsTotalPlaysCard').hidden = false;
-            document.getElementById('statsTotalMinutesCard').hidden = false;
-            document.getElementById('statsTodayPlaysCard').hidden = isToday || isAllTime;
             const rangeLabels = { today: 'Today', week: 'Last 7 Days', month: 'Last 30 Days', all: 'All Time' };
             const rangeLabel = rangeLabels[range] || 'Selected Range';
             document.getElementById('statsScope').textContent = `${currentStatsMode === 'my' ? 'My Stats' : 'Global Stats'} · ${rangeLabel}`;
@@ -3231,20 +3256,26 @@
             const todayTotal = Number(currentStatsData.today ?? games.reduce((sum, game) => sum + (Number(game.today) || 0), 0));
             const rangePlayTotal = range === 'all' ? currentStatsData.totalPlays : (currentStatsData.periodPlays ?? todayTotal);
             document.getElementById('statsTotalPlays').textContent = Number(rangePlayTotal || 0).toLocaleString();
-            document.getElementById('statsTodayPlays').textContent = todayTotal.toLocaleString();
             document.getElementById('statsGamesPlayed').textContent = games.filter(game => getStatsMetric(game, metric) > 0).length.toLocaleString();
             document.getElementById('statsTotalMinutes').textContent = formatMinutes(getTotalMinutes(currentStatsData, games));
-            const chartTitles = { today: 'Plays today', week: 'Plays this week', month: 'Plays in the last 30 days', all: 'All-time plays by day' };
+            const chartTitles = { today: 'Today summary', week: 'Plays in the last 7 days', month: 'Plays in the last 30 days', all: 'All-time plays by month' };
             document.getElementById('statsChartTitle').textContent = chartTitles[range] || chartTitles.week;
             document.getElementById('statsTotalPlaysLabel').textContent = isAllTime ? 'Total plays' : `${rangeLabel} plays`;
-            document.getElementById('statsTotalMinutesLabel').textContent = isAllTime ? 'Total minutes' : `${rangeLabel} minutes`;
+            const minuteLabels = { today: 'Minutes played today', week: 'Minutes played in the last 7 days', month: 'Minutes played in the last 30 days', all: 'Total minutes played' };
+            document.getElementById('statsTotalMinutesLabel').textContent = minuteLabels[range];
 
             const chart = document.getElementById('statsChart');
-            const points = range === 'today' ? [{ date: currentStatsData.todayDate || new Date().toISOString().slice(0, 10), plays: todayTotal }] : (currentStatsData.daily || []);
+            let points = range === 'today' ? [] : (currentStatsData.daily || []);
+            if (range === 'all') {
+                const monthly = new Map();
+                points.forEach(point => { const month = point.date.slice(0, 7); monthly.set(month, (monthly.get(month) || 0) + Number(point.plays || 0)); });
+                points = [...monthly.entries()].map(([date, plays]) => ({ date: `${date}-01`, plays }));
+            }
+            if (range === 'today') chart.innerHTML = `<div class="stats-empty">${todayTotal.toLocaleString()} plays today</div>`;
             const max = Math.max(...points.map(point => Number(point.plays) || 0), 1);
-            chart.innerHTML = points.length ? points.map(point => {
+            if (range !== 'today') chart.innerHTML = points.length ? points.map(point => {
                 const height = Math.max(3, ((Number(point.plays) || 0) / max) * 180);
-                const label = range === 'today' ? 'Today' : new Date(`${point.date}T00:00:00Z`).toLocaleDateString(undefined, { weekday: 'short' });
+                const label = range === 'all' ? new Date(`${point.date}T00:00:00Z`).toLocaleDateString(undefined, { month: 'short', year: '2-digit' }) : new Date(`${point.date}T00:00:00Z`).toLocaleDateString(undefined, { weekday: 'short' });
                 return `<div class="stats-bar-wrap"><span class="stats-bar-value">${Number(point.plays) || 0}</span><div class="stats-bar" style="height:${height}px"></div><span class="stats-bar-label">${label}</span></div>`;
             }).join('') : '<div class="stats-empty">No play data yet.</div>';
 
@@ -3254,13 +3285,13 @@
             ranking.innerHTML = rankedGames.length ? rankedGames.map((game, index) => `<li class="stats-ranking-row"><span class="stats-rank-number">#${index + 1}</span><span class="stats-game-name">${getStatsGameName(game.gameId)}</span><span class="stats-game-total">${getStatsMetric(game, metric).toLocaleString()} plays</span></li>`).join('') : `<li class="stats-empty">No plays recorded for ${rangeLabel.toLowerCase()}.</li>`;
         }
 
-        async function loadStats() {
+        async function loadStats(force = false) {
             if (currentStatsMode === 'my') {
                 renderStats(getLocalStatsData());
                 return;
             }
             const range = document.getElementById('statsRange')?.value || 'week';
-            if (globalStatsCache.has(range) && Date.now() - globalStatsCacheTime.get(range) < 300000) {
+            if (!force && globalStatsCache.has(range) && Date.now() - globalStatsCacheTime.get(range) < 300000) {
                 renderStats(globalStatsCache.get(range));
                 return;
             }
@@ -3271,6 +3302,7 @@
                 globalStatsCache.set(range, data);
                 globalStatsCacheTime.set(range, Date.now());
                 renderStats(data);
+                document.getElementById('statsUpdated').textContent = `Last updated: ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
             } catch (error) {
                 console.warn('Could not load Cloudflare game stats:', error);
                 renderStats({ totalPlays: 0, today: 0, totalMinutes: 0, daily: [], games: [] });
@@ -3838,6 +3870,31 @@
             loadStats();
         });
         document.getElementById('statsRange').addEventListener('change', loadStats);
+        document.getElementById('statsRefresh').addEventListener('click', async () => {
+            const button = document.getElementById('statsRefresh');
+            const range = document.getElementById('statsRange').value;
+            globalStatsCache.delete(range);
+            button.disabled = true;
+            try { await loadStats(true); } finally { button.disabled = false; }
+        });
+        document.getElementById('mobileMenuToggle').addEventListener('click', () => {
+            const nav = document.querySelector('.topbar-nav');
+            const open = nav.classList.toggle('mobile-menu-open');
+            document.getElementById('mobileMenuToggle').setAttribute('aria-expanded', String(open));
+        });
+        document.getElementById('mobileSearchToggle').addEventListener('click', () => {
+            const search = document.getElementById('topbarSearchBox');
+            const open = search.classList.toggle('mobile-search-open');
+            document.getElementById('mobileSearchToggle').setAttribute('aria-expanded', String(open));
+            if (open) document.getElementById('searchInput').focus();
+        });
+        document.getElementById('sidebarToggle').addEventListener('click', () => {
+            const sidebar = document.getElementById('pageSidebar');
+            const collapsed = sidebar.classList.toggle('collapsed');
+            document.getElementById('sidebarToggle').setAttribute('aria-expanded', String(!collapsed));
+            document.getElementById('sidebarToggle').setAttribute('aria-label', collapsed ? 'Expand sidebar' : 'Collapse sidebar');
+            document.getElementById('sidebarToggle').textContent = collapsed ? '▾' : '▴';
+        });
         document.getElementById('headerCollapseToggle').addEventListener('click', toggleHeaderCollapsed);
         setShellView('home');
 
