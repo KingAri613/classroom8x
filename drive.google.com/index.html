@@ -208,11 +208,11 @@
         .stats-hero h2 { color: #fff; font-size: clamp(1.8rem, 4vw, 2.7rem); }
         .stats-hero p { margin-top: 6px; color: rgba(234, 234, 234, 0.68); }
         .stats-scope { display: inline-block; margin-top: 12px; padding: 6px 10px; border: 1px solid rgba(233, 69, 96, 0.32); border-radius: 999px; color: #ffb3bf; font-size: 0.82rem; font-weight: 800; letter-spacing: 0.04em; }
-        .stats-hero-actions { display: flex; align-items: center; gap: 10px; }
-        .stats-refresh { min-height: 44px; padding: 10px 14px; border: 1px solid rgba(233, 69, 96, 0.42); border-radius: 10px; background: rgba(16, 24, 43, 0.86); color: #fff; cursor: pointer; font-weight: 700; }
+        .stats-hero-actions { display: flex; align-items: center; gap: 12px; width: 100%; }
+        .stats-refresh { min-width: 112px; min-height: 48px; padding: 11px 18px; border: 1px solid rgba(233, 69, 96, 0.42); border-radius: 10px; background: rgba(16, 24, 43, 0.86); color: #fff; cursor: pointer; font-weight: 700; }
         .stats-refresh:disabled { opacity: 0.6; cursor: wait; }
         .stats-updated { margin-top: 8px; color: rgba(234, 234, 234, 0.56); font-size: 0.78rem; }
-        .stats-range { min-width: 150px; padding: 11px 14px; border: 1px solid rgba(233, 69, 96, 0.42); border-radius: 10px; background: rgba(16, 24, 43, 0.86); color: #fff; font-weight: 700; }
+        .stats-range { flex: 1; min-width: 190px; min-height: 48px; padding: 11px 16px; border: 1px solid rgba(233, 69, 96, 0.42); border-radius: 10px; background: rgba(16, 24, 43, 0.86); color: #fff; font-weight: 700; }
         .stats-tabs { display: inline-flex; gap: 6px; margin-bottom: 18px; padding: 5px; border: 1px solid rgba(233, 69, 96, 0.24); border-radius: 12px; background: rgba(10, 14, 25, 0.48); }
         .stats-tab { padding: 9px 14px; border: 0; border-radius: 8px; background: transparent; color: rgba(234, 234, 234, 0.68); cursor: pointer; font-weight: 700; }
         .stats-tab.active, .stats-tab:hover { background: rgba(233, 69, 96, 0.2); color: #fff; }
@@ -237,7 +237,7 @@
         .stats-game-total { color: #fff; font-weight: 800; }
         .stats-empty { color: rgba(234, 234, 234, 0.62); text-align: center; padding: 32px 10px; }
         @media (max-width: 900px) { .stats-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-        @media (max-width: 760px) { .stats-hero { align-items: stretch; flex-direction: column; } .stats-hero-actions { justify-content: space-between; } .stats-range { flex: 1; } .stats-summary, .stats-layout { grid-template-columns: 1fr; } }
+        @media (max-width: 760px) { .stats-hero { align-items: stretch; flex-direction: column; } .stats-hero-actions { gap: 10px; } .stats-range { min-width: 0; } .stats-summary, .stats-layout { grid-template-columns: 1fr; } }
 
         @media (max-width: 760px) {
             .education-hero, .education-footer { align-items: flex-start; flex-direction: column; }
