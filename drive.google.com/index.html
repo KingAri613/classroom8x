@@ -3453,7 +3453,9 @@
                 document.getElementById('statsUpdated').textContent = `Last updated: ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
             } catch (error) {
                 console.warn('Could not load Cloudflare game stats:', error);
-                renderStats({ totalPlays: 0, today: 0, totalMinutes: 0, daily: [], games: [] });
+                const localData = getLocalStatsData();
+                renderStats(localData);
+                document.getElementById('statsUpdated').textContent = `Last updated locally: ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
             }
         }
 
@@ -3562,7 +3564,7 @@
                                 <div class="section-games-grid">
                                     ${topGames.map(game => {
                                         return `
-                                            <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
+                                            <div class="game-card" data-game-url="${game.gameUrl}" data-game-name="${game.name}" data-game-id="${game.id}" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                                                 <div class="game-thumbnail">
                                                     <span class="player-count" data-player-count="${game.id}" title="Play count for the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                                                     ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
@@ -3594,7 +3596,7 @@
                             <div class="section-games-grid">
                                 ${popularGames.map(game => {
                                     return `
-                                        <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
+                                        <div class="game-card" data-game-url="${game.gameUrl}" data-game-name="${game.name}" data-game-id="${game.id}" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                                             <div class="game-thumbnail">
                                                 <span class="player-count" data-player-count="${game.id}" title="Play count for the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                                                 <div class="game-badge">Hot</div>
@@ -3603,7 +3605,7 @@
                                             </div>
                                             <div class="game-info">
                                                 <div class="game-title">${game.name}</div>
-                                                <button class="game-button" onclick="event.stopPropagation(); playGame('${game.gameUrl}', '${game.name}', '${game.id}')">Play Now</button>
+                                                <button class="game-button" type="button" data-game-url="${game.gameUrl}" data-game-name="${game.name}" data-game-id="${game.id}" onclick="event.stopPropagation(); playGame('${game.gameUrl}', '${game.name}', '${game.id}')">Play Now</button>
                                             </div>
                                         </div>
                                     `;
@@ -3624,7 +3626,7 @@
                     : fixedGameIds.includes(game.id) ? '<div class="game-badge fixed">Fixed</div>'
                     : newGameIds.includes(game.id) ? '<div class="game-badge">New</div>' : '';
                 return `
-                <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
+                                        <div class="game-card" data-game-url="${game.gameUrl}" data-game-name="${game.name}" data-game-id="${game.id}" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                     <div class="game-thumbnail">
                         <span class="player-count" data-player-count="${game.id}" title="Play count for the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                         ${gameBadge}
@@ -3642,7 +3644,7 @@
                 const newGames = allGames.filter(game => newGameIds.includes(game.id) && !hiddenGameIds.includes(game.id));
                 if (newGames.length > 0) {
                     htmlContent += newGames.map(game => `
-                        <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
+                        <div class="game-card" data-game-url="${game.gameUrl}" data-game-name="${game.name}" data-game-id="${game.id}" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                             <div class="game-thumbnail">
                                 <span class="player-count" data-player-count="${game.id}" title="Play count for the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                                 <div class="game-badge">New</div>
@@ -3663,7 +3665,7 @@
                             </h3>
                             <div class="section-games-grid">
                                 ${newGames.map(game => `
-                                    <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
+                                    <div class="game-card" data-game-url="${game.gameUrl}" data-game-name="${game.name}" data-game-id="${game.id}" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                                         <div class="game-thumbnail">
                                             <span class="player-count" data-player-count="${game.id}" title="Play count for the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                                             <div class="game-badge">New</div>
@@ -3672,7 +3674,7 @@
                                         </div>
                                         <div class="game-info">
                                             <div class="game-title">${game.name}</div>
-                                            <button class="game-button" onclick="event.stopPropagation(); playGame('${game.gameUrl}', '${game.name}', '${game.id}')">Play Now</button>
+                                            <button class="game-button" type="button" data-game-url="${game.gameUrl}" data-game-name="${game.name}" data-game-id="${game.id}" onclick="event.stopPropagation(); playGame('${game.gameUrl}', '${game.name}', '${game.id}')">Play Now</button>
                                         </div>
                                     </div>
                                 `).join('')}
@@ -3697,7 +3699,7 @@
 
             const htmlContent = moreGames.map(game => {
                 return `
-                <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
+                <div class="game-card" data-game-url="${game.gameUrl}" data-game-name="${game.name}" data-game-id="${game.id}" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                     <div class="game-thumbnail">
                         <span class="player-count" data-player-count="${game.id}" title="Play count for the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                         ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
@@ -3747,7 +3749,7 @@
             const list = document.getElementById('suggestionsList');
             if (!wrapper || !list || !suggestions.length) return;
                             const searchable = `${game.name} ${game.description} ${(game.categories || []).join(' ')} ${(game.tags || []).join(' ')}`.toLowerCase();
-            list.innerHTML = suggestions.map(game => `<button class="suggestion-card" type="button" onclick='playGame(${JSON.stringify(game.gameUrl)}, ${JSON.stringify(game.name)}, ${JSON.stringify(game.id)})'><img src="${game.image || ''}" alt="${game.name}" loading="lazy"><span>${game.name}</span></button>`).join('');
+            list.innerHTML = suggestions.map(game => `<button class="suggestion-card" type="button" data-game-url="${game.gameUrl}" data-game-name="${game.name}" data-game-id="${game.id}"><img src="${game.image || ''}" alt="${game.name}" loading="lazy"><span>${game.name}</span></button>`).join('');
             wrapper.hidden = false;
         }
 
@@ -4109,12 +4111,13 @@
         document.addEventListener('click', (event) => {
             const launchElement = event.target.closest('.game-card, .suggestion-card');
             if (!launchElement) return;
-            const source = launchElement.getAttribute('onclick') || '';
-            const match = source.match(/playGame\((?:'([^']*)'|"([^"]*)"),\s*(?:'([^']*)'|"([^"]*)"),\s*(?:'([^']*)'|"([^"]*)")\)/);
-            if (!match) return;
+            const gameUrl = launchElement.dataset.gameUrl;
+            const gameName = launchElement.dataset.gameName;
+            const gameId = launchElement.dataset.gameId;
+            if (!gameUrl || !gameName || !gameId) return;
             event.preventDefault();
             event.stopImmediatePropagation();
-            playGame(match[1] ?? match[2], match[3] ?? match[4], match[5] ?? match[6]);
+            playGame(gameUrl, gameName, gameId);
         }, true);
         document.getElementById('mobileMenuToggle').addEventListener('click', () => {
             const nav = document.querySelector('.topbar-nav');
