@@ -24,7 +24,7 @@ const mimeTypes = {
 };
 
 function sendResponse(res, statusCode, contentType, data) {
-  res.writeHead(statusCode, { 'Content-Type': contentType, 'Cache-Control': 'no-cache' });
+  res.writeHead(statusCode, { 'Content-Type': contentType });
   res.end(data);
 }
 
@@ -38,12 +38,7 @@ function send500(res) {
 
 const server = http.createServer((req, res) => {
   try {
-    const requestUrl = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
-    const requestedPath = decodeURIComponent(requestUrl.pathname);
-    if (requestedPath === '/__health') {
-      sendResponse(res, 200, 'application/json; charset=utf-8', JSON.stringify({ ok: true, port: PORT }));
-      return;
-    }
+    const requestedPath = decodeURI(req.url.split('?')[0]);
     const normalizedPath = path.normalize(requestedPath)
       .replace(/^\/+/, '')
       .replace(/^(?:drive|docs|classroom)\.google\.com(?:[\\/]|$)/i, '');
@@ -95,7 +90,7 @@ const server = http.createServer((req, res) => {
   }
 });
 
-server.listen(PORT, '0.0.0.0', () => {
+server.listen(PORT, () => {
   console.log(`Preview server running at http://localhost:${PORT}/`);
   console.log(`Serving content from ${PUBLIC_DIR}`);
 });

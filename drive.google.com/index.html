@@ -1973,49 +1973,6 @@
                 grid-template-columns: repeat(var(--game-columns, 5), minmax(0, 1fr));
             }
         }
-
-        .mobile-bottom-nav { display: none; }
-        .game-error-state { display: none; position: fixed; inset: 0; z-index: 2002; align-items: center; justify-content: center; padding: 24px; background: rgba(10, 14, 25, 0.94); text-align: center; }
-        .game-error-state.visible { display: flex; }
-        .game-error-state-inner { width: min(420px, 100%); padding: 28px 22px; border: 1px solid rgba(233, 69, 96, 0.4); border-radius: 14px; background: #16213e; }
-        .game-error-state h2 { margin-bottom: 8px; color: #fff; }
-        .game-error-state p { margin-bottom: 18px; color: rgba(234, 234, 234, 0.7); line-height: 1.5; }
-        .game-error-state button { min-width: 130px; min-height: 48px; padding: 12px 18px; border: 0; border-radius: 10px; background: #e94560; color: #fff; cursor: pointer; font-weight: 800; }
-        .connection-notice { display: none; position: fixed; right: 14px; bottom: 14px; z-index: 2100; max-width: min(360px, calc(100vw - 28px)); padding: 12px 16px; border: 1px solid rgba(255, 196, 92, 0.45); border-radius: 10px; background: #30243a; color: #fff; box-shadow: 0 8px 24px rgba(0,0,0,.25); }
-        .connection-notice.visible { display: block; }
-        .game-suggestions { position: absolute; left: 50%; bottom: max(12px, env(safe-area-inset-bottom)); z-index: 2003; width: min(760px, calc(100% - 28px)); transform: translateX(-50%); }
-        .suggestions-toggle { display: block; margin: 0 auto; min-height: 28px; padding: 4px 10px; border: 1px solid rgba(233, 69, 96, 0.5); border-radius: 7px; background: rgba(22, 33, 62, 0.96); color: #ffdbe1; cursor: pointer; font-size: .72rem; font-weight: 700; letter-spacing: .02em; box-shadow: 0 4px 14px rgba(0,0,0,.28); }
-        .suggestions-toggle:hover, .suggestions-toggle:focus-visible { border-color: #ff8095; background: #e94560; color: #fff; outline: none; }
-        .suggestions-list { display: none; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 7px; margin-top: 6px; padding: 8px; border: 1px solid rgba(233, 69, 96, 0.28); border-radius: 10px; background: rgba(10, 14, 25, 0.96); box-shadow: 0 12px 28px rgba(0,0,0,.35); }
-        .game-suggestions:hover .suggestions-list { display: grid; }
-        .suggestion-card { min-width: 0; padding: 3px; border: 1px solid rgba(255,255,255,.12); border-radius: 7px; background: rgba(255,255,255,.06); color: #fff; cursor: pointer; text-align: left; transition: border-color .2s ease, transform .2s ease, background .2s ease; }
-        .suggestion-card:hover, .suggestion-card:focus-visible { border-color: #ff8095; background: rgba(233,69,96,.2); transform: translateY(-2px); outline: none; }
-        .suggestion-card img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 5px; background: #0f3460; }
-        .suggestion-card span { display: block; margin: 3px 2px 1px; overflow: hidden; font-size: .65rem; text-overflow: ellipsis; white-space: nowrap; }
-        @media (max-width: 768px) {
-            body { padding-bottom: 64px; }
-            .header { position: sticky; top: 0; padding: 6px 8px; min-height: 58px; }
-            .gc-logo { width: 42px; height: 36px; }
-            .header h1 { font-size: 1.25rem; }
-            .sidebar { padding: 38px 8px 8px; }
-            .sidebar-body { overflow-x: auto; }
-            .sidebar h3 { display: none; }
-            .sidebar-list { display: flex; gap: 8px; width: max-content; }
-            .sidebar-list li { margin: 0; }
-            .sidebar-list button { min-height: 44px; width: auto; padding: 9px 12px; font-size: .9rem; white-space: nowrap; }
-            .request-games-sidebar-btn { display: none; }
-            .main-content { padding: 8px; }
-            .games-grid { grid-template-columns: 1fr; gap: 10px; }
-            .game-button { min-height: 44px; width: 100%; }
-            .mobile-bottom-nav { position: fixed; display: grid; grid-template-columns: repeat(4, 1fr); left: 0; right: 0; bottom: 0; z-index: 1900; padding: 6px 8px max(6px, env(safe-area-inset-bottom)); border-top: 1px solid rgba(233,69,96,.3); background: rgba(10,14,25,.97); }
-            .mobile-bottom-nav button { min-height: 44px; border: 0; background: transparent; color: rgba(255,255,255,.72); cursor: pointer; font-weight: 700; }
-            .mobile-bottom-nav button.active { color: #ff8095; }
-            .game-suggestions { bottom: max(8px, env(safe-area-inset-bottom)); }
-            .suggestions-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-            #gameModal iframe { top: env(safe-area-inset-top); bottom: env(safe-area-inset-bottom); height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important; }
-        }
-        @media (min-width: 480px) and (max-width: 768px) { .games-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-        @media (orientation: portrait) and (max-width: 768px) { #gameModal.landscape-required::before { content: 'Rotate your device to play this game'; position: fixed; inset: 0; z-index: 2004; display: grid; place-items: center; padding: 30px; background: #0a0e19; color: #fff; font-size: 1.25rem; font-weight: 800; text-align: center; } }
     </style>
 </head>
 <body>
@@ -2243,13 +2200,6 @@
             <div class="game-loading-spinner" aria-hidden="true"></div>
             <div class="game-loading-text">Loading game...</div>
         </div>
-        <div class="game-error-state" id="gameErrorState" aria-live="assertive">
-            <div class="game-error-state-inner">
-                <h2>Game unavailable</h2>
-                <p>We could not load this game. Check your connection and try again.</p>
-                <button type="button" id="gameRetryButton">Retry</button>
-            </div>
-        </div>
         <iframe id="gameFrame" 
             allowfullscreen 
             webkitallowfullscreen 
@@ -2258,19 +2208,7 @@
             allow="camera; microphone; clipboard-read; clipboard-write; fullscreen"
             referrerpolicy="no-referrer-when-downgrade">
         </iframe>
-        <div class="game-suggestions" id="gameSuggestions" hidden>
-            <button class="suggestions-toggle" type="button" aria-expanded="false">⌃ Suggested games</button>
-            <div class="suggestions-list" id="suggestionsList"></div>
-        </div>
     </div>
-
-    <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
-        <button type="button" data-mobile-target="home">⌂<br><span>Home</span></button>
-        <button type="button" data-mobile-target="search">⌕<br><span>Search</span></button>
-        <button type="button" data-mobile-target="favorites">♡<br><span>Favorites</span></button>
-        <button type="button" data-mobile-target="stats">▥<br><span>Stats</span></button>
-    </nav>
-    <div class="connection-notice" id="connectionNotice" role="status">You are offline. Cached games remain available.</div>
 
     <div class="modal-overlay" id="soundboardModal" aria-hidden="true">
         <button class="soundboard-close" onclick="closeSoundboard()" style="display:none;">← Back</button>
@@ -2322,13 +2260,6 @@
         let currentCategory = 'all';
         let currentSearch = '';
         let currentSoundSearch = '';
-        let lastGameLaunch = null;
-        let preloadFrames = new Map();
-        let gameLoadTimeoutId = null;
-        let preloadRequestId = null;
-        let preloadTimerId = null;
-        let backgroundPreloadingStopped = false;
-        let preloadIndex = 0;
         const moreGameIds = ['basket-random', 'johnny-trigger'];
         const fixedGameIds = ['escape-road'];
         const mainGameIds = ['hook-stickman', 'level-devil', 'motox-3m', 'vex-8'];
@@ -2339,75 +2270,6 @@
         const whatsNewFallbackIcons = ['🏎️', '⚽', '🎯', '🧩', '🚀', '🎮', '🛹', '🏀', '🧱', '🎲', '⏱️', '🧠', '🏁', '🎰', '🛠️', '⚡', '🎧', '🔥'];
         const defaultGameSandbox = 'allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-presentation allow-downloads';
         const liveSportUrl = 'https://cube-trove-api.lovable.app/';
-        const searchAliases = {
-            car: ['racing', 'driving', 'vehicle', 'motor'],
-            racing: ['car', 'driving', 'vehicle', 'motor'],
-            driving: ['car', 'racing', 'vehicle', 'motor'],
-            race: ['car', 'racing', 'driving']
-        };
-        const categoryTagMap = {
-            action: ['action', 'fast-paced', 'challenge', 'score-chasing', 'reflex', 'arcade-action', 'single-player', 'quick-play', 'browser-game', 'high-energy'],
-            arcade: ['arcade', 'classic', 'score-chasing', 'high-score', 'quick-play', 'retro', 'single-player', 'casual', 'browser-game', 'high-energy'],
-            platformer: ['platformer', 'jumping', 'obstacles', 'side-scroller', 'precision', 'level-based', 'single-player', 'challenge', 'quick-play', 'adventure'],
-            racing: ['racing', 'driving', 'cars', 'vehicles', 'tracks', 'speed', 'stunts', 'time-trial', 'competitive', 'arcade-racing'],
-            puzzle: ['puzzle', 'logic', 'strategy', 'thinking', 'brain-teaser', 'problem-solving', 'level-based', 'casual', 'single-player', 'challenge'],
-            sports: ['sports', 'competition', 'skill', 'timing', 'score-chasing', 'competitive', 'quick-play', 'single-player', 'arcade', 'reflex'],
-            shooter: ['shooter', 'aiming', 'action', 'combat', 'weapons', 'arcade', 'fast-paced', 'challenge', 'score-chasing', 'single-player'],
-            '2player': ['2-player', 'multiplayer', 'local-multiplayer', 'friends', 'competitive', 'party', 'quick-play', 'arcade', 'versus', 'co-op'],
-            io: ['io-game', 'multiplayer', 'competitive', 'arena', 'survival', 'score-chasing', 'quick-play', 'online', 'action', 'casual'],
-            simulation: ['simulation', 'management', 'strategy', 'building', 'planning', 'casual', 'progression', 'single-player', 'creative', 'browser-game'],
-            idle: ['idle', 'incremental', 'progression', 'upgrade', 'management', 'casual', 'strategy', 'simulation', 'relaxing', 'single-player'],
-            adventure: ['adventure', 'exploration', 'story', 'discovery', 'level-based', 'challenge', 'single-player', 'action', 'journey', 'browser-game'],
-            horror: ['horror', 'scary', 'survival', 'dark', ' suspense', 'challenge', 'single-player', 'adventure', 'atmospheric', 'thriller']
-        };
-
-        function enrichGameTags(game) {
-            const text = `${game.name || ''} ${game.description || ''} ${(game.categories || []).join(' ')}`.toLowerCase();
-            const tags = new Set((game.categories || []).map(category => category.toLowerCase()));
-            (game.categories || []).forEach(category => (categoryTagMap[category] || []).forEach(tag => tags.add(tag.trim())));
-            const keywordTags = {
-                car: ['car', 'cars', 'vehicle', 'driving', 'racing'],
-                drive: ['driving', 'car', 'vehicles', 'speed'],
-                race: ['racing', 'speed', 'competition', 'tracks'],
-                run: ['running', 'endless-runner', 'speed', 'reflex'],
-                jump: ['jumping', 'platformer', 'precision'],
-                stickman: ['stickman', 'physics', 'action'],
-                multiplayer: ['multiplayer', 'online', 'friends'],
-                football: ['football', 'soccer', 'sports', 'competition'],
-                soccer: ['soccer', 'football', 'sports', 'competition'],
-                shooter: ['shooter', 'aiming', 'combat'],
-                zombie: ['zombies', 'survival', 'horror'],
-                space: ['space', ' sci-fi', 'exploration'],
-                craft: ['crafting', 'building', 'creative'],
-                hotel: ['hotel', 'management', 'simulation'],
-                mart: ['shop', 'management', 'simulation'],
-                clicker: ['clicker', 'incremental', 'idle']
-            };
-            Object.entries(keywordTags).forEach(([keyword, keywordValues]) => {
-                if (text.includes(keyword)) keywordValues.forEach(tag => tags.add(tag.trim()));
-            });
-            ['browser-game', 'instant-play', 'free-game', 'web-game'].forEach(tag => tags.add(tag));
-            ['gameplay', 'skill-based', 'challenge', 'single-player', 'casual-play', 'quick-session'].forEach(tag => {
-                if (tags.size < 10) tags.add(tag);
-            });
-            game.tags = [...tags];
-            return game;
-        }
-
-        function isSafeGameUrl(gameUrl) {
-            if (!gameUrl || typeof gameUrl !== 'string') return false;
-            try {
-                const url = new URL(gameUrl, window.location.href);
-                return ['http:', 'https:'].includes(url.protocol) && (url.origin === window.location.origin || url.hostname.endsWith('.netlify.app'));
-            } catch (error) {
-                return false;
-            }
-        }
-
-        function getSearchTerms(search) {
-            const normalized = search.trim().toLowerCase();
-            return [normalized, ...(searchAliases[normalized] || [])];
-        }
 
         function renderWhatsNewGrid() {
             const grid = document.getElementById('newGamesNotificationGrid');
@@ -3187,7 +3049,6 @@
         const GAME_STATS_KEY = 'classroom8x_game_stats';
         const GAME_MINUTES_KEY = 'classroom8x_game_minutes';
         const GAME_SESSIONS_KEY = 'classroom8x_game_sessions';
-        const GAME_EVENTS_KEY = 'classroom8x_game_events';
         const MAX_SESSION_SECONDS = 60 * 60 * 3;
 
         function normalizeSessionSeconds(value) {
@@ -3214,9 +3075,6 @@
                 stats[gameId].lastPlayed = new Date().toISOString();
                 
                 localStorage.setItem(GAME_STATS_KEY, JSON.stringify(stats));
-                const events = JSON.parse(localStorage.getItem(GAME_EVENTS_KEY)) || [];
-                events.push({ gameId, playedAt: Date.now() });
-                localStorage.setItem(GAME_EVENTS_KEY, JSON.stringify(events.slice(-1000)));
                 console.log(`[Tracking] ${gameName} played. Total plays: ${stats[gameId].playCount}`);
             } catch (error) {
                 console.error('Error tracking game play:', error);
@@ -3256,9 +3114,7 @@
         function getVisitorId() {
             let visitorId = localStorage.getItem('classroom8xVisitorId');
             if (!visitorId) {
-                visitorId = typeof crypto?.randomUUID === 'function'
-                    ? crypto.randomUUID().replace(/-/g, '')
-                    : `visitor-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+                visitorId = crypto.randomUUID().replace(/-/g, '');
                 localStorage.setItem('classroom8xVisitorId', visitorId);
             }
             return visitorId;
@@ -3345,15 +3201,12 @@
             let stats = {};
             let minutes = {};
             let sessions = [];
-            let events = [];
             try { stats = JSON.parse(localStorage.getItem(GAME_STATS_KEY)) || {}; } catch (error) {}
             try { minutes = JSON.parse(localStorage.getItem(GAME_MINUTES_KEY)) || {}; } catch (error) {}
             try { sessions = JSON.parse(localStorage.getItem(GAME_SESSIONS_KEY)) || []; } catch (error) {}
-            try { events = JSON.parse(localStorage.getItem(GAME_EVENTS_KEY)) || []; } catch (error) {}
             const range = document.getElementById('statsRange')?.value || 'week';
             const now = Date.now();
             const rangeStart = range === 'today' ? new Date().setHours(0, 0, 0, 0) : range === 'month' ? now - (29 * 86400000) : range === 'all' ? 0 : now - (6 * 86400000);
-            const rangedEvents = events.filter(event => Number(event.playedAt) >= rangeStart);
             const rangedSessions = sessions.filter(session => Number(session.playedAt) >= rangeStart).map(session => ({
                 ...session,
                 durationSeconds: normalizeSessionSeconds(session.durationSeconds)
@@ -3361,17 +3214,14 @@
             const rangedMinutes = new Map();
             rangedSessions.forEach(session => rangedMinutes.set(session.gameId, (rangedMinutes.get(session.gameId) || 0) + (Number(session.durationSeconds) || 0) / 60));
             const safeMinutes = Object.fromEntries(Object.entries(minutes).map(([gameId, value]) => [gameId, normalizeSessionSeconds(value)]));
-            const eventCounts = new Map();
-            rangedEvents.forEach(event => eventCounts.set(event.gameId, (eventCounts.get(event.gameId) || 0) + 1));
             const games = Object.values(stats).map(stat => ({
                 gameId: stat.id,
                 total: Number(stat.playCount) || 0,
-                today: eventCounts.get(stat.id) || 0,
-                period: eventCounts.get(stat.id) || 0,
+                today: stat.lastPlayed && stat.lastPlayed.slice(0, 10) === new Date().toISOString().slice(0, 10) ? Number(stat.playCount) || 0 : 0,
                 minutes: range === 'all' ? (Number(safeMinutes[stat.id]) || 0) / 60 : rangedMinutes.get(stat.id) || 0
             }));
             const totalMinutes = range === 'all' ? Object.values(safeMinutes).reduce((sum, value) => sum + (Number(value) || 0) / 60, 0) : rangedSessions.reduce((sum, session) => sum + (Number(session.durationSeconds) || 0) / 60, 0);
-            return { totalPlays: games.reduce((sum, game) => sum + game.total, 0), periodPlays: rangedEvents.length, today: range === 'today' ? rangedEvents.length : events.filter(event => Number(event.playedAt) >= new Date().setHours(0, 0, 0, 0)).length, totalMinutes, daily: [], games };
+            return { totalPlays: games.reduce((sum, game) => sum + game.total, 0), today: games.reduce((sum, game) => sum + game.today, 0), totalMinutes, daily: [], games };
         }
 
         function getStatsGameName(gameId) {
@@ -3455,9 +3305,7 @@
                 document.getElementById('statsUpdated').textContent = `Last updated: ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
             } catch (error) {
                 console.warn('Could not load Cloudflare game stats:', error);
-                const localData = getLocalStatsData();
-                renderStats(localData);
-                document.getElementById('statsUpdated').textContent = `Last updated locally: ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
+                renderStats({ totalPlays: 0, today: 0, totalMinutes: 0, daily: [], games: [] });
             }
         }
 
@@ -3488,13 +3336,21 @@
         // Load games
         async function loadGames() {
             try {
-                const response = await fetch('games.json', { cache: 'force-cache' });
-                allGames = (await response.json()).map(enrichGameTags);
+                const response = await fetch('games.json');
+                allGames = await response.json();
                 renderWhatsNewGrid();
                 showWhatsNewOnce();
                 filterGames();
                 renderMoreGames();
                 startPlayerCountRefresh();
+                loadPlayerCounts().then(() => {
+                    document.body.classList.add('silent-player-refresh');
+                    try {
+                        refreshHomeSectionsSilently();
+                    } finally {
+                        document.body.classList.remove('silent-player-refresh');
+                    }
+                });
             } catch (error) {
                 console.error('Error loading games:', error);
                 document.getElementById('gamesGrid').innerHTML = `
@@ -3512,13 +3368,13 @@
         }
 
         function filterGames() {
-            const searchTerms = getSearchTerms(currentSearch);
             filteredGames = allGames.filter(game => {
                 if (moreGameIds.includes(game.id) && !mainGameIds.includes(game.id)) return false;
                 const matchesCategory = currentCategory === 'all' || 
                     (game.categories && game.categories.includes(currentCategory));
-                const searchable = `${game.name} ${game.description} ${(game.categories || []).join(' ')}`.toLowerCase();
-                const matchesSearch = currentSearch === '' || searchTerms.some(term => searchable.includes(term));
+                const matchesSearch = currentSearch === '' ||
+                    game.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                    game.description.toLowerCase().includes(currentSearch.toLowerCase());
                 return matchesCategory && matchesSearch;
             });
             renderGames(filteredGames);
@@ -3566,7 +3422,7 @@
                                 <div class="section-games-grid">
                                     ${topGames.map(game => {
                                         return `
-                                            <div class="game-card" data-game-url="${game.gameUrl}" data-game-name="${game.name}" data-game-id="${game.id}" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
+                                            <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                                                 <div class="game-thumbnail">
                                                     <span class="player-count" data-player-count="${game.id}" title="Play count for the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                                                     ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
@@ -3598,7 +3454,7 @@
                             <div class="section-games-grid">
                                 ${popularGames.map(game => {
                                     return `
-                                        <div class="game-card" data-game-url="${game.gameUrl}" data-game-name="${game.name}" data-game-id="${game.id}" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
+                                        <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                                             <div class="game-thumbnail">
                                                 <span class="player-count" data-player-count="${game.id}" title="Play count for the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                                                 <div class="game-badge">Hot</div>
@@ -3607,7 +3463,7 @@
                                             </div>
                                             <div class="game-info">
                                                 <div class="game-title">${game.name}</div>
-                                                <button class="game-button" type="button" data-game-url="${game.gameUrl}" data-game-name="${game.name}" data-game-id="${game.id}" onclick="event.stopPropagation(); playGame('${game.gameUrl}', '${game.name}', '${game.id}')">Play Now</button>
+                                                <button class="game-button" onclick="event.stopPropagation(); playGame('${game.gameUrl}', '${game.name}', '${game.id}')">Play Now</button>
                                             </div>
                                         </div>
                                     `;
@@ -3628,7 +3484,7 @@
                     : fixedGameIds.includes(game.id) ? '<div class="game-badge fixed">Fixed</div>'
                     : newGameIds.includes(game.id) ? '<div class="game-badge">New</div>' : '';
                 return `
-                                        <div class="game-card" data-game-url="${game.gameUrl}" data-game-name="${game.name}" data-game-id="${game.id}" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
+                <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                     <div class="game-thumbnail">
                         <span class="player-count" data-player-count="${game.id}" title="Play count for the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                         ${gameBadge}
@@ -3646,7 +3502,7 @@
                 const newGames = allGames.filter(game => newGameIds.includes(game.id) && !hiddenGameIds.includes(game.id));
                 if (newGames.length > 0) {
                     htmlContent += newGames.map(game => `
-                        <div class="game-card" data-game-url="${game.gameUrl}" data-game-name="${game.name}" data-game-id="${game.id}" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
+                        <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                             <div class="game-thumbnail">
                                 <span class="player-count" data-player-count="${game.id}" title="Play count for the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                                 <div class="game-badge">New</div>
@@ -3667,7 +3523,7 @@
                             </h3>
                             <div class="section-games-grid">
                                 ${newGames.map(game => `
-                                    <div class="game-card" data-game-url="${game.gameUrl}" data-game-name="${game.name}" data-game-id="${game.id}" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
+                                    <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                                         <div class="game-thumbnail">
                                             <span class="player-count" data-player-count="${game.id}" title="Play count for the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                                             <div class="game-badge">New</div>
@@ -3676,7 +3532,7 @@
                                         </div>
                                         <div class="game-info">
                                             <div class="game-title">${game.name}</div>
-                                            <button class="game-button" type="button" data-game-url="${game.gameUrl}" data-game-name="${game.name}" data-game-id="${game.id}" onclick="event.stopPropagation(); playGame('${game.gameUrl}', '${game.name}', '${game.id}')">Play Now</button>
+                                            <button class="game-button" onclick="event.stopPropagation(); playGame('${game.gameUrl}', '${game.name}', '${game.id}')">Play Now</button>
                                         </div>
                                     </div>
                                 `).join('')}
@@ -3701,7 +3557,7 @@
 
             const htmlContent = moreGames.map(game => {
                 return `
-                <div class="game-card" data-game-url="${game.gameUrl}" data-game-name="${game.name}" data-game-id="${game.id}" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
+                <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                     <div class="game-thumbnail">
                         <span class="player-count" data-player-count="${game.id}" title="Play count for the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                         ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
@@ -3725,77 +3581,10 @@
             overlay.classList.toggle('visible', isLoading);
         }
 
-        function setGameErrorState(isVisible) {
-            document.getElementById('gameErrorState')?.classList.toggle('visible', isVisible);
-        }
-
-        function showConnectionNotice(message) {
-            const notice = document.getElementById('connectionNotice');
-            if (!notice) return;
-            notice.textContent = message;
-            notice.classList.add('visible');
-            clearTimeout(showConnectionNotice.timeoutId);
-            showConnectionNotice.timeoutId = setTimeout(() => notice.classList.remove('visible'), 5000);
-        }
-
-        function renderGameSuggestions(gameId) {
-            const current = allGames.find(game => game.id === gameId);
-            const currentTags = new Set(current?.tags || current?.categories || []);
-            const suggestions = allGames
-                .filter(game => game.id !== gameId)
-                .map(game => ({ game, score: (game.tags || game.categories || []).reduce((score, tag) => score + (currentTags.has(tag) ? 1 : 0), 0) }))
-                .sort((first, second) => second.score - first.score || first.game.name.localeCompare(second.game.name))
-                .slice(0, 6)
-                .map(item => item.game);
-            const wrapper = document.getElementById('gameSuggestions');
-            const list = document.getElementById('suggestionsList');
-            if (!wrapper || !list || !suggestions.length) return;
-                            const searchable = `${game.name} ${game.description} ${(game.categories || []).join(' ')} ${(game.tags || []).join(' ')}`.toLowerCase();
-            list.innerHTML = suggestions.map(game => `<button class="suggestion-card" type="button" data-game-url="${game.gameUrl}" data-game-name="${game.name}" data-game-id="${game.id}"><img src="${game.image || ''}" alt="${game.name}" loading="lazy"><span>${game.name}</span></button>`).join('');
-            wrapper.hidden = false;
-        }
-
-        function scheduleGamePreloads() {
-            if (backgroundPreloadingStopped) return;
-            const preloadableGames = allGames.filter(game => isSafeGameUrl(game.gameUrl));
-            const preloadNext = () => {
-                if (backgroundPreloadingStopped || preloadIndex >= preloadableGames.length) return;
-                const game = preloadableGames[preloadIndex++];
-                if (preloadFrames.has(game.id)) { preloadNext(); return; }
-                const frame = document.createElement('iframe');
-                frame.src = new URL(game.gameUrl, window.location.href).href;
-                frame.loading = 'lazy';
-                frame.setAttribute('aria-hidden', 'true');
-                frame.style.cssText = 'position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;left:-10px;bottom:-10px;';
-                frame.sandbox = defaultGameSandbox;
-                document.body.appendChild(frame);
-                preloadFrames.set(game.id, frame);
-                let nextTimer = setTimeout(preloadNext, 5000);
-                frame.addEventListener('load', () => {
-                    clearTimeout(nextTimer);
-                    nextTimer = setTimeout(preloadNext, 150);
-                }, { once: true });
-            };
-            if ('requestIdleCallback' in window) preloadRequestId = requestIdleCallback(preloadNext, { timeout: 2500 });
-            else preloadTimerId = setTimeout(preloadNext, 1500);
-        }
-
-        function stopBackgroundPreloading() {
-            backgroundPreloadingStopped = true;
-            if (preloadRequestId !== null && 'cancelIdleCallback' in window) cancelIdleCallback(preloadRequestId);
-            if (preloadTimerId !== null) clearTimeout(preloadTimerId);
-            preloadRequestId = null;
-            preloadTimerId = null;
-            preloadFrames.forEach(frame => frame.remove());
-            preloadFrames.clear();
-        }
-
         const gameFrame = document.getElementById('gameFrame');
         if (gameFrame) {
             gameFrame.addEventListener('load', () => {
                 setGameLoadingState(false);
-                setGameErrorState(false);
-                if (gameLoadTimeoutId) clearTimeout(gameLoadTimeoutId);
                 if (gameLoadStartedAt) {
                     trackAnalyticsEvent('game_load_time', { load_time_ms: Date.now() - gameLoadStartedAt });
                     gameLoadStartedAt = 0;
@@ -3803,7 +3592,6 @@
             });
             gameFrame.addEventListener('error', () => {
                 setGameLoadingState(false);
-                setGameErrorState(true);
                 trackAnalyticsEvent('game_load_error');
                 gameLoadStartedAt = 0;
             });
@@ -3825,12 +3613,6 @@
         }
 
         function playGame(gameUrl, gameName, gameId) {
-            if (!isSafeGameUrl(gameUrl)) {
-                showConnectionNotice('This game has an invalid or unavailable URL.');
-                return;
-            }
-            stopBackgroundPreloading();
-            lastGameLaunch = { gameUrl, gameName, gameId };
             // Check if game has warning popup (BitLife)
             const game = allGames.find(g => g.id === gameId);
             if (game && game.warningPopup) {
@@ -3847,13 +3629,10 @@
             const gameModal = document.getElementById('gameModal');
             const gameFrame = document.getElementById('gameFrame');
             gameModal.classList.toggle('ai-mode', gameId === 'ai-tool');
-            gameModal.classList.toggle('landscape-required', Boolean(game?.landscape));
             gameFrame.setAttribute('sandbox', defaultGameSandbox);
             gameFrame.src = '';
             gameLoadStartedAt = Date.now();
             setGameLoadingState(true);
-            setGameErrorState(false);
-            renderGameSuggestions(gameId);
             startGameSession(gameId);
             gameModal.classList.add('active');
             document.body.classList.add('game-open');
@@ -3863,7 +3642,6 @@
             // Small delay to ensure modal is active before loading game
             setTimeout(() => {
                 gameFrame.src = gameUrl;
-                gameLoadTimeoutId = setTimeout(() => { setGameLoadingState(false); setGameErrorState(true); }, 12000);
             }, 50);
         }
 
@@ -3987,14 +3765,9 @@
             const gameFrame = document.getElementById('gameFrame');
             gameModal.classList.remove('active');
             gameModal.classList.remove('ai-mode');
-            gameModal.classList.remove('landscape-required');
             gameFrame.setAttribute('sandbox', defaultGameSandbox);
             gameFrame.src = '';
             setGameLoadingState(false);
-            setGameErrorState(false);
-            const suggestions = document.getElementById('gameSuggestions');
-            if (suggestions) { suggestions.hidden = true; suggestions.classList.remove('open'); }
-            if (gameLoadTimeoutId) clearTimeout(gameLoadTimeoutId);
             finishGameSession();
             document.body.classList.remove('game-open');
             document.body.style.overflow = '';
@@ -4058,9 +3831,6 @@
         window.addEventListener('load', () => {
             pageShellLoaded = true;
             revealSiteIfReady();
-            if (document.body.classList.contains('home-shell-view')) {
-                setTimeout(scheduleGamePreloads, 1200);
-            }
         });
 
         function openAI() {
@@ -4107,19 +3877,6 @@
             button.disabled = true;
             try { await loadStats(true); } finally { button.disabled = false; }
         });
-        document.getElementById('gameRetryButton').addEventListener('click', () => {
-            if (lastGameLaunch) playGame(lastGameLaunch.gameUrl, lastGameLaunch.gameName, lastGameLaunch.gameId);
-        });
-        document.addEventListener('click', (event) => {
-            const launchElement = event.target.closest('.game-card, .suggestion-card');
-            if (!launchElement) return;
-            const gameId = launchElement.dataset.gameId;
-            const game = allGames.find(item => item.id === gameId);
-            if (!game) return;
-            event.preventDefault();
-            event.stopImmediatePropagation();
-            playGame(game.gameUrl, game.name, game.id);
-        }, true);
         document.getElementById('mobileMenuToggle').addEventListener('click', () => {
             const nav = document.querySelector('.topbar-nav');
             const open = nav.classList.toggle('mobile-menu-open');
@@ -4139,31 +3896,7 @@
             document.getElementById('sidebarToggle').textContent = collapsed ? '▾' : '▴';
         });
         document.getElementById('headerCollapseToggle').addEventListener('click', toggleHeaderCollapsed);
-        document.querySelectorAll('[data-mobile-target]').forEach(button => {
-            button.addEventListener('click', () => {
-                const target = button.dataset.mobileTarget;
-                document.querySelectorAll('.mobile-bottom-nav button').forEach(item => item.classList.toggle('active', item === button));
-                if (target === 'home') showHomeView();
-                if (target === 'stats') setShellView('stats');
-                if (target === 'search') {
-                    showHomeView();
-                    document.getElementById('topbarSearchBox').classList.add('mobile-search-open');
-                    document.getElementById('searchInput').focus();
-                }
-                if (target === 'favorites') {
-                    showHomeView();
-                    currentSearch = '';
-                    const favorites = new Set(JSON.parse(localStorage.getItem('classroom8x_favorites') || '[]'));
-                    filteredGames = allGames.filter(game => favorites.has(game.id));
-                    renderGames(filteredGames);
-                    document.getElementById('sectionTitle').textContent = 'Favorites';
-                }
-            });
-        });
         setShellView('home');
-
-        window.addEventListener('offline', () => showConnectionNotice('You are offline. Cached games remain available.'));
-        window.addEventListener('online', () => showConnectionNotice('Connection restored.'));
 
         function showFullSiteFromCalculator() {
             document.body.classList.remove('classroom-calculator-mode');
