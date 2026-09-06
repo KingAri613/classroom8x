@@ -3256,7 +3256,9 @@
         function getVisitorId() {
             let visitorId = localStorage.getItem('classroom8xVisitorId');
             if (!visitorId) {
-                visitorId = crypto.randomUUID().replace(/-/g, '');
+                visitorId = typeof crypto?.randomUUID === 'function'
+                    ? crypto.randomUUID().replace(/-/g, '')
+                    : `visitor-${Date.now()}-${Math.random().toString(36).slice(2)}`;
                 localStorage.setItem('classroom8xVisitorId', visitorId);
             }
             return visitorId;
@@ -4111,13 +4113,12 @@
         document.addEventListener('click', (event) => {
             const launchElement = event.target.closest('.game-card, .suggestion-card');
             if (!launchElement) return;
-            const gameUrl = launchElement.dataset.gameUrl;
-            const gameName = launchElement.dataset.gameName;
             const gameId = launchElement.dataset.gameId;
-            if (!gameUrl || !gameName || !gameId) return;
+            const game = allGames.find(item => item.id === gameId);
+            if (!game) return;
             event.preventDefault();
             event.stopImmediatePropagation();
-            playGame(gameUrl, gameName, gameId);
+            playGame(game.gameUrl, game.name, game.id);
         }, true);
         document.getElementById('mobileMenuToggle').addEventListener('click', () => {
             const nav = document.querySelector('.topbar-nav');
