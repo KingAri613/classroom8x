@@ -1,96 +1,37 @@
 function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: {
-      'Content-Type': 'application/json',
-      'Cache-Control': 'public, max-age=300'
-    }
-  });
+  return new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=30, s-maxage=30, stale-while-revalidate=60' } });
 }
 
 export async function onRequestGet(context) {
   const now = Math.floor(Date.now() / 1000);
   const dayStart = now - (now % 86400);
   const range = new URL(context.request.url).searchParams.get('range') || 'week';
-  const rangeStart = range === 'today' ? dayStart : range === 'month' ? dayStart - (29 * 86400) : range === 'all' ? 0 : dayStart - (6 * 86400);
-
-  const [totalResult, todayResult, dailyResult, gamesResult] = await Promise.all([
-    context.env.DB.prepare(`
-      SELECT COUNT(*) AS totalPlays,
-             SUM(CASE WHEN played_at >= ? THEN 1 ELSE 0 END) AS periodPlays
-      FROM game_plays
-    `).bind(rangeStart).first(),
-    context.env.DB.prepare(`
-      SELECT COUNT(*) AS todayPlays
-      FROM game_plays
-      WHERE played_at >= ?
-    `).bind(dayStart).first(),
-    context.env.DB.prepare(`
-      SELECT strftime('%Y-%m-%d', played_at, 'unixepoch') AS date, COUNT(*) AS plays
-      FROM game_plays
-      WHERE played_at >= ?
-      GROUP BY date
-      ORDER BY date ASC
-    `).bind(rangeStart).all(),
-    context.env.DB.prepare(`
-      SELECT game_id AS gameId,
-             COUNT(*) AS total,
-             SUM(CASE WHEN played_at >= ? THEN 1 ELSE 0 END) AS today,
-             SUM(CASE WHEN played_at >= ? THEN 1 ELSE 0 END) AS period
-      FROM game_plays
-      GROUP BY game_id
-      ORDER BY total DESC, game_id ASC
-    `).bind(dayStart, rangeStart).all()
-  ]);
-
-  const maxSessionSeconds = 60 * 60 * 3;
-
-  let minutesResult = null;
-  let gameMinutesResult = { results: [] };
-  try {
-    [minutesResult, gameMinutesResult] = await Promise.all([
-      context.env.DB.prepare(`
-        SELECT COALESCE(SUM(CASE WHEN duration_seconds > ? THEN ? ELSE duration_seconds END), 0) AS totalSeconds
-        FROM game_play_sessions
-        WHERE played_at >= ?
-      `).bind(maxSessionSeconds, maxSessionSeconds, rangeStart).first(),
-      context.env.DB.prepare(`
-        SELECT game_id AS gameId,
-               COALESCE(SUM(CASE WHEN duration_seconds > ? THEN ? ELSE duration_seconds END), 0) AS totalSeconds
-        FROM game_play_sessions
-        WHERE played_at >= ?
-        GROUP BY game_id
-      `).bind(maxSessionSeconds, maxSessionSeconds, rangeStart).all()
-    ]);
-  } catch (error) {
-    console.warn('game_play_sessions is unavailable; returning zero minutes', error);
-  }
-  const gameMinutes = new Map((gameMinutesResult.results || []).map(row => [row.gameId, Math.round((Number(row.totalSeconds) || 0) / 6) / 10]));
-
-  const dailyCounts = new Map((dailyResult.results || []).map(row => [row.date, Number(row.plays) || 0]));
-  const daily = range === 'all'
-    ? [...dailyCounts.entries()].map(([date, plays]) => ({ date, plays }))
-    : [];
-  if (range !== 'all') {
-    for (let timestamp = rangeStart; timestamp <= dayStart; timestamp += 86400) {
-      const date = new Date(timestamp * 1000).toISOString().slice(0, 10);
-      daily.push({ date, plays: dailyCounts.get(date) || 0 });
-    }
-  }
-
-  return json({
-    totalPlays: Number(totalResult?.totalPlays) || 0,
-    periodPlays: Number(totalResult?.periodPlays) || 0,
-    today: Number(todayResult?.todayPlays) || 0,
-    todayDate: new Date(dayStart * 1000).toISOString().slice(0, 10),
-    totalMinutes: Math.round((Number(minutesResult?.totalSeconds) || 0) / 6) / 10,
-    daily,
-    games: (gamesResult.results || []).map(row => ({
-      gameId: row.gameId,
-      total: Number(row.total) || 0,
-      today: Number(row.today) || 0,
-      period: Number(row.period) || 0,
-      minutes: gameMinutes.get(row.gameId) || 0
-    }))
+  const rangeDays = range === 'today' ? 0 : range === 'month' ? 29 : range === 'all' ? null : 6;
+  const startDate = rangeDays === null ? '0000-01-01' : new Date((dayStart - rangeDays * 86400) * 1000).toISOString().slice(0, 10);
+  const todayDate = new Date(dayStart * 1000).toISOString().slice(0, 10);
+  const result = await context.env.DB.prepare(`SELECT stat_date AS date, game_id AS gameId, plays, duration_seconds AS durationSeconds FROM game_daily_stats WHERE stat_date >= ? ORDER BY stat_date ASC, plays DESC`).bind(startDate).all();
+  const dailyMap = new Map();
+  const games = new Map();
+  let totalPlays = 0;
+  let totalSeconds = 0;
+  let today = 0;
+  (result.results || []).forEach(row => {
+    const plays = Number(row.plays) || 0;
+    const seconds = Math.min(Number(row.durationSeconds) || 0, 60 * 60 * 3);
+    totalPlays += plays;
+    totalSeconds += seconds;
+    if (row.date === todayDate) today += plays;
+    dailyMap.set(row.date, (dailyMap.get(row.date) || 0) + plays);
+    const game = games.get(row.gameId) || { gameId: row.gameId, total: 0, today: 0, period: 0, minutes: 0 };
+    game.total += plays;
+    game.period += plays;
+    game.minutes += seconds / 60;
+    if (row.date === todayDate) game.today += plays;
+    games.set(row.gameId, game);
   });
+  const daily = range === 'all' ? [...dailyMap.entries()].map(([date, plays]) => ({ date, plays })) : Array.from({ length: rangeDays + 1 }, (_, index) => {
+    const date = new Date((dayStart - (rangeDays - index) * 86400) * 1000).toISOString().slice(0, 10);
+    return { date, plays: dailyMap.get(date) || 0 };
+  });
+  return json({ totalPlays, periodPlays: totalPlays, today, todayDate, totalMinutes: totalSeconds / 60, daily, games: [...games.values()].map(game => ({ ...game, minutes: Math.round(game.minutes * 10) / 10 })) });
 }

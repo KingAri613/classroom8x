@@ -211,6 +211,20 @@
         .stats-hero-actions { display: flex; align-items: center; gap: 12px; width: 100%; }
         .stats-refresh { min-width: 112px; min-height: 48px; padding: 11px 18px; border: 1px solid rgba(233, 69, 96, 0.42); border-radius: 10px; background: rgba(16, 24, 43, 0.86); color: #fff; cursor: pointer; font-weight: 700; }
         .stats-refresh:disabled { opacity: 0.6; cursor: wait; }
+        .stats-admin { min-height: 48px; padding: 11px 16px; border: 1px solid rgba(255, 196, 92, 0.45); border-radius: 10px; background: rgba(48, 36, 58, 0.9); color: #ffe7ad; cursor: pointer; font-weight: 800; }
+        .stats-admin-modal { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; padding: 20px; background: rgba(0,0,0,.72); }
+        .stats-admin-panel { width: min(760px, 100%); max-height: min(760px, 90vh); overflow: auto; padding: 24px; border: 1px solid rgba(255,196,92,.4); border-radius: 14px; background: #16213e; color: #fff; }
+        .stats-admin-panel h2 { margin-bottom: 16px; }
+        .stats-admin-form, .stats-admin-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+        .stats-admin-panel input, .stats-admin-panel select { min-height: 44px; padding: 9px 12px; border: 1px solid rgba(255,255,255,.2); border-radius: 8px; background: #0f3460; color: #fff; }
+        .stats-admin-panel button { min-height: 44px; padding: 9px 14px; border: 0; border-radius: 8px; background: #e94560; color: #fff; cursor: pointer; font-weight: 800; }
+        .stats-admin-close { float: right; background: transparent !important; font-size: 1.4rem; }
+        .admin-metric-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 18px 0; }
+        .admin-metric { padding: 14px; border: 1px solid rgba(255,255,255,.12); border-radius: 9px; background: rgba(255,255,255,.06); }
+        .admin-metric small { display: block; color: rgba(255,255,255,.65); }
+        .admin-metric strong { display: block; margin-top: 6px; font-size: 1.5rem; }
+        .admin-status { min-height: 24px; margin-top: 10px; color: #ffd27c; }
+        @media (max-width: 600px) { .admin-metric-grid { grid-template-columns: 1fr; } }
         .stats-updated { margin-top: 8px; color: rgba(234, 234, 234, 0.56); font-size: 0.78rem; }
         .stats-range { flex: 1; min-width: 190px; min-height: 48px; padding: 11px 16px; border: 1px solid rgba(233, 69, 96, 0.42); border-radius: 10px; background: rgba(16, 24, 43, 0.86); color: #fff; font-weight: 700; }
         .stats-tabs { display: inline-flex; gap: 6px; margin-bottom: 18px; padding: 5px; border: 1px solid rgba(233, 69, 96, 0.24); border-radius: 12px; background: rgba(10, 14, 25, 0.48); }
@@ -2161,6 +2175,7 @@
                         <option value="today">Today</option><option value="week" selected>Last 7 Days</option><option value="month">Last 30 Days</option><option value="all">All Time</option>
                     </select>
                     <button class="stats-refresh" id="statsRefresh" type="button">Refresh</button>
+                    <button class="stats-admin" id="statsAdminButton" type="button">Admin</button>
                 </div>
                 <div class="stats-summary">
                     <div class="stats-card"><span class="stats-card-label" id="statsTotalPlaysLabel">Total plays</span><strong class="stats-card-value" id="statsTotalPlays">0</strong></div>
@@ -2174,6 +2189,26 @@
                 </div>
             </section>
         </main>
+    </div>
+
+    <div id="statsAdminModal" class="stats-admin-modal" hidden>
+        <div class="stats-admin-panel" role="dialog" aria-modal="true" aria-labelledby="statsAdminTitle">
+            <button class="stats-admin-close" id="statsAdminClose" type="button" aria-label="Close admin statistics">×</button>
+            <h2 id="statsAdminTitle">Admin statistics</h2>
+            <form class="stats-admin-form" id="statsAdminLoginForm">
+                <input id="statsAdminPassword" type="password" autocomplete="current-password" placeholder="Admin password" required>
+                <button type="submit">Unlock</button>
+            </form>
+            <div class="stats-admin-controls" id="statsAdminControls" hidden>
+                <select id="statsAdminRange" aria-label="Admin stats range"><option value="today">Today</option><option value="month">Last 30 Days</option><option value="year">This Year</option><option value="all">All Time</option></select>
+                <input id="statsAdminStart" type="date" aria-label="Custom start date">
+                <input id="statsAdminEnd" type="date" aria-label="Custom end date">
+                <button id="statsAdminLoad" type="button">Load</button>
+            </div>
+            <div class="admin-status" id="statsAdminStatus" role="status"></div>
+            <div class="admin-metric-grid" id="statsAdminMetrics"></div>
+            <ol class="stats-ranking" id="statsAdminRanking"></ol>
+        </div>
     </div>
 
     <footer class="privacy-footer" id="privacyFooter">
@@ -2460,7 +2495,7 @@
                 header.classList.remove('header-collapsed');
                 updateHeaderCollapseButton(false);
             }
-            if (isStats) loadStats();
+            if (isStats) loadStats(true);
             updateTopbarState(view);
         }
 
@@ -3291,12 +3326,12 @@
                 return;
             }
             const range = document.getElementById('statsRange')?.value || 'week';
-            if (!force && globalStatsCache.has(range) && Date.now() - globalStatsCacheTime.get(range) < 300000) {
+            if (!force && globalStatsCache.has(range) && Date.now() - globalStatsCacheTime.get(range) < 30000) {
                 renderStats(globalStatsCache.get(range));
                 return;
             }
             try {
-                const response = await fetch(`/api/game-stats?range=${encodeURIComponent(range)}`);
+                const response = await fetch(`/api/game-stats?range=${encodeURIComponent(range)}`, { cache: 'no-store' });
                 if (!response.ok) throw new Error(`Stats request failed: ${response.status}`);
                 const data = await response.json();
                 globalStatsCache.set(range, data);
@@ -3307,6 +3342,27 @@
                 console.warn('Could not load Cloudflare game stats:', error);
                 renderStats({ totalPlays: 0, today: 0, totalMinutes: 0, daily: [], games: [] });
             }
+        }
+
+        let adminPassword = '';
+        async function loadAdminStats() {
+            const range = document.getElementById('statsAdminRange').value;
+            const start = document.getElementById('statsAdminStart').value;
+            const end = document.getElementById('statsAdminEnd').value;
+            const params = new URLSearchParams({ range });
+            if (start) params.set('start', start);
+            if (end) params.set('end', end);
+            const response = await fetch(`/api/admin-stats?${params}`, { headers: { Authorization: `Bearer ${adminPassword}` }, cache: 'no-store' });
+            if (!response.ok) throw new Error(response.status === 401 ? 'Incorrect admin password.' : 'Admin stats unavailable.');
+            const data = await response.json();
+            const rows = data.stats || [];
+            const plays = rows.reduce((sum, row) => sum + (Number(row.plays) || 0), 0);
+            const minutes = rows.reduce((sum, row) => sum + (Number(row.durationSeconds) || 0), 0) / 60;
+            document.getElementById('statsAdminMetrics').innerHTML = `<div class="admin-metric"><small>Active visitors</small><strong>${Number(data.activeVisitors || 0).toLocaleString()}</strong></div><div class="admin-metric"><small>Plays</small><strong>${plays.toLocaleString()}</strong></div><div class="admin-metric"><small>Minutes</small><strong>${minutes.toFixed(1)}</strong></div>`;
+            const gameTotals = new Map();
+            rows.forEach(row => gameTotals.set(row.gameId, (gameTotals.get(row.gameId) || 0) + (Number(row.plays) || 0)));
+            document.getElementById('statsAdminRanking').innerHTML = [...gameTotals.entries()].sort((first, second) => second[1] - first[1]).slice(0, 20).map(([gameId, count], index) => `<li class="stats-ranking-row"><span class="stats-rank-number">#${index + 1}</span><span class="stats-game-name">${getStatsGameName(gameId)}</span><span class="stats-game-total">${count.toLocaleString()} plays</span></li>`).join('') || '<li class="stats-empty">No data for this range.</li>';
+            document.getElementById('statsAdminStatus').textContent = `Updated ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
         }
 
         async function refreshPlayerCounts() {
@@ -3876,6 +3932,31 @@
             globalStatsCache.delete(range);
             button.disabled = true;
             try { await loadStats(true); } finally { button.disabled = false; }
+        });
+        document.getElementById('statsAdminButton').addEventListener('click', () => {
+            document.getElementById('statsAdminModal').hidden = false;
+            document.getElementById('statsAdminPassword').focus();
+        });
+        document.getElementById('statsAdminClose').addEventListener('click', () => {
+            document.getElementById('statsAdminModal').hidden = true;
+            adminPassword = '';
+            document.getElementById('statsAdminControls').hidden = true;
+        });
+        document.getElementById('statsAdminLoginForm').addEventListener('submit', async event => {
+            event.preventDefault();
+            adminPassword = document.getElementById('statsAdminPassword').value;
+            document.getElementById('statsAdminStatus').textContent = 'Checking password...';
+            try {
+                document.getElementById('statsAdminControls').hidden = false;
+                await loadAdminStats();
+            } catch (error) {
+                adminPassword = '';
+                document.getElementById('statsAdminControls').hidden = true;
+                document.getElementById('statsAdminStatus').textContent = error.message;
+            }
+        });
+        document.getElementById('statsAdminLoad').addEventListener('click', async () => {
+            try { await loadAdminStats(); } catch (error) { document.getElementById('statsAdminStatus').textContent = error.message; }
         });
         document.getElementById('mobileMenuToggle').addEventListener('click', () => {
             const nav = document.querySelector('.topbar-nav');

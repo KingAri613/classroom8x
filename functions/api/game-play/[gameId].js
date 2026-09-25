@@ -29,6 +29,8 @@ export async function onRequestPost(context) {
   }
 
   const durationSeconds = Math.floor(Number(body.durationSeconds) || 0);
+  const now = Math.floor(Date.now() / 1000);
+  const statDate = new Date(now * 1000).toISOString().slice(0, 10);
   if (durationSeconds > 0) {
     if (durationSeconds > 60 * 60 * 3) return json({ error: 'Invalid duration' }, 400);
     await context.env.DB.prepare(`
@@ -42,14 +44,27 @@ export async function onRequestPost(context) {
     await context.env.DB.prepare(`
       INSERT INTO game_play_sessions (game_id, visitor_id, played_at, duration_seconds)
       VALUES (?, ?, ?, ?)
-    `).bind(gameId, visitorId, Math.floor(Date.now() / 1000), durationSeconds).run();
+    `).bind(gameId, visitorId, now, durationSeconds).run();
+    await context.env.DB.prepare(`
+      INSERT INTO game_daily_stats (stat_date, game_id, duration_seconds)
+      VALUES (?, ?, ?)
+      ON CONFLICT(stat_date, game_id) DO UPDATE SET duration_seconds = duration_seconds + excluded.duration_seconds
+    `).bind(statDate, gameId, durationSeconds).run();
     return json({ success: true });
   }
 
   await context.env.DB.prepare(`
     INSERT INTO game_plays (game_id, visitor_id, played_at)
     VALUES (?, ?, ?)
-  `).bind(gameId, visitorId, Math.floor(Date.now() / 1000)).run();
+  `).bind(gameId, visitorId, now).run();
+  await context.env.DB.prepare(`
+    INSERT INTO game_daily_stats (stat_date, game_id, plays)
+    VALUES (?, ?, 1)
+    ON CONFLICT(stat_date, game_id) DO UPDATE SET plays = plays + 1
+  `).bind(statDate, gameId).run();
+  await context.env.DB.prepare(`
+    INSERT OR IGNORE INTO daily_active_visitors (stat_date, visitor_id) VALUES (?, ?)
+  `).bind(statDate, visitorId).run();
 
   return json({ success: true });
 }
