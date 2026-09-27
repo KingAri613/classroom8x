@@ -68,7 +68,7 @@
             'ad_personalization': 'denied'
         });
     </script>
-    <script id="kookieok-consent-script" src="https://cdn.kookiok.com/consent.js?id=01a05d08-8356-73a8-a0b2-bdc0afc3a115"></script>
+    <script id="kookieok-consent-script" src="https://cdn.kookiok.com/consent.js?id=01a05d08-8356-73a8-a0b2-bdc0afc3a115" defer></script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-FEKCEXRBE2"></script>
     <script>
@@ -3221,7 +3221,7 @@
 
         async function loadPlayerCounts() {
             try {
-                const response = await fetch('/api/game-play');
+                const response = await fetch('/api/game-play', { cache: 'no-store' });
                 if (!response.ok) throw new Error(`Player count request failed: ${response.status}`);
                 const data = await response.json();
                 Object.entries(data.games || {}).forEach(([gameId, players]) => {
@@ -3385,8 +3385,12 @@
 
         function startPlayerCountRefresh() {
             if (playerCountRefreshId) clearInterval(playerCountRefreshId);
-            playerCountRefreshId = null;
+            playerCountRefreshId = setInterval(refreshPlayerCounts, 5 * 60 * 1000);
         }
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible' && allGames.length) refreshPlayerCounts();
+        });
 
         // ============ END GAME PLAY TRACKING ============
 
@@ -3482,7 +3486,7 @@
                                             <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                                                 <div class="game-thumbnail">
                                                     <span class="player-count" data-player-count="${game.id}" title="Play count for the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
-                                                    ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
+                                                    ${game.image ? `<img src="${game.image}" alt="${game.name}" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                                                     <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
                                                 </div>
                                                 <div class="game-info">
@@ -3515,7 +3519,7 @@
                                             <div class="game-thumbnail">
                                                 <span class="player-count" data-player-count="${game.id}" title="Play count for the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                                                 <div class="game-badge">Hot</div>
-                                                ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
+                                                ${game.image ? `<img src="${game.image}" alt="${game.name}" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                                                 <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
                                             </div>
                                             <div class="game-info">
@@ -3545,7 +3549,7 @@
                     <div class="game-thumbnail">
                         <span class="player-count" data-player-count="${game.id}" title="Play count for the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                         ${gameBadge}
-                        ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
+                        ${game.image ? `<img src="${game.image}" alt="${game.name}" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                         <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
                     </div>
                     <div class="game-info">
@@ -3563,7 +3567,7 @@
                             <div class="game-thumbnail">
                                 <span class="player-count" data-player-count="${game.id}" title="Play count for the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                                 <div class="game-badge">New</div>
-                                ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
+                                ${game.image ? `<img src="${game.image}" alt="${game.name}" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                                 <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
                             </div>
                             <div class="game-info">
@@ -3584,7 +3588,7 @@
                                         <div class="game-thumbnail">
                                             <span class="player-count" data-player-count="${game.id}" title="Play count for the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
                                             <div class="game-badge">New</div>
-                                            ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
+                                            ${game.image ? `<img src="${game.image}" alt="${game.name}" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                                             <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
                                         </div>
                                         <div class="game-info">
@@ -3617,7 +3621,7 @@
                 <div class="game-card" onclick="playGame('${game.gameUrl}', '${game.name}', '${game.id}')">
                     <div class="game-thumbnail">
                         <span class="player-count" data-player-count="${game.id}" title="Play count for the last 30 days"><span aria-hidden="true">🔥</span><span class="player-count-number">...</span></span>
-                        ${game.image ? `<img src="${game.image}" alt="${game.name}" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
+                        ${game.image ? `<img src="${game.image}" alt="${game.name}" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling?.style.display='flex'">` : ''}
                         <div style="font-size: 4em; display: ${game.image ? 'none' : 'flex'}; align-items: center; justify-content: center; width: 100%; height: 100%;">${game.icon}</div>
                     </div>
                     <div class="game-info">
@@ -4087,12 +4091,11 @@
             });
         }
 
-        // Add lazy loading for game thumbnail images using Intersection Observer
+        // Keep catalog thumbnails deferred until they are near the viewport.
         function setupLazyLoading() {
-            // Load all images immediately
-            document.querySelectorAll('img[data-src]').forEach(img => {
-                img.src = img.dataset.src;
-                img.removeAttribute('data-src');
+            document.querySelectorAll('#gamesGrid img, #moreGamesGrid img').forEach(img => {
+                img.loading = 'lazy';
+                img.decoding = 'async';
             });
         }
 

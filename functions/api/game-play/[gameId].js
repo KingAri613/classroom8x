@@ -73,12 +73,12 @@ export async function onRequestGet(context) {
   const gameId = context.params.gameId;
   if (!validGameId(gameId)) return json({ error: 'Invalid game ID' }, 400);
 
-  const cutoff = Math.floor(Date.now() / 1000) - (30 * 24 * 60 * 60);
+  const cutoffDate = new Date(Date.now() - (30 * 24 * 60 * 60 * 1000)).toISOString().slice(0, 10);
   const result = await context.env.DB.prepare(`
-    SELECT COUNT(*) AS players
-    FROM game_plays
-    WHERE game_id = ? AND played_at >= ?
-  `).bind(gameId, cutoff).first();
+    SELECT SUM(plays) AS players
+    FROM game_daily_stats
+    WHERE game_id = ? AND stat_date >= ?
+  `).bind(gameId, cutoffDate).first();
 
   return json({ gameId, players: result?.players || 0 });
 }

@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v1.0.3';
+const CACHE_VERSION = 'v1.0.4';
 const CACHE_NAME = `classroom8x-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `classroom8x-runtime-${CACHE_VERSION}`;
 
@@ -65,6 +65,11 @@ self.addEventListener('fetch', (event) => {
 
   // Skip cross-origin requests and non-GET requests
   if (url.origin !== location.origin || request.method !== 'GET') {
+    return;
+  }
+
+  // Let the player-count endpoint use its timed Cloudflare edge cache.
+  if (url.pathname === '/api/game-play') {
     return;
   }
 
