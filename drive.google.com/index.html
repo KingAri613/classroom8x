@@ -1595,39 +1595,132 @@
             animation: slideUp 0.6s ease-out;
         }
 
-        #gameModal {
+        .game-experience {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0);
+            inset: 0;
             z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s ease;
-            backdrop-filter: blur(0px);
-            margin: 0;
-            padding: 0;
+            grid-template-columns: minmax(0, 1fr) 0;
+            grid-template-rows: minmax(0, 1fr) 0;
+            gap: 0;
             width: 100vw;
-            height: 100vh;
+            height: 100dvh;
             overflow: hidden;
+            padding: 0;
+            background: #0f3460;
         }
 
-        #gameModal.active {
-            display: flex;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
+        .game-experience.active {
+            display: grid;
             animation: fadeIn 0.3s ease-out;
         }
 
-        #gameModal.active iframe {
+        .game-experience.ads-visible:not(.game-fullscreen):not(.ai-mode) {
+            grid-template-columns: minmax(0, 1fr) 160px;
+            grid-template-rows: minmax(0, 1fr) 90px;
+            gap: 6px;
+        }
+
+        #gameModal {
+            display: none;
+            position: relative;
+            grid-column: 1;
+            grid-row: 1;
+            width: 100%;
+            height: 100%;
+            min-width: 0;
+            min-height: 0;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #1a1a2e;
+        }
+
+        #gameModal.active {
+            display: block;
+        }
+
+        #gameModal.active #gameFrame {
             display: block !important;
         }
 
+        .game-play-area {
+            position: absolute;
+            inset: 0;
+            min-width: 0;
+            min-height: 0;
+            overflow: hidden;
+            border: 0;
+            border-radius: 0;
+            background: #1a1a2e;
+        }
+
+        .game-ad-slot {
+            position: relative;
+            display: none;
+            min-width: 0;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 0;
+            border-radius: 0;
+            background: rgba(12, 18, 32, 0.94);
+        }
+
+        .game-experience.ads-visible .game-ad-slot {
+            display: flex;
+        }
+
+        #div-side-ad {
+            grid-column: 2;
+            grid-row: 1;
+            min-height: 0;
+        }
+
+        #div-bottom-ad {
+            grid-column: 1 / -1;
+            grid-row: 2;
+            width: 100%;
+            min-height: 90px;
+            justify-self: center;
+        }
+
+        .ad-preview-label {
+            color: rgba(255, 255, 255, 0.68);
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .ad-preview-label span {
+            display: block;
+            margin-top: 6px;
+            color: rgba(255, 255, 255, 0.42);
+            font-size: 0.72rem;
+            font-weight: 500;
+        }
+
+        .game-experience .adsbygoogle {
+            display: block;
+            width: 100%;
+        }
+
+        .game-experience.game-fullscreen #div-side-ad,
+        .game-experience.game-fullscreen #div-bottom-ad,
+        .game-experience.ai-mode #div-side-ad,
+        .game-experience.ai-mode #div-bottom-ad {
+            display: none;
+        }
+
+        .game-experience.game-fullscreen,
+        .game-experience.ai-mode {
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-rows: minmax(0, 1fr);
+            gap: 0;
+        }
+
         .game-loading-overlay {
-            position: fixed;
+            position: absolute;
             inset: 0;
             display: none;
             align-items: center;
@@ -1781,8 +1874,8 @@
         }
 
         .modal-action {
-            position: fixed;
-            z-index: 2001;
+            position: absolute;
+            z-index: 2003;
             width: 46px;
             height: 46px;
             display: inline-flex;
@@ -1849,16 +1942,12 @@
             border: none;
         }
 
-        #gameModal iframe {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+        #gameModal #gameFrame {
+            position: absolute;
+            inset: 0;
             width: 100% !important;
             height: 100% !important;
             border: none;
-            z-index: 2000;
             background: #1a1a2e;
             transform: scale(1) !important;
             transform-origin: top left !important;
@@ -1972,7 +2061,14 @@
                 font-size: 1.8em;
             }
 
-            #gameModal iframe { width: 100% !important; height: 100dvh !important; }
+            .game-experience.ads-visible:not(.game-fullscreen):not(.ai-mode) {
+                grid-template-columns: minmax(0, 1fr);
+                grid-template-rows: minmax(0, 1fr) 72px 72px;
+                gap: 4px;
+            }
+
+            #div-side-ad { grid-column: 1; grid-row: 2; min-height: 72px; }
+            #div-bottom-ad { grid-row: 3; width: 100%; min-height: 72px; }
             .modal-action { width: 48px; height: 48px; top: max(10px, env(safe-area-inset-top)); }
             .close-button { left: max(10px, env(safe-area-inset-left)); }
             .fullscreen-button { right: max(10px, env(safe-area-inset-right)); }
@@ -2229,22 +2325,32 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="gameModal">
-        <button class="modal-action close-button" onclick="closeGame()" title="Close">✕</button>
-        <button class="modal-action fullscreen-button" type="button" onclick="toggleGameFullscreen()" title="Fullscreen">⛶</button>
-        <button class="music-close ai-game-close" onclick="closeGame()" style="display:none;">← Back</button>
-        <div class="game-loading-overlay" id="gameLoadingOverlay" aria-live="polite">
-            <div class="game-loading-spinner" aria-hidden="true"></div>
-            <div class="game-loading-text">Loading game...</div>
+    <div class="game-experience" id="gameExperience">
+        <div class="modal-overlay" id="gameModal">
+            <button class="modal-action close-button" onclick="closeGame()" title="Close">✕</button>
+            <button class="modal-action fullscreen-button" type="button" onclick="toggleGameFullscreen()" title="Fullscreen">⛶</button>
+            <button class="music-close ai-game-close" onclick="closeGame()" style="display:none;">← Back</button>
+            <div class="game-loading-overlay" id="gameLoadingOverlay" aria-live="polite">
+                <div class="game-loading-spinner" aria-hidden="true"></div>
+                <div class="game-loading-text">Loading game...</div>
+            </div>
+            <div class="game-play-area">
+                <iframe id="gameFrame"
+                    allowfullscreen
+                    webkitallowfullscreen
+                    mozallowfullscreen
+                    sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-presentation allow-downloads"
+                    allow="camera; microphone; clipboard-read; clipboard-write; fullscreen"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
         </div>
-        <iframe id="gameFrame" 
-            allowfullscreen 
-            webkitallowfullscreen 
-            mozallowfullscreen 
-            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-presentation allow-downloads"
-            allow="camera; microphone; clipboard-read; clipboard-write; fullscreen"
-            referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
+        <aside class="game-ad-slot" id="div-side-ad" aria-label="Side advertisement preview">
+            <div class="ad-preview-label">Side ad preview<span>160 × 600</span></div>
+        </aside>
+        <div class="game-ad-slot" id="div-bottom-ad" aria-label="Bottom advertisement preview">
+            <div class="ad-preview-label">Bottom ad preview<span>728 × 90</span></div>
+        </div>
     </div>
 
     <div class="modal-overlay" id="soundboardModal" aria-hidden="true">
@@ -3177,6 +3283,57 @@
             }).catch(() => {});
         }
 
+        const ADSENSE_PREVIEW_MODE = new URLSearchParams(window.location.search).get('ad-preview') === '1';
+        const ADSENSE_LIVE_ENABLED = false;
+        const ADSENSE_GAME_CHANGE_REFRESH_ENABLED = false;
+        const ADSENSE_REFRESH_COOLDOWN_MS = 30000;
+        const ADSENSE_CLIENT_ID = 'ca-pub-3324534036575197';
+        const GAME_AD_SLOTS = [
+            { containerId: 'div-side-ad', slotId: '7010071914' },
+            { containerId: 'div-bottom-ad', slotId: '6073143194' }
+        ];
+        let gameAdSlotsInitialized = false;
+        let lastGameAdRequestAt = 0;
+
+        function safeRefreshAds() {
+            const experience = document.getElementById('gameExperience');
+            const shouldShowAdAreas = ADSENSE_PREVIEW_MODE || ADSENSE_LIVE_ENABLED;
+            experience?.classList.toggle('ads-visible', shouldShowAdAreas);
+            if (ADSENSE_PREVIEW_MODE || !ADSENSE_LIVE_ENABLED) return false;
+
+            const modal = document.getElementById('gameModal');
+            if (!modal?.classList.contains('active') || modal.classList.contains('ai-mode') || modal.classList.contains('game-fullscreen')) return false;
+
+            const now = Date.now();
+            if (lastGameAdRequestAt && now - lastGameAdRequestAt < ADSENSE_REFRESH_COOLDOWN_MS) return false;
+            if (gameAdSlotsInitialized && !ADSENSE_GAME_CHANGE_REFRESH_ENABLED) return false;
+
+            const containers = GAME_AD_SLOTS.map(slot => ({ ...slot, container: document.getElementById(slot.containerId) }));
+            if (containers.some(slot => !slot.container)) return false;
+
+            // AdSense has no synchronous impression-success callback; gate from request time.
+            lastGameAdRequestAt = now;
+            gameAdSlotsInitialized = true;
+            try {
+                window.adsbygoogle = window.adsbygoogle || [];
+                containers.forEach(({ container, slotId }) => {
+                    const ad = document.createElement('ins');
+                    ad.className = 'adsbygoogle';
+                    ad.style.display = 'block';
+                    ad.setAttribute('data-ad-client', ADSENSE_CLIENT_ID);
+                    ad.setAttribute('data-ad-slot', slotId);
+                    ad.setAttribute('data-ad-format', 'auto');
+                    ad.setAttribute('data-full-width-responsive', 'true');
+                    container.replaceChildren(ad);
+                    window.adsbygoogle.push({});
+                });
+                return true;
+            } catch (error) {
+                console.warn('Could not initialize game ad slots:', error);
+                return false;
+            }
+        }
+
         function startGameSession(gameId) {
             if (!gameId) return;
             finishGameSession();
@@ -3689,14 +3846,17 @@
             }
             
             const gameModal = document.getElementById('gameModal');
+            const gameExperience = document.getElementById('gameExperience');
             const gameFrame = document.getElementById('gameFrame');
             gameModal.classList.toggle('ai-mode', gameId === 'ai-tool');
+            gameExperience.classList.toggle('ai-mode', gameId === 'ai-tool');
             gameFrame.setAttribute('sandbox', defaultGameSandbox);
             gameFrame.src = '';
             gameLoadStartedAt = Date.now();
             setGameLoadingState(true);
             startGameSession(gameId);
             gameModal.classList.add('active');
+            gameExperience.classList.add('active');
             document.body.classList.add('game-open');
             trackGamePageView(gameName, gameId);
             trackAnalyticsEvent('game_start', { game_id: gameId, game_name: gameName });
@@ -3704,6 +3864,7 @@
             // Small delay to ensure modal is active before loading game
             setTimeout(() => {
                 gameFrame.src = gameUrl;
+                safeRefreshAds();
             }, 50);
         }
 
@@ -3721,11 +3882,13 @@
                 setGameLoadingState(true);
                 startGameSession(gameId);
                 document.getElementById('gameModal').classList.add('active');
+                document.getElementById('gameExperience').classList.add('active');
                 document.body.classList.add('game-open');
                 trackGamePageView(gameName, gameId);
                 trackAnalyticsEvent('game_start', { game_id: gameId, game_name: gameName });
                 setTimeout(() => {
                     gameFrame.src = gameUrl;
+                    safeRefreshAds();
                 }, 50);
                 return;
             }
@@ -3790,11 +3953,13 @@
                 setGameLoadingState(true);
                 startGameSession(gameId);
                 document.getElementById('gameModal').classList.add('active');
+                document.getElementById('gameExperience').classList.add('active');
                 document.body.classList.add('game-open');
                 trackGamePageView(gameName, gameId);
                 trackAnalyticsEvent('game_start', { game_id: gameId, game_name: gameName });
                 setTimeout(() => {
                     gameFrame.src = gameUrl;
+                    safeRefreshAds();
                 }, 50);
             };
         }
@@ -3822,11 +3987,27 @@
             }
         }
 
+        function syncGameFullscreenState() {
+            const modal = document.getElementById('gameModal');
+            const experience = document.getElementById('gameExperience');
+            const frame = document.getElementById('gameFrame');
+            const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement;
+            const isGameFullscreen = fullscreenElement === frame;
+            modal?.classList.toggle('game-fullscreen', isGameFullscreen);
+            experience?.classList.toggle('game-fullscreen', isGameFullscreen);
+        }
+
+        document.addEventListener('fullscreenchange', syncGameFullscreenState);
+        document.addEventListener('webkitfullscreenchange', syncGameFullscreenState);
+
         function closeGame() {
             const gameModal = document.getElementById('gameModal');
+            const gameExperience = document.getElementById('gameExperience');
             const gameFrame = document.getElementById('gameFrame');
             gameModal.classList.remove('active');
             gameModal.classList.remove('ai-mode');
+            gameModal.classList.remove('game-fullscreen');
+            gameExperience.classList.remove('active', 'ai-mode', 'game-fullscreen');
             gameFrame.setAttribute('sandbox', defaultGameSandbox);
             gameFrame.src = '';
             setGameLoadingState(false);
